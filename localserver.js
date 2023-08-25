@@ -13,7 +13,7 @@ const port = 5002;
 const addr = 'localhost';
 
 app.use(express.json());
-//app.use(express.static("public"));
+app.use(express.static('public'));
 
 app.get('/seqviz.js', function (req, res) {
   res.sendFile(path.join(__dirname, 'public', 'seqviz.js'));
@@ -90,6 +90,8 @@ app.post('/Run', async (req, res) => {
                     </html>`;
     res.send(theHtml);
   } catch (err) {
+    console.log(err);
+
     const theHtml = `<!doctype html>
                     <html>
                       <head><title>sequence view</title></head>

@@ -9,6 +9,12 @@ la build del codice del frontend ogni volta che qualcosa all'interno di esso cam
 
 4. La porta su cui viene lanciato il local server è la `5002` invece della `5000`, a causa di conflitti sull'utilizzo della porta
 
+5. Nel `Dockerfile` (usato per la build dell'immagine del plugin) è stata aggiornata la versione di node (`16.20` al posto di `14`) perché non era più in grado di installare correttamente le dipendenze
+
+6. Sempre nel `Dockerfile` è stata tolta l'opzione `--only=production` perchè ci serve installare (temporaneamente) `babel-node`, il quale viene utilizzato dal comando `npm run start-prod-server`
+
+7. È stato quindi aggiunto il comando `build-local-docker-image` legato a uno script bash con lo stesso nome (fa la build della image usando come tag `local`)
+
 ## Note importanti
 
 1. Per installare le dipendenze, utilizzare `npm install` invece di `yarn`, perché nel progetto è presente solo un `package-lock.json` 
