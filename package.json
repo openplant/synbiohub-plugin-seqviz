@@ -8,9 +8,10 @@
     "build": "webpack --config ./config/webpack.build.js",
     "build-verbose": "webpack --config ./config/webpack.build.js --display-error-details --verbose",
     "build-dev": "nodemon --watch src/ -e js,jsx --exec yarn build",
-    "start-prod-server": "node start.js",
+    "start-prod-server": "babel-node start.js",
     "start-local-server": "nodemon --exec babel-node localserver.js",
-    "local": "concurrently \"yarn build-dev\" \"yarn start-local-server\""
+    "local": "concurrently \"yarn build-dev\" \"yarn start-local-server\"",
+    "build-local-docker-image": "./scripts/build-local-docker-image.sh"
   },
   "keywords": [],
   "author": "",
