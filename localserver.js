@@ -4,8 +4,6 @@ const path = require('path');
 const request = require('request');
 const serialize = require('serialize-javascript');
 
-const propdata = require('./sample-data-BBa');
-
 import filesToParts from './io/filesToParts';
 
 const app = express();
@@ -35,6 +33,8 @@ app.post('/Evaluate', function (req, res) {
 
 app.get('/RunLocal', async (req, res) => {
   let hostAddr = req.get('host');
+
+  const propdata = require('./sample-data-mCherry');
 
   const theHtml = `<!doctype html>
                     <html>
