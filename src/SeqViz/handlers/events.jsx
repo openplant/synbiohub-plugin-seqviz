@@ -336,7 +336,6 @@ const withEventRouter = WrappedComp =>
           className="la-vz-viewer-event-router"
           onKeyDown={this.handleKeyPress}
           onMouseMove={mouseEvent}
-          onWheel={this.handleScrollEvent}
           role="presentation"
           ref={ref => {
             this.eventRouter = ref;

@@ -34,7 +34,7 @@ app.post('/Evaluate', function (req, res) {
 app.get('/RunLocal', async (req, res) => {
   let hostAddr = req.get('host');
 
-  const propdata = require('./sample-data-mCherry');
+  const propdata = require('./sega008.js');
 
   const theHtml = `<!doctype html>
                     <html>
