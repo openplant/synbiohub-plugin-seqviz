@@ -179,34 +179,12 @@ const SingleAnnotation = props => {
           direction: a.direction
         })}
         fill={a.color}
-        stroke={COLOR_BORDER_MAP[a.color] || calcBorderColor(a.color)}
         onMouseOver={() => hoverAnnotation(a.annId, 1.0, true)}
         onMouseOut={() => hoverAnnotation(a.annId, 0.7, false)}
         onFocus={() => { }}
         onBlur={() => { }}
         {...annStyle}
       />
-      {inlinedAnnotations.includes(a.id) && (
-        <text
-          id={a.id}
-          dy={-0.4 * lineHeight}
-          onMouseOver={() => hoverAnnotation(a.annId, 1.0, true)}
-          onMouseOut={() => hoverAnnotation(a.annId, 0.7, false)}
-          onFocus={() => { }}
-          onBlur={() => { }}
-        >
-          <textPath
-            id={a.id}
-            textAnchor="middle"
-            startOffset={bottomHalf ? "25%" : "75%"}
-            dominantBaseline="middle"
-            xlinkHref={`#${circAnnID}`}
-            {...labelStyle}
-          >
-            {a.name}
-          </textPath>
-        </text>
-      )}
     </g>
   );
 };

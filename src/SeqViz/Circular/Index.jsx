@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react';
 
-import CentralIndexContext from "../handlers/centralIndex";
+import CentralIndexContext from '../handlers/centralIndex';
 
 /**
  * this component renders the following:
@@ -16,7 +16,7 @@ import CentralIndexContext from "../handlers/centralIndex";
 export default class Index extends React.PureComponent {
   static contextType = CentralIndexContext;
 
-  static getDerivedStateFromProps = nextProps => {
+  static getDerivedStateFromProps = (nextProps) => {
     const { seqLength } = nextProps;
     let centralIndex = 0;
     if (this.context) {
@@ -37,7 +37,7 @@ export default class Index extends React.PureComponent {
     }
     const tickTolerance = indexInc * 6;
     ticks = ticks.filter(
-      t =>
+      (t) =>
         Math.abs(centralIndex - t) < tickTolerance ||
         Math.abs(centralIndex + seqLength - t) < tickTolerance ||
         Math.abs(centralIndex - seqLength - t) < tickTolerance
@@ -47,22 +47,14 @@ export default class Index extends React.PureComponent {
 
   state = {
     ticks: [],
-    indexInc: 10
+    indexInc: 10,
   };
 
   /**
    * return a react element for the basepairs along the surface of the plasmid viewer
    */
   renderBasepairs = () => {
-    const {
-      seq,
-      compSeq,
-      seqLength,
-      lineHeight,
-      radius,
-      findCoor,
-      getRotation
-    } = this.props;
+    const { seq, compSeq, seqLength, lineHeight, radius, findCoor, getRotation } = this.props;
     const { indexInc } = this.state;
     const centralIndex = this.context.circular;
 
@@ -111,7 +103,7 @@ export default class Index extends React.PureComponent {
       generateArc,
       findCoor,
       totalRows,
-      showIndex
+      showIndex,
     } = this.props;
     const { ticks } = this.state;
 
@@ -145,42 +137,43 @@ export default class Index extends React.PureComponent {
       nameCoorRadius > mostInwardElementRadius
         ? {
             x: center.x,
-            y: size.height - nameYAdjust - yDiff
+            y: size.height - nameYAdjust - yDiff,
           }
         : {
             x: center.x,
-            y: center.y - ((nameSpans.length - 1) / 2) * 25 // shift the name up for >1 rows of text
+            y: center.y - ((nameSpans.length - 1) / 2) * 25, // shift the name up for >1 rows of text
           };
 
     // these are just created once, but are rotated to each position along the plasmid
     const tickCoorStart = findCoor(0, radius);
-    const tickCoorEnd = findCoor(0, radius - 10);
+    const tickCoorEnd = findCoor(0, radius - 15);
 
     // create tick and text style
     const nameStyle = {
       fontSize: 20,
-      textAnchor: "middle",
-      fontWeight: 500
+      textAnchor: 'middle',
+      fontWeight: 500,
     };
     const subtitleStyle = {
       fontSize: 14,
-      textAnchor: "middle",
-      fill: "gray"
+      textAnchor: 'middle',
+      fill: 'gray',
     };
     const indexCircleStyle = {
-      fill: "transparent",
-      stroke: "#73777D",
-      strokeWidth: 3
+      fill: 'transparent',
+      stroke: '#CECECE',
+      strokeWidth: 1,
     };
     const tickLineStyle = {
-      fill: "transparent",
-      stroke: "black",
+      fill: 'transparent',
+      stroke: '#cecece',
       strokeWidth: 1,
-      shapeRendering: "geometricPrecision"
+      shapeRendering: 'geometricPrecision',
     };
     const tickTextStyle = {
-      textAnchor: "middle",
-      fontWeight: 300
+      textAnchor: 'middle',
+      fontWeight: 300,
+      stroke: '#7c7c7c',
     };
 
     // generate the full circle around the edge of the plasmid
@@ -188,7 +181,7 @@ export default class Index extends React.PureComponent {
       innerRadius: radius,
       outerRadius: radius,
       length: seqLength / 2,
-      largeArc: true
+      largeArc: true,
     });
     return (
       <g className="la-vz-circular-index">
@@ -202,32 +195,22 @@ export default class Index extends React.PureComponent {
         </text>
 
         {/* A label for the length of the plasmid */}
-        <text
-          x={nameCoor.x}
-          y={nameCoor.y + 14 + 25 * (nameSpans.length - 1)}
-          {...subtitleStyle}
-        >
+        <text x={nameCoor.x} y={nameCoor.y + 14 + 25 * (nameSpans.length - 1)} {...subtitleStyle}>
           {`${seqLength} bp`}
         </text>
 
         {/* If less than 200bp long, render the bp of the plasmid */}
-        {seq.length < 200 ? (
-          <g className="la-vz-circular-bps">{this.renderBasepairs()}</g>
-        ) : null}
+        {seq.length < 200 ? <g className="la-vz-circular-bps">{this.renderBasepairs()}</g> : null}
 
         {/* The ticks and their index labels */}
-        {ticks.map(t => (
+        {ticks.map((t) => (
           <g key={`la-vz-${t}_tick`} transform={getRotation(t - 0.5)}>
             <path
               d={`M ${tickCoorStart.x} ${tickCoorStart.y}
                 L ${tickCoorEnd.x} ${tickCoorEnd.y}`}
               {...tickLineStyle}
             />
-            <text
-              x={tickCoorEnd.x}
-              y={tickCoorEnd.y + lineHeight}
-              {...tickTextStyle}
-            >
+            <text x={tickCoorEnd.x} y={tickCoorEnd.y - lineHeight * 2} {...tickTextStyle}>
               {t}
             </text>
           </g>
@@ -235,16 +218,8 @@ export default class Index extends React.PureComponent {
 
         {/* The two arcs that make the plasmid's circle */}
         <g>
-          <path
-            d={indexCurve}
-            transform={getRotation(seqLength * 0.75)}
-            {...indexCircleStyle}
-          />
-          <path
-            d={indexCurve}
-            transform={getRotation(seqLength * 0.25)}
-            {...indexCircleStyle}
-          />
+          <path d={indexCurve} transform={getRotation(seqLength * 0.75)} {...indexCircleStyle} />
+          <path d={indexCurve} transform={getRotation(seqLength * 0.25)} {...indexCircleStyle} />
         </g>
       </g>
     );

@@ -346,7 +346,7 @@ class Circular extends React.Component {
             totalRows={totalRows}
             showIndex={showIndex}
           />
-          <Labels {...general} labels={outerLabels} size={size} yDiff={yDiff} />
+          {/* <Labels {...general} labels={outerLabels} size={size} yDiff={yDiff} /> */}
         </g>
       </svg>
     );
