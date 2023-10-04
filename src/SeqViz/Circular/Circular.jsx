@@ -1,17 +1,17 @@
-import * as React from "react";
+import * as React from 'react';
 
-import bindingSites from "../../utils/bindingSites";
-import isEqual from "../../utils/isEqual";
-import { stackElements } from "../elementsToRows";
-import withViewerHOCs from "../handlers";
-import CentralIndexContext from "../handlers/centralIndex";
-import Annotations from "./Annotations.jsx";
-import CutSites from "./CutSites.jsx";
-import Find from "./Find.jsx";
-import Index from "./Index.jsx";
-import Labels from "./Labels.jsx";
-import Primers from "./Primers.jsx";
-import Selection from "./Selection.jsx";
+import bindingSites from '../../utils/bindingSites';
+import isEqual from '../../utils/isEqual';
+import { stackElements } from '../elementsToRows';
+import withViewerHOCs from '../handlers';
+import CentralIndexContext from '../handlers/centralIndex';
+import Annotations from './Annotations.jsx';
+import CutSites from './CutSites.jsx';
+import Find from './Find.jsx';
+import Index from './Index.jsx';
+import Labels from './Labels.jsx';
+import Primers from './Primers.jsx';
+import Selection from './Selection.jsx';
 
 // this will need to change whenever the css of the plasmid viewer text changes
 // just divide the width of some rectangular text by it's number of characters
@@ -20,10 +20,10 @@ export const CHAR_WIDTH = 7.801;
 class Circular extends React.Component {
   static contextType = CentralIndexContext;
 
-  static getDerivedStateFromProps = nextProps => {
+  static getDerivedStateFromProps = (nextProps) => {
     const lineHeight = 14;
     const annotationsInRows = stackElements(
-      nextProps.annotations.filter(ann => ann.type !== "insert"),
+      nextProps.annotations.filter((ann) => ann.type !== 'insert'),
       nextProps.seq.length
     );
     const primers = bindingSites(nextProps.primers, nextProps.seq);
@@ -43,9 +43,9 @@ class Circular extends React.Component {
     let innerRadius = radius - 3 * lineHeight;
     const inlinedLabels = [];
     const outerLabels = [];
-    annotationsInRows.forEach(r => {
+    annotationsInRows.forEach((r) => {
       const circumf = innerRadius * Math.PI;
-      r.forEach(ann => {
+      r.forEach((ann) => {
         // how large is the name of the annotation horizontally (with two char padding)
         const annNameLengthPixels = (ann.name.length + 2) * CHAR_WIDTH;
         // how large would part be if it were wrapped around the plasmid
@@ -56,25 +56,23 @@ class Circular extends React.Component {
           inlinedLabels.push(ann.id);
         } else {
           const { id, name, start, end } = ann;
-          const type = "annotation";
+          const type = 'annotation';
           outerLabels.push({ id, name, start, end, type });
         }
       });
       innerRadius -= lineHeight;
     });
 
-    cutSiteLabels.forEach(c =>
+    cutSiteLabels.forEach((c) =>
       outerLabels.push({
         ...c,
         start: c.fcut,
-        type: "enzyme"
+        type: 'enzyme',
       })
     );
 
     // sort all the labels so they're in ascending order
-    outerLabels.sort(
-      (a, b) => Math.min(a.start, a.end) - Math.min(b.start, b.end)
-    );
+    outerLabels.sort((a, b) => Math.min(a.start, a.end) - Math.min(b.start, b.end));
 
     return {
       seqLength: nextProps.seq.length,
@@ -82,7 +80,7 @@ class Circular extends React.Component {
       annotationsInRows: annotationsInRows,
       primersInRows: primersInRows,
       inlinedLabels: inlinedLabels,
-      outerLabels: outerLabels
+      outerLabels: outerLabels,
     };
   };
 
@@ -93,13 +91,13 @@ class Circular extends React.Component {
     annotationsInRows: [],
     primersInRows: [],
     inlinedLabels: [],
-    outerLabels: []
+    outerLabels: [],
   };
 
   /**
    * Deep equality comparison
    */
-  shouldComponentUpdate = nextProps => !isEqual(nextProps, this.props);
+  shouldComponentUpdate = (nextProps) => !isEqual(nextProps, this.props);
 
   /**
    * find the rotation transformation needed to put a child element in the
@@ -110,7 +108,7 @@ class Circular extends React.Component {
    *
    * @return {Coor}
    */
-  getRotation = index => {
+  getRotation = (index) => {
     const { center } = this.props;
     const { seqLength } = this.state;
     const centralIndex = this.context.circular;
@@ -145,7 +143,7 @@ class Circular extends React.Component {
 
     return {
       x: center.x + xAdjust,
-      y: center.y + yAdjust
+      y: center.y + yAdjust,
     };
   };
 
@@ -177,7 +175,7 @@ class Circular extends React.Component {
 
     return {
       x: center.x + xAdjust,
-      y: center.y + yAdjust
+      y: center.y + yAdjust,
     };
   };
 
@@ -197,7 +195,7 @@ class Circular extends React.Component {
     sweepFWD = false,
     arrowFWD = false,
     arrowREV = false,
-    offset = 0
+    offset = 0,
   }) => {
     const { radius } = this.props;
     const { seqLength, lineHeight } = this.state;
@@ -206,8 +204,8 @@ class Circular extends React.Component {
     let leftTop = this.findCoor(offset, outerRadius);
     let rightBottom = this.findCoor(length + offset, innerRadius);
     let rightTop = this.findCoor(length + offset, outerRadius);
-    let leftArrow = "";
-    let rightArrow = "";
+    let leftArrow = '';
+    let rightArrow = '';
 
     // create arrows by making a midpoint along edge and shifting corners inwards
     if (arrowREV || arrowFWD) {
@@ -237,6 +235,17 @@ class Circular extends React.Component {
     const sFlagF = sweepFWD ? 1 : 0;
     const sFlagR = sweepFWD ? 0 : 1;
 
+    document.head.innerHTML += '<i>generateArc(' + JSON.stringify({
+      innerRadius,
+      outerRadius,
+      length,
+      largeArc, 
+      sweepFWD,
+      arrowFWD,
+      arrowREV,
+      offset,
+    }) + ')</i>'
+
     return `M ${rightBottom.x} ${rightBottom.y}
       A ${innerRadius} ${innerRadius}, 0, ${lArc}, ${sFlagR}, ${leftBottom.x} ${leftBottom.y}
       L ${leftBottom.x} ${leftBottom.y}
@@ -244,7 +253,8 @@ class Circular extends React.Component {
       L ${leftTop.x} ${leftTop.y}
       A ${outerRadius} ${outerRadius}, 0, ${lArc}, ${sFlagF}, ${rightTop.x} ${rightTop.y}
       ${rightArrow}
-      Z`;
+      Z
+      `;
   };
 
   render() {
@@ -263,17 +273,11 @@ class Circular extends React.Component {
       seq,
       compSeq,
       cutSites,
-      search
+      search,
     } = this.props;
 
-    const {
-      seqLength,
-      lineHeight,
-      annotationsInRows,
-      primersInRows,
-      inlinedLabels,
-      outerLabels
-    } = this.state;
+    const { seqLength, lineHeight, annotationsInRows, primersInRows, inlinedLabels, outerLabels } =
+      this.state;
 
     const { getRotation, generateArc, findCoor, rotateCoor } = this;
 
@@ -287,7 +291,7 @@ class Circular extends React.Component {
       getRotation,
       generateArc,
       rotateCoor,
-      inputRef
+      inputRef,
     };
 
     // an inward shift is needed for primers if the annotations are shown
@@ -310,16 +314,11 @@ class Circular extends React.Component {
         onMouseDown={mouseEvent}
         onMouseUp={mouseEvent}
         onMouseMove={mouseEvent}
-        ref={inputRef(plasmidId, { type: "SEQ" })}
+        ref={inputRef(plasmidId, { type: 'SEQ' })}
         {...size}
       >
         <g className="la-vz-circular-root" transform={`translate(0, ${yDiff})`}>
-          <Selection
-            {...general}
-            onUnmount={onUnmount}
-            totalRows={totalRows}
-            seq={seq}
-          />
+          <Selection {...general} onUnmount={onUnmount} totalRows={totalRows} seq={seq} />
           <Annotations
             {...general}
             annotations={annotationsInRows}
