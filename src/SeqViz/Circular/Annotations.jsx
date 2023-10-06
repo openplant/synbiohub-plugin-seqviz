@@ -1,8 +1,11 @@
 import * as React from 'react';
+import { renderToString } from 'react-dom/server';
 
 import CentralIndexContext from '../handlers/centralIndex';
 import { COLOR_BORDER_MAP, darkerColor } from '../../utils/colors';
 import { sbolTooltipStringToObject, tooltipForInnerHTML } from '../../utils/parser';
+
+import SymbolSVG from '../SymbolSVG.jsx';
 
 /**
  * Used to build up all the path elements. Does not include a display
@@ -45,13 +48,16 @@ export default class Annotations extends React.PureComponent {
       let tooltipObject = sbolTooltipStringToObject(text.tooltip);
       let { identifier, name, role, orientation, range } = tooltipForInnerHTML(tooltipObject);
 
+      console.log('SymbolSVG: ', SymbolSVG);
+      let symbolSVGString = renderToString(<SymbolSVG role={role} orientation={orientation} />);
+
       tooltip.innerHTML = `
         <div style="width: 180px; background-color: white; border: solid 2px ${text.color}; border-radius: 2px;">
           <div class="font-name" style="background-color: ${text.color}; padding:6px 5px">${name}</div>
           <div style="background-color: ${text.color}26; padding: 10px 5px;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-              <div style="color: black;">coding sequence</div>
-              <div>${text.name}-${orientation}</div>
+              <div style="color: black;">${role}</div>
+              <div>${symbolSVGString}</div>
             </div>
 
             <div style="color: #a3a3a3">Feature Identifier</div>
