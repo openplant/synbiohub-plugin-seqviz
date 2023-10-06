@@ -13,7 +13,7 @@ module.exports = {
     umdNamedDefine: true,
     globalObject: "this",
   },
-  mode: "production",
+  // mode: "production", // Passed in as command line option
   resolve: {
     extensions: ["", ".js", ".jsx"]
   },
