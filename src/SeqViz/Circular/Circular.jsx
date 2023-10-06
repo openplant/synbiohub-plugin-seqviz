@@ -235,17 +235,6 @@ class Circular extends React.Component {
     const sFlagF = sweepFWD ? 1 : 0;
     const sFlagR = sweepFWD ? 0 : 1;
 
-    document.head.innerHTML += '<i>generateArc(' + JSON.stringify({
-      innerRadius,
-      outerRadius,
-      length,
-      largeArc, 
-      sweepFWD,
-      arrowFWD,
-      arrowREV,
-      offset,
-    }) + ')</i>'
-
     return `M ${rightBottom.x} ${rightBottom.y}
       A ${innerRadius} ${innerRadius}, 0, ${lArc}, ${sFlagR}, ${leftBottom.x} ${leftBottom.y}
       L ${leftBottom.x} ${leftBottom.y}
@@ -345,7 +334,6 @@ class Circular extends React.Component {
             totalRows={totalRows}
             showIndex={showIndex}
           />
-          {/* <Labels {...general} labels={outerLabels} size={size} yDiff={yDiff} /> */}
         </g>
       </svg>
     );

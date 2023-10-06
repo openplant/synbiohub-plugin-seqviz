@@ -1,7 +1,8 @@
-import * as React from "react";
+import * as React from 'react';
 
-import CentralIndexContext from "../handlers/centralIndex";
-import { COLOR_BORDER_MAP, darkerColor } from "../../utils/colors";
+import CentralIndexContext from '../handlers/centralIndex';
+import { COLOR_BORDER_MAP, darkerColor } from '../../utils/colors';
+import { sbolTooltipStringToObject } from '../../utils/parser';
 
 /**
  * Used to build up all the path elements. Does not include a display
@@ -21,12 +22,77 @@ export default class Annotations extends React.PureComponent {
     if (ishovered) {
       for (let i = 0; i < elements.length; i += 1) {
         elements[i].style.fillOpacity = opacity;
-        elements[i].classList.add("hoveredannotation");
+        elements[i].classList.add('hoveredannotation');
       }
     } else {
       for (let i = 0; i < elements.length; i += 1) {
         elements[i].style.fillOpacity = opacity;
-        elements[i].classList.remove("hoveredannotation");
+        elements[i].classList.remove('hoveredannotation');
+      }
+    }
+  };
+
+  tooltipForInnerHTML = ({ Identifier, Name, Orientation, Range, Role }) => {
+    const orientation = Orientation.includes('inline') ? 'inline' : 'reverseComplement';
+    const range = Range.split('..');
+
+    return {
+      identifier: Identifier,
+      name: Name,
+      role: Role,
+      orientation,
+      range,
+    };
+  };
+
+  hoverOtherAnnotationRows = (event, className, opacity, isTooltipShown, text) => {
+    event.stopPropagation();
+    const elements = document.getElementsByClassName(className);
+    if (isTooltipShown) {
+      let view = document.getElementsByClassName('la-vz-seqviz')[0].getBoundingClientRect();
+
+      let left = event.clientX - view.left;
+      let top = event.clientY - view.top;
+      let tooltip = document.getElementById('linear-tooltip');
+
+      let tooltipObject = sbolTooltipStringToObject(text.tooltip);
+      let { identifier, name, role, orientation, range } = this.tooltipForInnerHTML(tooltipObject);
+
+      tooltip.innerHTML = `
+        <div style="width: 180px; background-color: white; border: solid 2px ${text.color}; border-radius: 2px;">
+          <div class="font-name" style="background-color: ${text.color}; padding:6px 5px">${name}</div>
+          <div style="background-color: ${text.color}26; padding: 10px 5px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <div style="color: black;">coding sequence</div>
+              <div>${text.name}-${orientation}</div>
+            </div>
+
+            <div style="color: #a3a3a3">Feature Identifier</div>
+            <div style="color: black; margin-bottom: 4px;">${identifier}</div>
+
+
+            <div style="color: #a3a3a3">Orientation</div>
+            <div style="color: black; margin-bottom: 4px;">${orientation}</div>
+
+            <div style="color: #a3a3a3">Segment</div>
+            <div style="margin-bottom: 4px;">${range[0]}___________${range[1]}</div>
+          </div>
+        </div>
+      `;
+
+      tooltip.style.display = 'block';
+      tooltip.style.left = left + 20 + 'px';
+      tooltip.style.top = top + 'px';
+      for (let i = 0; i < elements.length; i += 1) {
+        elements[i].style.fillOpacity = opacity;
+        elements[i].classList.add('hoveredannotation');
+      }
+    } else {
+      let tooltip = document.getElementById('linear-tooltip');
+      tooltip.style.display = 'block';
+      for (let i = 0; i < elements.length; i += 1) {
+        elements[i].style.fillOpacity = opacity;
+        elements[i].classList.remove('hoveredannotation');
       }
     }
   };
@@ -44,19 +110,19 @@ export default class Annotations extends React.PureComponent {
     // shared style object for inlining
     const annStyle = {
       strokeWidth: 0.5,
-      shapeRendering: "geometricPrecision",
-      cursor: "pointer",
+      shapeRendering: 'geometricPrecision',
+      cursor: 'pointer',
       fillOpacity: 0.7,
-      strokeLinejoin: "round"
+      strokeLinejoin: 'round',
     };
     // this is strictly here to create an invisible path that the
     // annotation name can follow
     const transparentPath = {
-      stroke: "transparent",
-      fill: "transparent"
+      stroke: 'transparent',
+      fill: 'transparent',
     };
     const labelStyle = {
-      cursor: "pointer"
+      cursor: 'pointer',
     };
 
     return (
@@ -70,7 +136,7 @@ export default class Annotations extends React.PureComponent {
               } // increment the annRow radii if on every loop after first
 
               return acc.concat(
-                anns.map(a => (
+                anns.map((a) => (
                   <SingleAnnotation
                     {...this.props}
                     key={`la-vz-${a.id}-annotation-circular-row`}
@@ -82,6 +148,7 @@ export default class Annotations extends React.PureComponent {
                     labelStyle={labelStyle}
                     annStyle={annStyle}
                     hoverAnnotation={this.hoverAnnotation}
+                    hoverOtherAnnotationRows={this.hoverOtherAnnotationRows}
                     calcBorderColor={darkerColor}
                     centralIndex={circular}
                   />
@@ -100,7 +167,7 @@ export default class Annotations extends React.PureComponent {
  *
  * @param {AnnotationProps} props for a single Annotation
  */
-const SingleAnnotation = props => {
+const SingleAnnotation = (props) => {
   const {
     annotation: a,
     seqLength,
@@ -116,18 +183,18 @@ const SingleAnnotation = props => {
     hoverAnnotation,
     annStyle,
     inlinedAnnotations,
-    labelStyle
+    hoverOtherAnnotationRows,
+    labelStyle,
   } = props;
 
   // if it crosses the zero index, correct for actual length
-  let annLength =
-    a.end >= a.start ? a.end - a.start : seqLength - a.start + a.end;
+  let annLength = a.end >= a.start ? a.end - a.start : seqLength - a.start + a.end;
 
   // can't make an arc from a full circle
   if (annLength === 0) {
     annLength = 1;
   } else if (annLength === seqLength) {
-    annLength = seqLength - 0.1
+    annLength = seqLength - 0.1;
   }
   // annLength = annLength === 0 ? seqLength - 0.1 : annLength;
 
@@ -149,7 +216,7 @@ const SingleAnnotation = props => {
     largeArc: annLength > seqLength / 2,
     sweepFWD: true,
     arrowFWD: a.direction === 1,
-    arrowREV: a.direction === -1
+    arrowREV: a.direction === -1,
   });
 
   const namePath = generateArc({
@@ -159,7 +226,7 @@ const SingleAnnotation = props => {
     largeArc: annLength > seqLength / 2,
     sweepFWD: true,
     arrowFWD: false,
-    arrowREV: false
+    arrowREV: false,
   });
 
   const circAnnID = `la-vz-${a.id}-circular`;
@@ -175,14 +242,14 @@ const SingleAnnotation = props => {
           annref: a.annId,
           start: a.start,
           end: a.end,
-          type: "ANNOTATION",
-          direction: a.direction
+          type: 'ANNOTATION',
+          direction: a.direction,
         })}
         fill={a.color}
-        onMouseOver={() => hoverAnnotation(a.annId, 1.0, true)}
-        onMouseOut={() => hoverAnnotation(a.annId, 0.7, false)}
-        onFocus={() => { }}
-        onBlur={() => { }}
+        onMouseEnter={(event) => hoverOtherAnnotationRows(event, a.annId, 1.0, true, a)}
+        onMouseLeave={(event) => hoverOtherAnnotationRows(event, a.annId, 0.7, false, '')}
+        onFocus={() => {}}
+        onBlur={() => {}}
         {...annStyle}
       />
     </g>
