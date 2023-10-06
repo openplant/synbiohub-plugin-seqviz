@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import CentralIndexContext from '../handlers/centralIndex';
 import { COLOR_BORDER_MAP, darkerColor } from '../../utils/colors';
-import { sbolTooltipStringToObject } from '../../utils/parser';
+import { sbolTooltipStringToObject, tooltipForInnerHTML } from '../../utils/parser';
 
 /**
  * Used to build up all the path elements. Does not include a display
@@ -32,19 +32,6 @@ export default class Annotations extends React.PureComponent {
     }
   };
 
-  tooltipForInnerHTML = ({ Identifier, Name, Orientation, Range, Role }) => {
-    const orientation = Orientation.includes('inline') ? 'inline' : 'reverseComplement';
-    const range = Range.split('..');
-
-    return {
-      identifier: Identifier,
-      name: Name,
-      role: Role,
-      orientation,
-      range,
-    };
-  };
-
   hoverOtherAnnotationRows = (event, className, opacity, isTooltipShown, text) => {
     event.stopPropagation();
     const elements = document.getElementsByClassName(className);
@@ -56,7 +43,7 @@ export default class Annotations extends React.PureComponent {
       let tooltip = document.getElementById('linear-tooltip');
 
       let tooltipObject = sbolTooltipStringToObject(text.tooltip);
-      let { identifier, name, role, orientation, range } = this.tooltipForInnerHTML(tooltipObject);
+      let { identifier, name, role, orientation, range } = tooltipForInnerHTML(tooltipObject);
 
       tooltip.innerHTML = `
         <div style="width: 180px; background-color: white; border: solid 2px ${text.color}; border-radius: 2px;">
@@ -89,7 +76,7 @@ export default class Annotations extends React.PureComponent {
       }
     } else {
       let tooltip = document.getElementById('linear-tooltip');
-      tooltip.style.display = 'block';
+      tooltip.style.display = 'none';
       for (let i = 0; i < elements.length; i += 1) {
         elements[i].style.fillOpacity = opacity;
         elements[i].classList.remove('hoveredannotation');
