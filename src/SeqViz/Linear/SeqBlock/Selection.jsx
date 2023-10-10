@@ -71,28 +71,23 @@ export class Edges extends React.PureComponent {
       }
 
       // inlining style in the SVG for speed sake
+      const edgeHeight = 40;
+      const edgeWidth = 8;
       const rect = {
-        y: '-10',
-        style: {
-          fill: 'black',
-          width: start === end ? 1 : 2,
-        },
+        y: selectEdgeHeight / 2 - edgeHeight / 2 - 10,
+        fill: '#676767',
+        width: 8,
         shapeRendering: 'crispEdges',
+        rx: 2,
       };
 
       return (
-        <g className="la-vz-linear-sel-edges">
-          {startEdge !== null && (
-            <rect {...rect} x={start === end ? x - 1 : x - 2} height={selectEdgeHeight} />
-          )}
-          {lastEdge !== null && (
-            <rect
-              {...rect}
-              x={start === end ? secondEdgeX - 1 : secondEdgeX - 2}
-              height={selectEdgeHeight}
-            />
-          )}
-        </g>
+        start !== end && (
+          <g className="la-vz-linear-sel-edges">
+            {startEdge !== null && <rect {...rect} x={x - edgeWidth / 2} height={edgeHeight} />}
+            {lastEdge !== null && <rect {...rect} x={x - edgeWidth / 2} height={edgeHeight} />}
+          </g>
+        )
       );
     });
   }

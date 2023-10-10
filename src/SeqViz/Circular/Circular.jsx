@@ -307,7 +307,6 @@ class Circular extends React.Component {
         {...size}
       >
         <g className="la-vz-circular-root" transform={`translate(0, ${yDiff - radius / 2})`}>
-          <Selection {...general} onUnmount={onUnmount} totalRows={totalRows} seq={seq} />
           <Annotations
             {...general}
             annotations={annotationsInRows}
@@ -315,6 +314,7 @@ class Circular extends React.Component {
             rowsToSkip={0}
             inlinedAnnotations={inlinedLabels}
           />
+          <Selection {...general} onUnmount={onUnmount} totalRows={totalRows} seq={seq} />
           <Find {...general} search={search} />
           <Primers
             {...general}

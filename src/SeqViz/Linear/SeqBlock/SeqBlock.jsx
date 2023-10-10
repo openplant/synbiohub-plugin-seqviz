@@ -263,26 +263,6 @@ export default class SeqBlock extends React.PureComponent {
         cursor="text"
       >
         <g transform="translate(0, 10)">
-          <Selection.Block
-            selection={selection}
-            selectHeight={selectHeight}
-            findXAndWidth={this.findXAndWidth}
-            inputRef={inputRef}
-            onUnmount={onUnmount}
-            firstBase={firstBase}
-            lastBase={lastBase}
-            fullSeq={fullSeq}
-          />
-          <Selection.Edges
-            lastBase={lastBase}
-            findXAndWidth={this.findXAndWidth}
-            firstBase={firstBase}
-            fullSeq={fullSeq}
-            inputRef={inputRef}
-            onUnmount={onUnmount}
-            selection={selection}
-            selectEdgeHeight={selectEdgeHeight}
-          />
           <Find
             {...this.props}
             filteredRows={filteredSearchRows}
@@ -374,6 +354,26 @@ export default class SeqBlock extends React.PureComponent {
             seqBlockRef={this}
             lastBase={lastBase}
             listenerOnly
+          />
+          <Selection.Block
+            selection={selection}
+            selectHeight={selectHeight}
+            findXAndWidth={this.findXAndWidth}
+            inputRef={inputRef}
+            onUnmount={onUnmount}
+            firstBase={firstBase}
+            lastBase={lastBase}
+            fullSeq={fullSeq}
+          />
+          <Selection.Edges
+            lastBase={lastBase}
+            findXAndWidth={this.findXAndWidth}
+            firstBase={firstBase}
+            fullSeq={fullSeq}
+            inputRef={inputRef}
+            onUnmount={onUnmount}
+            selection={selection}
+            selectEdgeHeight={selectEdgeHeight}
           />
         </g>
       </svg>

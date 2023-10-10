@@ -110,7 +110,8 @@
 }
 
 .la-vz-linear-sel-block {
-  fill: #def6ff;
+  fill: transparent;
+  outline: solid #676767 1px;
 }
 
 .la-vz-scroll::-webkit-scrollbar {
