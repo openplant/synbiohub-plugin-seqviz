@@ -48,7 +48,6 @@ export default class Annotations extends React.PureComponent {
       let tooltipObject = sbolTooltipStringToObject(text.tooltip);
       let { identifier, name, role, orientation, range } = tooltipForInnerHTML(tooltipObject);
 
-      console.log('SymbolSVG: ', SymbolSVG);
       let symbolSVGString = renderToString(<SymbolSVG role={role} orientation={orientation} />);
 
       tooltip.innerHTML = `
