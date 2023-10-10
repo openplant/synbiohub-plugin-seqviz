@@ -1,8 +1,7 @@
-import * as React from "react";
+import * as React from 'react';
 
-import debounce from "../../utils/debounce";
-import CentralIndexContext from "./centralIndex";
-
+import debounce from '../../utils/debounce';
+import CentralIndexContext from './centralIndex';
 
 /**
  * an HOC used one level above the Sequence viewer. It handles the routing of all
@@ -15,7 +14,7 @@ import CentralIndexContext from "./centralIndex";
  * @param  {React.Component} WrappedComp
  * @return {React.Component}
  */
-const withEventRouter = WrappedComp =>
+const withEventRouter = (WrappedComp) =>
   class WithEventRouter extends React.PureComponent {
     // eslint-disable-next-line
     static displayName = `EventRouter`;
@@ -27,15 +26,15 @@ const withEventRouter = WrappedComp =>
     clickedTwice = null;
 
     componentDidMount = () => {
-      window.addEventListener("keydown", this.handleKeyPress);
+      window.addEventListener('keydown', this.handleKeyPress);
     };
 
     componentWillUnmount = () => {
-      window.removeEventListener("keydown", this.handleKeyPress);
+      window.removeEventListener('keydown', this.handleKeyPress);
     };
 
     /** set the event router reference on this class */
-    setEventRouter = eventRouter => {
+    setEventRouter = (eventRouter) => {
       this.eventRouter = eventRouter;
     };
 
@@ -45,7 +44,7 @@ const withEventRouter = WrappedComp =>
      *
      * @param  {React.SyntheticEvent} e   keypress
      */
-    handleKeyPress = e => {
+    handleKeyPress = (e) => {
       const keyType = this.keypressMap(e);
       if (!keyType) {
         return; // not recognized key
@@ -60,19 +59,19 @@ const withEventRouter = WrappedComp =>
      * @return {String} 			     the action performed, one of:
      * ["All", "Copy", "Up", "Right", "Down", "Left"]
      */
-    keypressMap = e => {
+    keypressMap = (e) => {
       const { copyEvent } = this.props;
 
       if (copyEvent && copyEvent(e)) {
-        return "Copy";
+        return 'Copy';
       }
 
       const { key, shiftKey } = e;
       switch (key) {
-        case "ArrowLeft":
-        case "ArrowRight":
-        case "ArrowUp":
-        case "ArrowDown":
+        case 'ArrowLeft':
+        case 'ArrowRight':
+        case 'ArrowUp':
+        case 'ArrowDown':
           return shiftKey ? `Shift${key}` : key;
         default:
           return null;
@@ -87,52 +86,50 @@ const withEventRouter = WrappedComp =>
      *
      * @param {String} i  		  one of the commands listed above
      */
-    handleSeqInteraction = async type => {
+    handleSeqInteraction = async (type) => {
       const { seq, Linear } = this.props;
       const seqLength = seq.length;
-      const {
-        bpsPerBlock = Math.max(Math.floor(seqLength / 20), 1)
-      } = this.props;
+      const { bpsPerBlock = Math.max(Math.floor(seqLength / 20), 1) } = this.props;
 
       switch (type) {
-        case "SelectAll": {
+        case 'SelectAll': {
           this.selectAllHotkey();
           break;
         }
-        case "Copy": {
+        case 'Copy': {
           this.handleCopy();
           break;
         }
-        case "ArrowUp":
-        case "ArrowRight":
-        case "ArrowDown":
-        case "ArrowLeft":
-        case "ShiftArrowUp":
-        case "ShiftArrowRight":
-        case "ShiftArrowDown":
-        case "ShiftArrowLeft": {
+        case 'ArrowUp':
+        case 'ArrowRight':
+        case 'ArrowDown':
+        case 'ArrowLeft':
+        case 'ShiftArrowUp':
+        case 'ShiftArrowRight':
+        case 'ShiftArrowDown':
+        case 'ShiftArrowLeft': {
           const { selection, setSelection } = this.props;
           const { start, end } = selection[0];
           if (Linear) {
             let { clockwise } = selection[0];
             let newPos = end;
-            if (type === "ArrowUp" || type === "ShiftArrowUp") {
+            if (type === 'ArrowUp' || type === 'ShiftArrowUp') {
               // if there are multiple blocks or just one. If one, just inc by one
               if (seqLength / bpsPerBlock > 1) {
                 newPos -= bpsPerBlock;
               } else {
                 newPos -= 1;
               }
-            } else if (type === "ArrowRight" || type === "ShiftArrowRight") {
+            } else if (type === 'ArrowRight' || type === 'ShiftArrowRight') {
               newPos += 1;
-            } else if (type === "ArrowDown" || type === "ShiftArrowDown") {
+            } else if (type === 'ArrowDown' || type === 'ShiftArrowDown') {
               // if there are multiple blocks or just one. If one, just inc by one
               if (seqLength / bpsPerBlock > 1) {
                 newPos += bpsPerBlock;
               } else {
                 newPos += 1;
               }
-            } else if (type === "ArrowLeft" || type === "ShiftArrowLeft") {
+            } else if (type === 'ArrowLeft' || type === 'ShiftArrowLeft') {
               newPos -= 1;
             }
 
@@ -145,25 +142,29 @@ const withEventRouter = WrappedComp =>
             const selLength = Math.abs(start - end);
             clockwise =
               selLength === 0
-                ? type === "ArrowRight" ||
-                type === "ShiftArrowRight" ||
-                type === "ArrowDown" ||
-                type === "ShiftArrowDown"
+                ? type === 'ArrowRight' ||
+                  type === 'ShiftArrowRight' ||
+                  type === 'ArrowDown' ||
+                  type === 'ShiftArrowDown'
                 : clockwise;
-            if (newPos !== start && !type.startsWith("Shift")) {
-              setSelection([{
-                start: newPos,
-                end: newPos,
-                clockwise: true,
-                ref: ""
-              }]);
-            } else if (type.startsWith("Shift")) {
-              setSelection([{
-                start: start,
-                end: newPos,
-                clockwise: clockwise,
-                ref: ""
-              }]);
+            if (newPos !== start && !type.startsWith('Shift')) {
+              setSelection([
+                {
+                  start: newPos,
+                  end: newPos,
+                  clockwise: true,
+                  ref: '',
+                },
+              ]);
+            } else if (type.startsWith('Shift')) {
+              setSelection([
+                {
+                  start: start,
+                  end: newPos,
+                  clockwise: clockwise,
+                  ref: '',
+                },
+              ]);
             }
             break;
           }
@@ -179,27 +180,24 @@ const withEventRouter = WrappedComp =>
      * Copy the current sequence selection to the user's clipboard
      */
     handleCopy = () => {
-      const {
-        seq,
-        selection
-      } = this.props;
+      const { seq, selection } = this.props;
 
       const formerFocus = document.activeElement;
-      const tempNode = document.createElement("textarea");
+      const tempNode = document.createElement('textarea');
       tempNode.innerText = '';
       selection.forEach((selec) => {
-        if (selec.ref === "ALL") {
+        if (selec.ref === 'ALL') {
           tempNode.innerText = seq;
         } else {
-          tempNode.innerText += seq.substring(selec.start, selec.end) + " \n";
+          tempNode.innerText += seq.substring(selec.start, selec.end) + ' \n';
         }
-      })
+      });
       if (document.body) {
         document.body.appendChild(tempNode);
       }
-      tempNode.style.whiteSpace = "pre-wrap";
+      tempNode.style.whiteSpace = 'pre-wrap';
       tempNode.select();
-      document.execCommand("copy");
+      document.execCommand('copy');
       tempNode.remove();
       if (formerFocus) {
         formerFocus.focus();
@@ -213,16 +211,18 @@ const withEventRouter = WrappedComp =>
       const {
         setSelection,
         selection,
-        selection: [{ start }]
+        selection: [{ start }],
       } = this.props;
 
-      const newSelection = [{
-        ...selection[0],
-        start: start,
-        end: start,
-        clockwise: true,
-        ref: "ALL" // ref to all means select the whole thing
-      }];
+      const newSelection = [
+        {
+          ...selection[0],
+          start: start,
+          end: start,
+          clockwise: true,
+          ref: 'ALL', // ref to all means select the whole thing
+        },
+      ];
 
       setSelection(newSelection);
     };
@@ -234,13 +234,13 @@ const withEventRouter = WrappedComp =>
     handleDoubleClick = (target) => {
       let uri = target.getAttribute('uri');
       if (target.tagName === 'path' && !uri) {
-        uri = target.closest("g[uri]").getAttribute('uri');
+        uri = target.closest('g[uri]').getAttribute('uri');
         // uri = target.parentNode.getAttribute('uri');
       }
       if (uri) {
         window.location.assign(uri);
       }
-    }
+    };
 
     resetClicked = debounce(() => {
       this.clickedOnce = null;
@@ -258,18 +258,15 @@ const withEventRouter = WrappedComp =>
      *
      * @param  {React.SyntheticEvent} e   the mouse event
      */
-    handleMouseEvent = e => {
+    handleMouseEvent = (e) => {
       const { mouseEvent } = this.props;
 
-      if (e.type === "mouseup") {
+      if (e.type === 'mouseup') {
         this.resetClicked(this.clickedOnce, e.target, this.clickedTwice);
         if (this.clickedOnce === e.target && this.clickedTwice === e.target) {
           this.handleTripleClick();
           this.resetClicked();
-        } else if (
-          this.clickedOnce === e.target &&
-          this.clickedTwice === null
-        ) {
+        } else if (this.clickedOnce === e.target && this.clickedTwice === null) {
           this.handleDoubleClick(e.target);
           this.clickedOnce = e.target;
           this.clickedTwice = e.target;
@@ -280,7 +277,7 @@ const withEventRouter = WrappedComp =>
         }
       }
       const { type, button, ctrlKey } = e;
-      const ctxMenuClick = type === "mousedown" && button === 0 && ctrlKey;
+      const ctxMenuClick = type === 'mousedown' && button === 0 && ctrlKey;
 
       if (e.button === 0 && !ctxMenuClick) {
         // it's a mouse drag event or an element was clicked
@@ -292,7 +289,7 @@ const withEventRouter = WrappedComp =>
      * handle a scroll event and, if it's a CIRCULAR viewer, update the
      * current central index
      */
-    handleScrollEvent = e => {
+    handleScrollEvent = (e) => {
       const { Circular, seq } = this.props;
 
       if (Circular) {
@@ -309,7 +306,7 @@ const withEventRouter = WrappedComp =>
         let newCentralIndex = this.context.circular + delta;
         newCentralIndex = (newCentralIndex + seq.length) % seq.length;
 
-        this.context.setCentralIndex("circular", newCentralIndex);
+        this.context.setCentralIndex('circular', newCentralIndex);
       }
     };
 
@@ -317,18 +314,12 @@ const withEventRouter = WrappedComp =>
     eventRouter;
 
     render() {
-      const {
-        mouseEvent,
-        selection,
-        setSelection,
-        centralIndex,
-        setCentralIndex,
-        ...rest
-      } = this.props;
+      const { mouseEvent, selection, setSelection, centralIndex, setCentralIndex, ...rest } =
+        this.props;
       const { Circular, Linear, name } = this.props;
 
-      const type = Circular ? "circular" : (Linear ? "linear" : "visbol");
-      const id = `la-vz-${type}-${name.replace(/\s/g, "")}-event-router`;
+      const type = Circular ? 'circular' : Linear ? 'linear' : 'visbol';
+      const id = `la-vz-${type}-${name.replace(/\s/g, '')}-event-router`;
 
       return (
         <div
@@ -337,7 +328,7 @@ const withEventRouter = WrappedComp =>
           onKeyDown={this.handleKeyPress}
           onMouseMove={mouseEvent}
           role="presentation"
-          ref={ref => {
+          ref={(ref) => {
             this.eventRouter = ref;
           }}
         >
@@ -347,4 +338,4 @@ const withEventRouter = WrappedComp =>
     }
   };
 
-export default WrappedComp => withEventRouter(WrappedComp);
+export default (WrappedComp) => withEventRouter(WrappedComp);

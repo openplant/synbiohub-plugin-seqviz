@@ -1,8 +1,8 @@
-import enzymes from "./enzymes";
-import isEqual from "./isEqual";
-import { dnaComplement } from "./parser";
-import randomid from "./randomid";
-import { translateWildNucleotides } from "./sequence";
+import enzymes from './enzymes';
+import isEqual from './isEqual';
+import { dnaComplement } from './parser';
+import randomid from './randomid';
+import { translateWildNucleotides } from './sequence';
 
 /**
  * cutSitesInRows
@@ -20,13 +20,13 @@ import { translateWildNucleotides } from "./sequence";
  */
 export const cutSitesInRows = (seq, enzymeList) => {
   const seqToCut = (seq + seq).toUpperCase();
-  const filteredEnzymes = enzymeList.filter(e => !!enzymes[e]);
+  const filteredEnzymes = enzymeList.filter((e) => !!enzymes[e]);
 
   // find all the cut sites for the given row
   const cutSites = filteredEnzymes.reduce((acc, e) => {
     const cuts = findCutSites(enzymes[e], seqToCut, seq.length)
-      .filter(c => !(c.fcut === 0 && c.rcut === 0))
-      .map(c => ({
+      .filter((c) => !(c.fcut === 0 && c.rcut === 0))
+      .map((c) => ({
         id: randomid(),
         name: e,
         start: c.start,
@@ -35,7 +35,7 @@ export const cutSitesInRows = (seq, enzymeList) => {
         rcut: c.rcut < seq.length ? c.rcut : c.rcut - seq.length,
         recogStrand: c.recogStrand,
         recogStart: c.recogStart,
-        recogEnd: c.recogEnd % seq.length
+        recogEnd: c.recogEnd % seq.length,
       }));
     return acc.concat(cuts);
   }, []);
@@ -54,12 +54,7 @@ export const cutSitesInRows = (seq, enzymeList) => {
  * @param  {Number}  seqToCutLength [length of the sequence to be cut]
  * @return {[CutSite]} [the list of resulting cut and hang indexes]
  */
-const findCutSites = (
-  enzyme,
-  seqToSearch,
-  seqToCutLength,
-  enzymeName = null
-) => {
+const findCutSites = (enzyme, seqToSearch, seqToCutLength, enzymeName = null) => {
   // get the recognitionSite, fcut, and rcut
   let { fcut, rcut, rseq } = enzyme;
   if (!rseq) {
@@ -69,17 +64,17 @@ const findCutSites = (
   const recogSeq = rseq.toUpperCase();
   let recogStart = 0;
   let recogEnd = recogSeq.length;
-  while (recogSeq[recogStart] === "N") {
+  while (recogSeq[recogStart] === 'N') {
     recogStart += 1;
   }
-  while (recogSeq[recogEnd - 1] === "N") {
+  while (recogSeq[recogEnd - 1] === 'N') {
     recogEnd -= 1;
   }
 
   const recogLength = rseq.length;
-  const nucAmbig = new RegExp(/[^ATGC]/, "gi");
+  const nucAmbig = new RegExp(/[^ATGC]/, 'gi');
   if (nucAmbig.test(rseq)) rseq = translateWildNucleotides(rseq);
-  const regTest = new RegExp(rseq, "gi");
+  const regTest = new RegExp(rseq, 'gi');
 
   // this is in the forward direction, ie, when not checking the complement possibility
   // start search for cut sites
@@ -92,26 +87,21 @@ const findCutSites = (
   while (index > -1 && index < seqToCutLength) {
     // add the cut site index, after correcting for actual cut site index
     cutSiteIndices.push({
-      cutEnzymes: enzymeName
-        ? { start: [enzymeName], end: [enzymeName] }
-        : null, // enzymes that contributed to this cut site
+      cutEnzymes: enzymeName ? { start: [enzymeName], end: [enzymeName] } : null, // enzymes that contributed to this cut site
       fcut: index + fcut,
       rcut: index + rcut,
       start: index,
       end: index + recogLength,
       recogStrand: 1,
       recogStart: index + recogStart,
-      recogEnd: index + recogEnd
+      recogEnd: index + recogEnd,
     });
     startIndex = index + 1;
     index = seqToSearch.indexOf(rseq, startIndex);
   }
 
   // this is in the reverse direction, ie, when checking the complement
-  const recogComp = rseq
-    .split("")
-    .reverse()
-    .join("");
+  const recogComp = rseq.split('').reverse().join('');
 
   let { compSeq: inverComp } = dnaComplement(recogComp);
   if (nucAmbig.test(inverComp)) inverComp = translateWildNucleotides(inverComp);
@@ -126,16 +116,14 @@ const findCutSites = (
   while (index > -1 && index < seqToCutLength) {
     // same above, except correcting for the new reverse complement indexes
     cutSiteIndices.push({
-      cutEnzymes: enzymeName
-        ? { start: [enzymeName], end: [enzymeName] }
-        : null, // enzymes that contributed to this cut site
+      cutEnzymes: enzymeName ? { start: [enzymeName], end: [enzymeName] } : null, // enzymes that contributed to this cut site
       fcut: index + recogLength - fcutComp,
       rcut: index + recogLength - rcutComp,
       start: index,
       end: index + recogLength,
       recogStrand: -1,
       recogStart: index + recogStart,
-      recogEnd: index + recogEnd
+      recogEnd: index + recogEnd,
     });
     startIndex = index + 1;
     index = seqToSearch.indexOf(inverComp, startIndex);
@@ -179,27 +167,23 @@ const digestPart = (enzymeName, part, circularCheck) => {
     // ugly but needed defensive programming to make sure all annotations that
     // wrap around the 0 index are accounted for
     annotations = annotations
-      .map(a => ({
+      .map((a) => ({
         ...a,
-        end: a.end < a.start ? a.end + seqToCutLength : a.end
+        end: a.end < a.start ? a.end + seqToCutLength : a.end,
       }))
       .reduce(
         (acc, a) =>
           acc.concat(a, {
             ...a,
             start: a.start + seqToCutLength,
-            end: a.end + seqToCutLength
+            end: a.end + seqToCutLength,
           }),
         []
       );
   }
 
   // find the actual sequence cut sites
-  const cutSiteIndices = findCutSites(
-    enzymes[enzymeName],
-    seqToSearch,
-    seqToCutLength
-  );
+  const cutSiteIndices = findCutSites(enzymes[enzymeName], seqToSearch, seqToCutLength);
 
   // no cut sites were found with the given sequence
   if (cutSiteIndices.length < 1) {
@@ -224,45 +208,45 @@ const digestPart = (enzymeName, part, circularCheck) => {
     // versus the start index of the complement strand
     const startDiff = Math.abs(cutSequenceStart - cutComplementStart);
     if (cutSequenceStart < cutComplementStart) {
-      cutCompSeq = cutCompSeq.padStart(cutCompSeq.length + startDiff, "*");
+      cutCompSeq = cutCompSeq.padStart(cutCompSeq.length + startDiff, '*');
     } else if (cutSequenceStart > cutComplementStart) {
-      cutSeq = cutSeq.padStart(cutSeq.length + startDiff, "*");
+      cutSeq = cutSeq.padStart(cutSeq.length + startDiff, '*');
     }
 
     // and now for differences in last indices at the end of the sequences
     const endDiff = Math.abs(cutSequenceEnd - cutComplementEnd);
     if (cutSequenceEnd > cutComplementEnd) {
-      cutCompSeq = cutCompSeq.padEnd(cutCompSeq.length + endDiff, "*");
+      cutCompSeq = cutCompSeq.padEnd(cutCompSeq.length + endDiff, '*');
     } else if (cutSequenceEnd < cutComplementEnd) {
-      cutSeq = cutSeq.padEnd(cutSeq.length + endDiff, "*");
+      cutSeq = cutSeq.padEnd(cutSeq.length + endDiff, '*');
     }
 
     // adjust the locations of all annotations to match their new locations
     const newSeqLength = cutSequenceEnd - cutSequenceStart;
     const adjustedAnnotations = annotations
-      .map(a => ({
+      .map((a) => ({
         ...a,
         start: a.start - cutSequenceStart,
-        end: a.end - cutSequenceStart
+        end: a.end - cutSequenceStart,
       }))
       .filter(
-        a =>
+        (a) =>
           (a.start >= 0 && a.start < newSeqLength) ||
           (a.end > 0 && a.end <= newSeqLength) ||
           (a.start < 0 && a.end > newSeqLength)
       )
-      .map(a => ({
+      .map((a) => ({
         ...a,
         start: Math.max(a.start, 0),
-        end: Math.min(a.end, newSeqLength + endDiff)
+        end: Math.min(a.end, newSeqLength + endDiff),
       }));
 
     // push the newly fragmented sequences to the list
-    if (!(cutSeq.startsWith("*") && cutCompSeq.startsWith("*"))) {
+    if (!(cutSeq.startsWith('*') && cutCompSeq.startsWith('*'))) {
       fragmentedSequences.push({
         seq: cutSeq,
         compSeq: cutCompSeq,
-        annotations: adjustedAnnotations
+        annotations: adjustedAnnotations,
       });
     }
   };
@@ -320,11 +304,11 @@ const digestPart = (enzymeName, part, circularCheck) => {
  * involving data manipulation is kept client side
  * @param {[Annotation]} anns   the annotations to be casted
  */
-const annPosToInts = anns =>
-  anns.map(a => ({
+const annPosToInts = (anns) =>
+  anns.map((a) => ({
     ...a,
     start: +a.start,
-    end: +a.end
+    end: +a.end,
   }));
 
 /**
@@ -340,7 +324,7 @@ const annPosToInts = anns =>
 export const digest = (enzymeNames, part) => {
   const { circular = true } = part;
   // if no enzymes are passed or one of the enzymes is unknown
-  const filteredEnzymes = enzymeNames.filter(e => !!enzymes[e]);
+  const filteredEnzymes = enzymeNames.filter((e) => !!enzymes[e]);
   if (!filteredEnzymes.length) {
     return [part];
   }
@@ -348,7 +332,7 @@ export const digest = (enzymeNames, part) => {
   // cleaning part (mongo int cast problem)
   const inputPart = {
     ...part,
-    annotations: annPosToInts(part.annotations || [])
+    annotations: annPosToInts(part.annotations || []),
   };
 
   // loop through every enzyme and recut the sequence with that enzyme
@@ -372,6 +356,6 @@ export const digest = (enzymeNames, part) => {
     _id: randomid(),
     name: `${part.name}_${i}`,
     date: new Date(),
-    source: [part._id]
+    source: [part._id],
   }));
 };

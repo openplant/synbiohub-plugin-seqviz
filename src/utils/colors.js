@@ -7,40 +7,40 @@
  * https://material.io/color/#!/?view.left=0&view.right=0&primary.color=FFCC80
  */
 export const COLORS = [
-  "#9DEAED", // cyan
-  "#8FDE8C", // green
-  "#CFF283", // light green
-  "#8CDEBD", // teal
-  "#F0A3CE", // pink
-  "#F7C672", // orange
-  "#F07F7F", // red
-  "#FAA887", // red-orange
-  "#F099F7", // magenta
-  "#C59CFF", // purple
-  "#6B81FF", // blue
-  "#85A6FF" // light blue
+  '#9DEAED', // cyan
+  '#8FDE8C', // green
+  '#CFF283', // light green
+  '#8CDEBD', // teal
+  '#F0A3CE', // pink
+  '#F7C672', // orange
+  '#F07F7F', // red
+  '#FAA887', // red-orange
+  '#F099F7', // magenta
+  '#C59CFF', // purple
+  '#6B81FF', // blue
+  '#85A6FF', // light blue
 ];
 
 export const COLOR_BORDER_MAP = {
-  "#9DEAED": "#5EB5B8", // cyan
-  "#8FDE8C": "#5CA35A", // green
-  "#CFF283": "#8DB041", // light green
-  "#8CDEBD": "#4CA17F", // teal
-  "#F0A3CE": "#BD6295", // pink
-  "#F7C672": "#BD872B", // orange
-  "#F07F7F": "#AD4040", // red
-  "#FAA887": "#B36446", // red-orange
-  "#F099F7": "#AB63B0", // magenta
-  "#C59CFF": "#8A60C4", // purple
-  "#6B81FF": "#2E3B85", // blue
-  "#85A6FF": "#4C66AD" // light blue
+  '#9DEAED': '#5EB5B8', // cyan
+  '#8FDE8C': '#5CA35A', // green
+  '#CFF283': '#8DB041', // light green
+  '#8CDEBD': '#4CA17F', // teal
+  '#F0A3CE': '#BD6295', // pink
+  '#F7C672': '#BD872B', // orange
+  '#F07F7F': '#AD4040', // red
+  '#FAA887': '#B36446', // red-orange
+  '#F099F7': '#AB63B0', // magenta
+  '#C59CFF': '#8A60C4', // purple
+  '#6B81FF': '#2E3B85', // blue
+  '#85A6FF': '#4C66AD', // light blue
 };
 
 export const INSERT_COLORS = [
-  "#6bdbdc", // insert 1
-  "#a066c9", // insert 2
-  "#bbd44c", // insert 3
-  "#f3995b" // insert 4
+  '#6bdbdc', // insert 1
+  '#a066c9', // insert 2
+  '#bbd44c', // insert 3
+  '#f3995b', // insert 4
 ];
 
 // color generator function
@@ -51,17 +51,16 @@ export const chooseRandomColor = (colors = []) => {
 };
 
 /** get an "indexed" color from the colors array */
-export const colorByIndex = i => COLORS[i % COLORS.length];
+export const colorByIndex = (i) => COLORS[i % COLORS.length];
 
 /** get an "indexed" color from the colors array */
-export const borderColorByIndex = i =>
-  COLOR_BORDER_MAP[COLORS[i % COLORS.length]];
+export const borderColorByIndex = (i) => COLOR_BORDER_MAP[COLORS[i % COLORS.length]];
 
 /** cache for input color to those 50% darker */
 const darkerColorCache = {};
 
 /** darken a HEX color by 50% */
-export const darkerColor = c => {
+export const darkerColor = (c) => {
   if (darkerColorCache[c]) {
     return darkerColorCache[c];
   }
@@ -83,44 +82,36 @@ const pSBC = (p, c0, c1, l) => {
     h,
     i = parseInt,
     m = Math.round,
-    a = typeof c1 == "string";
+    a = typeof c1 == 'string';
 
   if (
-    typeof p !== "number" ||
+    typeof p !== 'number' ||
     p < -1 ||
     p > 1 ||
-    typeof c0 !== "string" ||
-    (c0[0] !== "r" && c0[0] !== "#") ||
+    typeof c0 !== 'string' ||
+    (c0[0] !== 'r' && c0[0] !== '#') ||
     (c1 && !a)
   ) {
     return null;
   }
 
-  const pSBCr = d => {
+  const pSBCr = (d) => {
     let n = d.length;
     let x = {};
     if (n > 9) {
-      [r, g, b, a] = d = d.split(",");
+      [r, g, b, a] = d = d.split(',');
       n = d.length;
 
       if (n < 3 || n > 4) return null;
 
-      x.r = i(r[3] === "a" ? r.slice(5) : r.slice(4));
+      x.r = i(r[3] === 'a' ? r.slice(5) : r.slice(4));
       x.g = i(g);
       x.b = i(b);
       x.a = a ? parseFloat(a) : -1;
     } else {
       if (n === 8 || n === 6 || n < 4) return null;
       if (n < 6) {
-        d =
-          "#" +
-          d[1] +
-          d[1] +
-          d[2] +
-          d[2] +
-          d[3] +
-          d[3] +
-          (n > 4 ? d[4] + d[4] : "");
+        d = '#' + d[1] + d[1] + d[2] + d[2] + d[3] + d[3] + (n > 4 ? d[4] + d[4] : '');
       }
       d = i(d.slice(1), 16);
 
@@ -141,11 +132,11 @@ const pSBC = (p, c0, c1, l) => {
   };
 
   h = c0.length > 9;
-  h = a ? (c1.length > 9 ? true : c1 === "c" ? !h : false) : h;
+  h = a ? (c1.length > 9 ? true : c1 === 'c' ? !h : false) : h;
   f = pSBCr(c0);
   P = p < 0;
   t =
-    c1 && c1 !== "c"
+    c1 && c1 !== 'c'
       ? pSBCr(c1)
       : P
       ? { r: 0, g: 0, b: 0, a: -1 }
@@ -171,19 +162,11 @@ const pSBC = (p, c0, c1, l) => {
 
   if (h) {
     return (
-      "rgb" +
-      (f ? "a(" : "(") +
-      r +
-      "," +
-      g +
-      "," +
-      b +
-      (f ? "," + m(a * 1000) / 1000 : "") +
-      ")"
+      'rgb' + (f ? 'a(' : '(') + r + ',' + g + ',' + b + (f ? ',' + m(a * 1000) / 1000 : '') + ')'
     );
   } else {
     return (
-      "#" +
+      '#' +
       (4294967296 + r * 16777216 + g * 65536 + b * 256 + (f ? m(a * 255) : 0))
         .toString(16)
         .slice(1, f ? undefined : -2)

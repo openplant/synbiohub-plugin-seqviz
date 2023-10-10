@@ -1,7 +1,7 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { borderColorByIndex, colorByIndex } from "../../../utils/colors";
-import randomid from "../../../utils/randomid";
+import { borderColorByIndex, colorByIndex } from '../../../utils/colors';
+import randomid from '../../../utils/randomid';
 
 export default class TranslationRows extends React.PureComponent {
   render() {
@@ -17,7 +17,7 @@ export default class TranslationRows extends React.PureComponent {
       bpsPerBlock,
       charWidth,
       findXAndWidth,
-      elementHeight
+      elementHeight,
     } = this.props;
 
     return (
@@ -59,30 +59,30 @@ export default class TranslationRows extends React.PureComponent {
  */
 class TranslationRow extends React.Component {
   static textProps = {
-    dominantBaseline: "middle",
-    cursor: "pointer",
-    textAnchor: "middle",
+    dominantBaseline: 'middle',
+    cursor: 'pointer',
+    textAnchor: 'middle',
     style: {
-      color: "black",
+      color: 'black',
       fontSize: 13,
-      fontWeight: 400
-    }
+      fontWeight: 400,
+    },
   };
 
   static aaProps = {
-    shapeRendering: "geometricPrecision",
+    shapeRendering: 'geometricPrecision',
     style: {
-      cursor: "pointer",
+      cursor: 'pointer',
       strokeWidth: 0.8,
-      opacity: 0.7
-    }
+      opacity: 0.7,
+    },
   };
 
   AAs = [];
 
   componentWillUnmount = () => {
     const { onUnmount } = this.props;
-    this.AAs.forEach(a => {
+    this.AAs.forEach((a) => {
       onUnmount(a);
     });
   }; // clear all AA references
@@ -118,19 +118,19 @@ class TranslationRow extends React.Component {
       height: h,
       y,
       charWidth,
-      bpsPerBlock
+      bpsPerBlock,
     } = this.props;
 
     const { id, start, end, AAseq, direction } = translation;
 
     // build up a reference to this whole translation for
     // selection handler (used only for context clicking right now)
-    const type = "TRANSLATION";
+    const type = 'TRANSLATION';
     const ref = { start, end, type, element };
 
     // substring and split only the amino acids that are relevant to this
     // particular sequence block
-    const AAs = AAseq.split("");
+    const AAs = AAseq.split('');
     return (
       <g transform={`translate(0, ${y})`} ref={inputRef(id, ref)} id={id}>
         {AAs.map((a, i) => {
@@ -184,12 +184,7 @@ class TranslationRow extends React.Component {
           const path = this.genPath(bpCount, direction === 1 ? 1 : -1);
 
           return (
-            <g
-              key={aaId}
-              id={aaId}
-              transform={`translate(${x}, 0)`}
-              ref={inputRef(aaId, ref)}
-            >
+            <g key={aaId} id={aaId} transform={`translate(${x}, 0)`} ref={inputRef(aaId, ref)}>
               <path
                 id={aaId}
                 d={path}

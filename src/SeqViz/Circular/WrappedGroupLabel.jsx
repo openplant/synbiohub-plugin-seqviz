@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { CHAR_WIDTH } from "./Circular.jsx";
+import { CHAR_WIDTH } from './Circular.jsx';
 
 /**
  * a component that groups several other labels together so they're all viewable at once
@@ -18,16 +18,16 @@ export default class WrappedGroupLabel extends React.Component {
       group,
       setHoveredGroup,
       lineHeight,
-      size: { height, width }
+      size: { height, width },
     } = this.props;
 
     // utility function for calculating the width of the last row before this one
     // the +1 after name.length is for a comma
-    const calcRowWidth = row =>
+    const calcRowWidth = (row) =>
       row.reduce((acc, label) => acc + (label.name.length + 1) * CHAR_WIDTH, 0);
 
     // group the labels into rows with a preference with widths less than 200px
-    const lastRow = acc => acc[acc.length - 1];
+    const lastRow = (acc) => acc[acc.length - 1];
     const labelRows = group.labels.reduce((acc, l) => {
       const nameWidth = l.name.length * CHAR_WIDTH;
       if (nameWidth > width) {
@@ -36,10 +36,10 @@ export default class WrappedGroupLabel extends React.Component {
         // split the name into separate rows so it's at max 75% of the
         // seq viewer's width, but each still referencing the original label
         const maxCharPerRow = Math.floor((width * 0.75) / CHAR_WIDTH);
-        const splitRegex = new RegExp(`.{1,${maxCharPerRow}}`, "g");
+        const splitRegex = new RegExp(`.{1,${maxCharPerRow}}`, 'g');
         const splitLabelNameRows = l.name.match(splitRegex);
         if (splitLabelNameRows.length) {
-          splitLabelNameRows.forEach(splitLabel => {
+          splitLabelNameRows.forEach((splitLabel) => {
             acc.push([{ ...l, name: splitLabel.trim() }]);
           });
           return acc;
@@ -62,16 +62,11 @@ export default class WrappedGroupLabel extends React.Component {
     const groupHeight = labelRows.length * lineHeight;
     const groupWidth = labelRows.reduce(
       (max, row, i) =>
-        Math.max(
-          max,
-          calcRowWidth(row) - (i === labelRows.length - 1 ? CHAR_WIDTH : 0)
-        ), // no comma on last row, correct
+        Math.max(max, calcRowWidth(row) - (i === labelRows.length - 1 ? CHAR_WIDTH : 0)), // no comma on last row, correct
       0
     );
     // add one CHAR_WIDTH padding to all sides of label box
-    const [rectHeight, rectWidth] = [groupHeight, groupWidth].map(
-      x => x + 2 * CHAR_WIDTH
-    );
+    const [rectHeight, rectWidth] = [groupHeight, groupWidth].map((x) => x + 2 * CHAR_WIDTH);
 
     // generate the line between the name and plasmid surface
     const forkCoor = group.forkCoor || group.textCoor;
@@ -84,10 +79,7 @@ export default class WrappedGroupLabel extends React.Component {
     // the plasmid, it should be upper right
     let { x, y } = group.textCoor;
     // the +3) is for ",+#"
-    x =
-      group.textAnchor === "end"
-        ? x - (group.labels[0].name.length + 3) * CHAR_WIDTH
-        : x;
+    x = group.textAnchor === 'end' ? x - (group.labels[0].name.length + 3) * CHAR_WIDTH : x;
     y -= CHAR_WIDTH;
     x = Math.max(x, 2 * CHAR_WIDTH); // prevent overflow of left or right side
     x = Math.min(x, width - 2 * CHAR_WIDTH - groupWidth);
@@ -101,15 +93,9 @@ export default class WrappedGroupLabel extends React.Component {
     const key = `${group.labels[0].id}_overlay`;
 
     return (
-      <g key={key} onMouseLeave={() => setHoveredGroup("")}>
+      <g key={key} onMouseLeave={() => setHoveredGroup('')}>
         <path d={linePath} className="la-vz-label-line" />
-        <rect
-          fill="white"
-          stroke="none"
-          height={rectHeight}
-          width={rectWidth}
-          {...rectCoor}
-        />
+        <rect fill="white" stroke="none" height={rectHeight} width={rectWidth} {...rectCoor} />
         <text {...groupCoor}>
           {labelRows.map((r, i) => (
             // turn each group of label rows into a text span
@@ -135,7 +121,7 @@ export default class WrappedGroupLabel extends React.Component {
                   >
                     {l.name}
                   </tspan>
-                  {i2 < r.length - 1 || i !== labelRows.length - 1 ? "," : ""}
+                  {i2 < r.length - 1 || i !== labelRows.length - 1 ? ',' : ''}
                 </React.Fragment>
               ))}
             </tspan>

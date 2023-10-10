@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 /**
  * a basepair indexing row for tracking the location of the current bp of DNA.
@@ -8,14 +8,7 @@ export default class Index extends React.PureComponent {
   // by the number set for tally thresholding and, if it is, 2) add its location to the list
   // of positions for tickInc
   genTicks = () => {
-    const {
-      seq,
-      zoom,
-      firstBase,
-      lineHeight,
-      size,
-      findXAndWidth
-    } = this.props;
+    const { seq, zoom, firstBase, lineHeight, size, findXAndWidth } = this.props;
     const seqLength = seq.length;
 
     // the tallie distance on the x-axis is zoom dependent:
@@ -60,16 +53,16 @@ export default class Index extends React.PureComponent {
 
     const tickStyle = {
       width: 1,
-      height: 8
+      height: 8,
       // shapeRendering: "crispEdges"
     };
 
     const textStyle = {
       fontSize: 11,
-      textRendering: "optimizeLegibility"
+      textRendering: 'optimizeLegibility',
     };
 
-    return tickIndexes.map(p => {
+    return tickIndexes.map((p) => {
       const { x: leftDist } = findXAndWidth(p - 0.5, p - 0.5); // for midpoint
       const tickFromLeft = leftDist;
       let textFromLeft = leftDist; // 0.05 * 11
@@ -98,14 +91,7 @@ export default class Index extends React.PureComponent {
   };
 
   render() {
-    const {
-      lineHeight,
-      transform,
-      showIndex,
-      findXAndWidth,
-      firstBase,
-      lastBase
-    } = this.props;
+    const { lineHeight, transform, showIndex, findXAndWidth, firstBase, lastBase } = this.props;
 
     // 28 accounts for 10px padding on linear scroller and 8px scroller gutter
     const { width } = findXAndWidth(firstBase, lastBase);
@@ -115,16 +101,12 @@ export default class Index extends React.PureComponent {
     const axisStyle = {
       width: width,
       height: 1,
-      shapeRendering: "crispEdges"
+      shapeRendering: 'crispEdges',
     };
 
     return (
       <g className="la-vz-linear-index" transform={transform}>
-        <rect
-          style={axisStyle}
-          fill="#B0B9C2"
-          transform={`translate(0, -${0.3 * lineHeight})`}
-        />
+        <rect style={axisStyle} fill="#B0B9C2" transform={`translate(0, -${0.3 * lineHeight})`} />
         {this.genTicks()}
       </g>
     );

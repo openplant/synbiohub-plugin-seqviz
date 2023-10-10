@@ -1,28 +1,28 @@
-import { colorByIndex, chooseRandomColor } from "./colors";
-import { dnaComplement } from "./parser";
-import randomid from "./randomid";
+import { colorByIndex, chooseRandomColor } from './colors';
+import { dnaComplement } from './parser';
+import randomid from './randomid';
 
 /**
  * Map of nucleotide bases
  */
-export const nucleotides = { a: "a", c: "c", t: "t", g: "g", u: "u" };
+export const nucleotides = { a: 'a', c: 'c', t: 't', g: 'g', u: 'u' };
 
 /**
  * Map of common nucleotide wildcards to their translations
  */
 export const nucleotideWildCards = {
-  y: { c: "c", t: "t" },
-  r: { a: "a", g: "g" },
-  w: { a: "a", t: "t" },
-  s: { g: "g", c: "c" },
-  k: { t: "t", g: "g" },
-  m: { c: "c", a: "a" },
-  d: { a: "a", g: "g", t: "t" },
-  v: { a: "a", c: "c", g: "g" },
-  h: { a: "a", c: "c", t: "t" },
-  b: { c: "c", g: "g", t: "t" },
-  x: { a: "a", c: "c", g: "g", t: "t" },
-  n: { a: "a", c: "c", g: "g", t: "t" }
+  y: { c: 'c', t: 't' },
+  r: { a: 'a', g: 'g' },
+  w: { a: 'a', t: 't' },
+  s: { g: 'g', c: 'c' },
+  k: { t: 't', g: 'g' },
+  m: { c: 'c', a: 'a' },
+  d: { a: 'a', g: 'g', t: 't' },
+  v: { a: 'a', c: 'c', g: 'g' },
+  h: { a: 'a', c: 'c', t: 't' },
+  b: { c: 'c', g: 'g', t: 't' },
+  x: { a: 'a', c: 'c', g: 'g', t: 't' },
+  n: { a: 'a', c: 'c', g: 'g', t: 't' },
 };
 
 /**
@@ -32,70 +32,70 @@ export const nucleotideWildCards = {
  * adapted from: "https://github.com/keithwhor/NtSeq/blob/master/lib/nt.js
  */
 const codon2AA = {
-  AAA: "K",
-  AAT: "N",
-  AAG: "K",
-  AAC: "N",
-  ATA: "I",
-  ATT: "I",
-  ATG: "M",
-  ATC: "I",
-  AGA: "R",
-  AGT: "S",
-  AGG: "R",
-  AGC: "S",
-  ACA: "T",
-  ACT: "T",
-  ACG: "T",
-  ACC: "T",
-  TAA: "*",
-  TAT: "Y",
-  TAG: "*",
-  TAC: "Y",
-  TTA: "L",
-  TTT: "F",
-  TTG: "L",
-  TTC: "F",
-  TGA: "*",
-  TGT: "C",
-  TGG: "W",
-  TGC: "C",
-  TCA: "S",
-  TCT: "S",
-  TCG: "S",
-  TCC: "S",
-  GAA: "E",
-  GAT: "D",
-  GAG: "E",
-  GAC: "D",
-  GTA: "V",
-  GTT: "V",
-  GTG: "V",
-  GTC: "V",
-  GGA: "G",
-  GGT: "G",
-  GGG: "G",
-  GGC: "G",
-  GCA: "A",
-  GCT: "A",
-  GCG: "A",
-  GCC: "A",
-  CAA: "Q",
-  CAT: "H",
-  CAG: "Q",
-  CAC: "H",
-  CTA: "L",
-  CTT: "L",
-  CTG: "L",
-  CTC: "L",
-  CGA: "R",
-  CGT: "R",
-  CGG: "R",
-  CGC: "R",
-  CCA: "P",
-  CCT: "P",
-  CCG: "P",
-  CCC: "P"
+  AAA: 'K',
+  AAT: 'N',
+  AAG: 'K',
+  AAC: 'N',
+  ATA: 'I',
+  ATT: 'I',
+  ATG: 'M',
+  ATC: 'I',
+  AGA: 'R',
+  AGT: 'S',
+  AGG: 'R',
+  AGC: 'S',
+  ACA: 'T',
+  ACT: 'T',
+  ACG: 'T',
+  ACC: 'T',
+  TAA: '*',
+  TAT: 'Y',
+  TAG: '*',
+  TAC: 'Y',
+  TTA: 'L',
+  TTT: 'F',
+  TTG: 'L',
+  TTC: 'F',
+  TGA: '*',
+  TGT: 'C',
+  TGG: 'W',
+  TGC: 'C',
+  TCA: 'S',
+  TCT: 'S',
+  TCG: 'S',
+  TCC: 'S',
+  GAA: 'E',
+  GAT: 'D',
+  GAG: 'E',
+  GAC: 'D',
+  GTA: 'V',
+  GTT: 'V',
+  GTG: 'V',
+  GTC: 'V',
+  GGA: 'G',
+  GGT: 'G',
+  GGG: 'G',
+  GGC: 'G',
+  GCA: 'A',
+  GCT: 'A',
+  GCG: 'A',
+  GCC: 'A',
+  CAA: 'Q',
+  CAT: 'H',
+  CAG: 'Q',
+  CAC: 'H',
+  CTA: 'L',
+  CTT: 'L',
+  CTG: 'L',
+  CTC: 'L',
+  CGA: 'R',
+  CGT: 'R',
+  CGG: 'R',
+  CGC: 'R',
+  CCA: 'P',
+  CCT: 'P',
+  CCG: 'P',
+  CCC: 'P',
 };
 
 /**
@@ -107,16 +107,16 @@ const codon2AA = {
  * @param {String} query
  * @return {String} [/regex/]
  */
-export const translateWildNucleotides = nucleotideSequence =>
+export const translateWildNucleotides = (nucleotideSequence) =>
   nucleotideSequence
     .toLowerCase()
-    .split("")
-    .map(letter =>
+    .split('')
+    .map((letter) =>
       nucleotideWildCards[letter]
-        ? `(${Object.keys(nucleotideWildCards[letter]).join("|")})`
+        ? `(${Object.keys(nucleotideWildCards[letter]).join('|')})`
         : letter
     )
-    .join("");
+    .join('');
 
 /**
  * Find the mismatches
@@ -126,21 +126,21 @@ export const translateWildNucleotides = nucleotideSequence =>
  */
 export const getMismatchIndices = (sequence, match) =>
   sequence
-    .split("")
+    .split('')
     .map((nucleotide, i) => {
-      if (nucleotide !== match.split("")[i]) {
+      if (nucleotide !== match.split('')[i]) {
         return i;
       }
       return -1;
     })
-    .filter(e => e !== -1);
+    .filter((e) => e !== -1);
 
 /**
  * Combine sequential indices into ranges
  * @param {array} indices
  * @return {array} array of ranges stored as arrays with start [0] and end [1]
  */
-export const returnRanges = indices => {
+export const returnRanges = (indices) => {
   let currStart = indices[0];
   let currCount = indices[0] - 1;
   const ranges = [];
@@ -162,7 +162,7 @@ export const returnRanges = indices => {
  * Calculate the GC% of a sequence
  * @param {string} sequence
  */
-export const calcGC = sequence => {
+export const calcGC = (sequence) => {
   if (!sequence) {
     return 0;
   }
@@ -195,12 +195,9 @@ export const calcTm = (sequence, match = sequence) => {
     numberbps > 24 &&
     numberbps < 46 &&
     gcpercent > 40 &&
-    sequence.slice(0, 1) in { G: "G", C: "C" }
+    sequence.slice(0, 1) in { G: 'G', C: 'C' }
   ) {
-    return (
-      (100 / numberbps) *
-      (0.815 * numberbps + 0.41 * numbergcs - numbermismatches - 6.75)
-    );
+    return (100 / numberbps) * (0.815 * numberbps + 0.41 * numbergcs - numbermismatches - 6.75);
   }
 
   // https://www.biophp.org/minitools/melting_temperature/demo.php?formula=basic
@@ -224,11 +221,7 @@ export const calcLength = (start, end, seqLength) => {
  * Reverses a string sequence
  * @param {string} sequence
  */
-export const reverse = sequence =>
-  sequence
-    .split("")
-    .reverse()
-    .join("");
+export const reverse = (sequence) => sequence.split('').reverse().join('');
 
 /**
  * an annotation generator
@@ -242,19 +235,19 @@ export const annotationFactory = (annName, i = -1) => {
   return {
     id: randomid(),
     color: color,
-    name: annName || "Untitled",
-    type: "",
+    name: annName || 'Untitled',
+    type: '',
     start: 0,
     end: 0,
-    direction: "NONE"
+    direction: 'NONE',
   };
 };
 
 export const primerFactory = () => ({
-  overhang: "",
-  name: "",
+  overhang: '',
+  name: '',
   id: randomid(),
-  complementId: "",
+  complementId: '',
   gc: 0,
   tm: 0,
   any: 0,
@@ -262,9 +255,9 @@ export const primerFactory = () => ({
   hairpin: 0,
   stability: 0,
   penalty: 0,
-  vector: "",
-  sequence: "",
-  strict: false
+  vector: '',
+  sequence: '',
+  strict: false,
 });
 
 /**
@@ -272,13 +265,13 @@ export const primerFactory = () => ({
  *
  * given a sequence of DNA, translate it into an AMINO ACID sequence
  */
-export const translateDNA = seqInput => {
+export const translateDNA = (seqInput) => {
   const seq = seqInput.toUpperCase();
   const seqLength = seq.length;
-  let aaSeq = "";
+  let aaSeq = '';
   for (let i = 0, j = 0; i < seqLength; i += 3, j += 1) {
     if (i + 2 < seqLength) {
-      aaSeq += codon2AA[seq[i] + seq[i + 1] + seq[i + 2]] || "?";
+      aaSeq += codon2AA[seq[i] + seq[i + 1] + seq[i + 2]] || '?';
     }
   }
   return aaSeq;
@@ -302,7 +295,7 @@ export const translateDNA = seqInput => {
 export const createLinearTranslations = (translations, dnaSeq) => {
   // elongate the original sequence to account for translations that cross the zero index
   const dnaDoubled = dnaSeq + dnaSeq;
-  return translations.map(t => {
+  return translations.map((t) => {
     const { start, direction } = t;
     let { end } = t;
     if (start > end) end += dnaSeq.length;
@@ -311,28 +304,19 @@ export const createLinearTranslations = (translations, dnaSeq) => {
     const subDNASeq =
       direction === 1
         ? dnaDoubled.substring(start, end)
-        : dnaComplement(dnaDoubled.substring(start, end))
-            .compSeq.split("")
-            .reverse()
-            .join(""); // get reverse complement
+        : dnaComplement(dnaDoubled.substring(start, end)).compSeq.split('').reverse().join(''); // get reverse complement
 
     // translate the DNA sub sequence
     const AAseq =
       direction === 1
         ? translateDNA(subDNASeq)
-        : translateDNA(subDNASeq)
-            .split("")
-            .reverse()
-            .join(""); // translate
+        : translateDNA(subDNASeq).split('').reverse().join(''); // translate
 
     // the starting point for the translation, reading left to right (regardless of translation
     // direction). this is later needed to calculate the number of bps needed in the first
     // and last codons
     const tStart = direction === 1 ? start : end - AAseq.length * 3;
-    let tEnd =
-      direction === 1
-        ? (start + AAseq.length * 3) % dnaSeq.length
-        : end % dnaSeq.length;
+    let tEnd = direction === 1 ? (start + AAseq.length * 3) % dnaSeq.length : end % dnaSeq.length;
 
     // treating one particular edge case where the start at zero doesn't make sense
     if (tEnd === 0 && direction === -1) {
@@ -343,7 +327,7 @@ export const createLinearTranslations = (translations, dnaSeq) => {
       ...t,
       start: tStart,
       end: tEnd,
-      AAseq: AAseq
+      AAseq: AAseq,
     };
   });
 };

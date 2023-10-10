@@ -1,6 +1,6 @@
-import React from "react";
-import { hydrate } from "react-dom";
-import SeqViz from "./SeqViz/SeqViz.jsx";
+import React from 'react';
+import { hydrate } from 'react-dom';
+import SeqViz from './SeqViz/SeqViz.jsx';
 
 // change non iterable obejct to iterable object, then can use spread operator
 function* iterate_object(o) {
@@ -9,9 +9,9 @@ function* iterate_object(o) {
     yield [keys[i], o[keys[i]]];
   }
 }
-var data = {}
+var data = {};
 for (var [key, val] of iterate_object(window.__INITIAL_DATA__)) {
   data[key] = val;
 }
 
-hydrate(<SeqViz {...data} />, document.getElementById("reactele"));
+hydrate(<SeqViz {...data} />, document.getElementById('reactele'));

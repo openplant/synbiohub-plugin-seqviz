@@ -1,7 +1,7 @@
-import * as React from "react";
+import * as React from 'react';
 
-import randomid from "../../../utils/randomid";
-import { reverse } from "../../../utils/sequence";
+import randomid from '../../../utils/randomid';
+import { reverse } from '../../../utils/sequence';
 
 /**
  * a single row of primers. Multiple of these may be in one seqBlock
@@ -9,7 +9,7 @@ import { reverse } from "../../../utils/sequence";
  */
 class PrimerRow extends React.PureComponent {
   // Handles the rendering of a single Primer within a primer row
-  renderPrimer = singlePrimer => {
+  renderPrimer = (singlePrimer) => {
     const {
       inputRef,
       seqBlockRef,
@@ -19,13 +19,12 @@ class PrimerRow extends React.PureComponent {
       fullSeq,
       charWidth: characterWidth,
       fontSize,
-      zoomed
+      zoomed,
     } = this.props;
     const primerUUID = randomid();
     const { direction, start = 0, end = 0, sequence, id } = singlePrimer;
 
-    const primerLength =
-      end < start ? fullSeq.length - start + end : end - start;
+    const primerLength = end < start ? fullSeq.length - start + end : end - start;
 
     let { x: origX, width } = findXAndWidth(start, end);
 
@@ -38,10 +37,10 @@ class PrimerRow extends React.PureComponent {
     let primerOverflowRight = end > lastBase || start === end; // start === end means covers whole plasmid
 
     const primerPart = () => {
-      if (!primerOverflowLeft && primerOverflowRight) return "TOP";
-      if (primerOverflowLeft && !primerOverflowRight) return "BOTTOM";
-      if (primerOverflowLeft && primerOverflowRight) return "MIDDLE";
-      return "WHOLE";
+      if (!primerOverflowLeft && primerOverflowRight) return 'TOP';
+      if (primerOverflowLeft && !primerOverflowRight) return 'BOTTOM';
+      if (primerOverflowLeft && primerOverflowRight) return 'MIDDLE';
+      return 'WHOLE';
     };
 
     const crossZero = start > end;
@@ -74,18 +73,18 @@ class PrimerRow extends React.PureComponent {
     height *= 0.4;
 
     const rectProps = {
-      shapeRendering: "geometricPrecision"
+      shapeRendering: 'geometricPrecision',
     };
 
     const textProps = {
-      dominantBaseline: "middle",
-      cursor: "pointer",
-      lengthAdjust: "spacing",
-      textRendering: "optimizeLegibility",
+      dominantBaseline: 'middle',
+      cursor: 'pointer',
+      lengthAdjust: 'spacing',
+      textRendering: 'optimizeLegibility',
       style: {
-        color: "black",
-        fontWeight: 150
-      }
+        color: 'black',
+        fontWeight: 150,
+      },
     };
 
     const cW = 4; // jagged cutoff width
@@ -100,16 +99,16 @@ class PrimerRow extends React.PureComponent {
 
     // If there are mismatches, add "." into primer name
     if (mismatches && mismatches.length > 0) {
-      mismatches.forEach(mismatch => {
+      mismatches.forEach((mismatch) => {
         const { start: mismatchStart, end: mismatchEnd } = mismatch;
         const mismatchLength = mismatchEnd - mismatchStart;
         name = forward
           ? name.substring(0, mismatch.start) +
-            " ".repeat(mismatchLength) +
+            ' '.repeat(mismatchLength) +
             name.substring(mismatch.end)
           : reverse(
               reverse(name).substring(0, mismatch.start) +
-                " ".repeat(mismatchLength) +
+                ' '.repeat(mismatchLength) +
                 reverse(name).substring(mismatch.end)
             );
       });
@@ -118,7 +117,7 @@ class PrimerRow extends React.PureComponent {
     // create the SVG path, starting at the topLeft and working clockwise
     // there is additional logic here for if the primer overflows
     // to the left or right of this seqBlock, where a "jagged edge" is created
-    const topLeft = "M 0 0";
+    const topLeft = 'M 0 0';
     const topRight = endFWD
       ? `L ${w - 8} 0
       l -10 -10
@@ -156,9 +155,9 @@ class PrimerRow extends React.PureComponent {
         l 0 ${0 - height}
         `; // reverse arrow
     }
-    const mismatchLength = mismatch => mismatch.end - mismatch.start;
+    const mismatchLength = (mismatch) => mismatch.end - mismatch.start;
 
-    const mismatchOverflowLeft = mismatch => {
+    const mismatchOverflowLeft = (mismatch) => {
       if (crossZeroPost) {
         return forward
           ? mismatch.end - (fullSeq.length - start) > firstBase &&
@@ -172,7 +171,7 @@ class PrimerRow extends React.PureComponent {
             start + (primerLength - mismatch.start) > firstBase;
     };
 
-    const mismatchOverflowRight = mismatch => {
+    const mismatchOverflowRight = (mismatch) => {
       if (crossZeroPost) {
         return forward
           ? mismatch.end - (fullSeq.length - start) > lastBase &&
@@ -186,19 +185,19 @@ class PrimerRow extends React.PureComponent {
             start + (primerLength - mismatch.start) > lastBase;
     };
 
-    const mismatchOverflow = mismatch => {
-      if (mismatchOverflowLeft(mismatch)) return "LEFT";
-      if (mismatchOverflowRight(mismatch)) return "RIGHT";
-      return "NONE";
+    const mismatchOverflow = (mismatch) => {
+      if (mismatchOverflowLeft(mismatch)) return 'LEFT';
+      if (mismatchOverflowRight(mismatch)) return 'RIGHT';
+      return 'NONE';
     };
 
-    const charWidth = characters => characters * characterWidth;
+    const charWidth = (characters) => characters * characterWidth;
 
-    const drawMismatch = mismatch => {
+    const drawMismatch = (mismatch) => {
       const mStart = mismatch.start; // relative to primer
       const mEnd = mismatch.end; // relative to primer
-      let mismatchName = ""; // label for mismatch (base pairs)
-      let mismatchPath = ""; // path for box enclosing mismatch
+      let mismatchName = ''; // label for mismatch (base pairs)
+      let mismatchPath = ''; // path for box enclosing mismatch
       // forward primers
       if (forward) {
         let mismatchStart = start + mStart; // relative to sequence
@@ -212,18 +211,12 @@ class PrimerRow extends React.PureComponent {
         const overflowRightAdjust = lastBase - mismatchEnd;
         switch (mismatchOverflow(mismatch)) {
           // mismatch crosses into seqBlock above
-          case "LEFT":
-            mismatchName = sequence.substring(
-              mStart + overflowLeftAdjust,
-              mEnd
-            );
+          case 'LEFT':
+            mismatchName = sequence.substring(mStart + overflowLeftAdjust, mEnd);
             break;
           // mismatch crosses into seqBlock below
-          case "RIGHT":
-            mismatchName = sequence.substring(
-              mStart,
-              mEnd + overflowRightAdjust
-            );
+          case 'RIGHT':
+            mismatchName = sequence.substring(mStart, mEnd + overflowRightAdjust);
             break;
           // mismatch doesn't cross seqBlocks
           default:
@@ -234,7 +227,7 @@ class PrimerRow extends React.PureComponent {
         const overflowNameAdjust = mismatchLength(mismatch) - mNameLength; // length of part of this mismatch in other seqBlock
         switch (mismatchOverflow(mismatch)) {
           // mismatch crosses into seqBlock above
-          case "LEFT":
+          case 'LEFT':
             mismatchPath = `M 0 0
             m ${charWidth(firstBase - mismatchStart - overflowNameAdjust)} 0
             l 0 ${0 - height}
@@ -244,7 +237,7 @@ class PrimerRow extends React.PureComponent {
           // mismatch crosses into seqBlock below or doesn't cross seqBlocks
           default:
             // mismatch is in the top part of a multi-seqBlock primer
-            if (primerPart() === "TOP") {
+            if (primerPart() === 'TOP') {
               mismatchPath = `M 0 0
               m ${charWidth(mStart)} 0
               l 0 ${0 - height}
@@ -271,16 +264,12 @@ class PrimerRow extends React.PureComponent {
         const overflowRightAdjust = lastBase - mismatchStart;
         switch (mismatchOverflow(mismatch)) {
           // mismatch crosses into seqBlock above
-          case "LEFT":
-            mismatchName = reverse(
-              sequence.substring(mEnd - overflowLeftAdjust, mStart)
-            );
+          case 'LEFT':
+            mismatchName = reverse(sequence.substring(mEnd - overflowLeftAdjust, mStart));
             break;
           // mismatch crosses into seqBlock below
-          case "RIGHT":
-            mismatchName = reverse(
-              sequence.substring(mEnd, mStart - overflowRightAdjust)
-            );
+          case 'RIGHT':
+            mismatchName = reverse(sequence.substring(mEnd, mStart - overflowRightAdjust));
             break;
           // mismatch doesn't cross seqBlocks
           default:
@@ -292,10 +281,9 @@ class PrimerRow extends React.PureComponent {
         const overflowNameAdjust = mismatchLength(mismatch) - mNameLength; // length of part of this mismatch in other seqBlock
         switch (mismatchOverflow(mismatch)) {
           // mismatch crosses into seqBlock below
-          case "RIGHT":
+          case 'RIGHT':
             mismatchPath = `M 0 ${height}
-            m ${width -
-              charWidth(mismatchStart - lastBase - overflowNameAdjust)} 0
+            m ${width - charWidth(mismatchStart - lastBase - overflowNameAdjust)} 0
             l 0 ${height}
             l ${0 - charWidth(mNameLength)} 0
             l 0 ${0 - height}`;
@@ -303,7 +291,7 @@ class PrimerRow extends React.PureComponent {
           // mismatch crosses into seqBlock above or doesn't cross seqBlocks
           default:
             // mismatch is in the bottom part of a multi-seqBlock primer
-            if (primerPart() === "BOTTOM") {
+            if (primerPart() === 'BOTTOM') {
               mismatchPath = `M 0 ${height}
               m ${charWidth(name.length - mStart)} 0
               l 0 ${height}
@@ -324,8 +312,8 @@ class PrimerRow extends React.PureComponent {
     // Iterate through mismatches
     // generate a path and add to path array
     // generate a name and add to mismatch array
-    const drawMismatches = mismatchRow =>
-      mismatchRow.map(mismatch => {
+    const drawMismatches = (mismatchRow) =>
+      mismatchRow.map((mismatch) => {
         const mismatchElement = mismatch;
         const { mismatchName, mismatchPath } = drawMismatch(mismatch);
         mismatchPathes.push(mismatchPath);
@@ -334,18 +322,14 @@ class PrimerRow extends React.PureComponent {
       });
 
     // if primer crosses seqBlocks and this is the top row
-    if (primerPart() === "TOP") {
+    if (primerPart() === 'TOP') {
       if (crossZeroPre) {
         name = name.substring(0, lastBase - start);
         if (mismatches && mismatches.length > 0) {
           mismatches = forward
-            ? mismatches.filter(
-                mismatch => mismatch.start - (fullSeq.length - start) < lastBase
-              )
+            ? mismatches.filter((mismatch) => mismatch.start - (fullSeq.length - start) < lastBase)
             : mismatches.filter(
-                mismatch =>
-                  primerLength - mismatch.end - (fullSeq.length - start) <
-                  lastBase
+                (mismatch) => primerLength - mismatch.end - (fullSeq.length - start) < lastBase
               );
           mismatches = drawMismatches(mismatches);
         }
@@ -353,15 +337,13 @@ class PrimerRow extends React.PureComponent {
         name = name.substring(0, lastBase - start);
         if (mismatches && mismatches.length > 0) {
           mismatches = forward
-            ? mismatches.filter(mismatch => start + mismatch.start < lastBase)
-            : mismatches.filter(
-                mismatch => start + (primerLength - mismatch.end) < lastBase
-              );
+            ? mismatches.filter((mismatch) => start + mismatch.start < lastBase)
+            : mismatches.filter((mismatch) => start + (primerLength - mismatch.end) < lastBase);
           mismatches = drawMismatches(mismatches);
         }
       }
       // if primer crosses seqBlocks and this is a middle row
-    } else if (primerPart() === "MIDDLE") {
+    } else if (primerPart() === 'MIDDLE') {
       if (crossZeroPost) {
         name = name.substring(
           fullSeq.length - start + firstBase,
@@ -370,32 +352,25 @@ class PrimerRow extends React.PureComponent {
         if (mismatches && mismatches.length > 0) {
           mismatches = forward
             ? mismatches.filter(
-                mismatch =>
+                (mismatch) =>
                   mismatch.end - (fullSeq.length - start) > firstBase &&
                   mismatch.start - (fullSeq.length - start) < lastBase
               )
             : mismatches.filter(
-                mismatch =>
-                  primerLength - mismatch.start - (fullSeq.length - start) >
-                    firstBase &&
-                  primerLength - mismatch.end - (fullSeq.length - start) <
-                    lastBase
+                (mismatch) =>
+                  primerLength - mismatch.start - (fullSeq.length - start) > firstBase &&
+                  primerLength - mismatch.end - (fullSeq.length - start) < lastBase
               );
         }
       } else {
-        name = name.substring(
-          firstBase - start,
-          firstBase - start + lastBase - firstBase
-        );
+        name = name.substring(firstBase - start, firstBase - start + lastBase - firstBase);
         if (mismatches && mismatches.length > 0) {
           mismatches = forward
             ? mismatches.filter(
-                mismatch =>
-                  start + mismatch.end > firstBase &&
-                  start + mismatch.start < lastBase
+                (mismatch) => start + mismatch.end > firstBase && start + mismatch.start < lastBase
               )
             : mismatches.filter(
-                mismatch =>
+                (mismatch) =>
                   start + (primerLength - mismatch.start) > firstBase &&
                   start + (primerLength - mismatch.end) < lastBase
               );
@@ -404,28 +379,22 @@ class PrimerRow extends React.PureComponent {
       mismatches = drawMismatches(mismatches);
 
       // if primer crosses seqBlocks and is this the bottom row
-    } else if (primerPart() === "BOTTOM") {
+    } else if (primerPart() === 'BOTTOM') {
       if (crossZeroPost) {
         name = name.substring(fullSeq.length - start + firstBase);
         if (mismatches && mismatches.length > 0) {
           mismatches = forward
-            ? mismatches.filter(
-                mismatch => mismatch.end - (fullSeq.length - start) > firstBase
-              )
+            ? mismatches.filter((mismatch) => mismatch.end - (fullSeq.length - start) > firstBase)
             : mismatches.filter(
-                mismatch =>
-                  primerLength - mismatch.start - (fullSeq.length - start) >
-                  firstBase
+                (mismatch) => primerLength - mismatch.start - (fullSeq.length - start) > firstBase
               );
         }
       } else {
         name = name.substring(firstBase - start);
         if (mismatches && mismatches.length > 0) {
           mismatches = forward
-            ? mismatches.filter(mismatch => start + mismatch.end > firstBase)
-            : mismatches.filter(
-                mismatch => start + (primerLength - mismatch.start) > firstBase
-              );
+            ? mismatches.filter((mismatch) => start + mismatch.end > firstBase)
+            : mismatches.filter((mismatch) => start + (primerLength - mismatch.start) > firstBase);
         }
       }
 
@@ -435,12 +404,9 @@ class PrimerRow extends React.PureComponent {
     } else {
       mismatches =
         mismatches && mismatches.length > 0
-          ? mismatches.map(mismatch => {
+          ? mismatches.map((mismatch) => {
               const mismatchElement = mismatch;
-              mismatchElement.name = sequence.substring(
-                mismatch.start,
-                mismatch.end
-              );
+              mismatchElement.name = sequence.substring(mismatch.start, mismatch.end);
               if (forward) {
                 // forward primers
                 mismatchPathes.push(`M 0 0
@@ -450,9 +416,7 @@ class PrimerRow extends React.PureComponent {
               l 0 ${height}`);
               } else if (!forward) {
                 // reverse primers
-                mismatchElement.name = reverse(
-                  sequence.substring(mismatch.end, mismatch.start)
-                );
+                mismatchElement.name = reverse(sequence.substring(mismatch.end, mismatch.start));
                 mismatchPathes.push(`M 0 ${height}
               m ${charWidth(name.length - mismatch.start)} 0
               l 0 ${height}
@@ -464,7 +428,7 @@ class PrimerRow extends React.PureComponent {
           : [];
     }
 
-    const mismatchPath = mismatchPathes.join(" ");
+    const mismatchPath = mismatchPathes.join(' ');
 
     const linePath = `${topLeft} ${topRight} ${bottomRight} ${bottomLeft} ${mismatchPath}`;
 
@@ -475,15 +439,15 @@ class PrimerRow extends React.PureComponent {
           ref: `${id}`,
           start: start,
           end: end,
-          type: "PRIMER",
-          element: seqBlockRef
+          type: 'PRIMER',
+          element: seqBlockRef,
         })}
         className={id}
         style={{
           fillOpacity: 0.1,
-          cursor: "pointer",
-          stroke: "#1b1d21",
-          strokeWidth: 0.5
+          cursor: 'pointer',
+          stroke: '#1b1d21',
+          strokeWidth: 0.5,
         }}
         {...rectProps}
         d={linePath}
@@ -494,18 +458,14 @@ class PrimerRow extends React.PureComponent {
       />
     );
 
-    const getMismatchX = mismatch => {
+    const getMismatchX = (mismatch) => {
       const overflowL = mismatchOverflowLeft(mismatch);
       const overflowR = mismatchOverflowRight(mismatch);
 
       if (forward) {
-        if (primerPart() === "BOTTOM" || primerPart() === "MIDDLE") {
+        if (primerPart() === 'BOTTOM' || primerPart() === 'MIDDLE') {
           if (crossZeroPost && forward) {
-            return overflowL
-              ? 0
-              : charWidth(
-                  mismatch.start - (fullSeq.length - start) - firstBase
-                );
+            return overflowL ? 0 : charWidth(mismatch.start - (fullSeq.length - start) - firstBase);
           }
           return overflowL
             ? charWidth(
@@ -518,7 +478,7 @@ class PrimerRow extends React.PureComponent {
         }
         return charWidth(mismatch.start);
       }
-      if (primerPart() === "TOP" || primerPart() === "MIDDLE") {
+      if (primerPart() === 'TOP' || primerPart() === 'MIDDLE') {
         if (crossZeroPost) {
           if (overflowL) {
             return 0;
@@ -530,50 +490,31 @@ class PrimerRow extends React.PureComponent {
             ? charWidth(mismatch.start - (fullSeq.length - start) - firstBase)
             : width -
                 charWidth(
-                  mismatch.end +
-                    lastBase -
-                    end -
-                    (mismatchLength(mismatch) - mismatch.name.length)
+                  mismatch.end + lastBase - end - (mismatchLength(mismatch) - mismatch.name.length)
                 );
         }
         if (crossZeroPre) {
           return overflowL
             ? width -
                 charWidth(
-                  lastBase -
-                    (start + (primerLength - mismatch.start)) +
-                    mismatch.name.length
+                  lastBase - (start + (primerLength - mismatch.start)) + mismatch.name.length
                 )
             : width -
                 charWidth(
-                  lastBase -
-                    (start + (primerLength - mismatch.start)) +
-                    mismatchLength(mismatch)
+                  lastBase - (start + (primerLength - mismatch.start)) + mismatchLength(mismatch)
                 );
         }
         return overflowR
           ? width - charWidth(mismatch.end + lastBase - end)
           : width -
               charWidth(
-                mismatch.end +
-                  lastBase -
-                  end -
-                  (mismatchLength(mismatch) - mismatch.name.length)
+                mismatch.end + lastBase - end - (mismatchLength(mismatch) - mismatch.name.length)
               );
       }
-      return (
-        width -
-        charWidth(
-          mismatch.end - (mismatchLength(mismatch) - mismatch.name.length)
-        )
-      );
+      return width - charWidth(mismatch.end - (mismatchLength(mismatch) - mismatch.name.length));
     };
     return (
-      <g
-        key={`${id}_${primerUUID}-primer`}
-        id={id}
-        transform={`translate(${x}, 0)`}
-      >
+      <g key={`${id}_${primerUUID}-primer`} id={id} transform={`translate(${x}, 0)`}>
         <text
           key={`${id}_${primerUUID}-primer`}
           fontSize={fontSize}
@@ -588,11 +529,11 @@ class PrimerRow extends React.PureComponent {
           onFocus={() => {}}
           onBlur={() => {}}
         >
-          {zoomed ? `${name}` : ""}
+          {zoomed ? `${name}` : ''}
         </text>
         ,
         {mismatches &&
-          mismatches.map(mismatch => (
+          mismatches.map((mismatch) => (
             <text
               key={`mismatch_text_${id}_${primerUUID}`}
               fontSize={fontSize}
@@ -603,7 +544,7 @@ class PrimerRow extends React.PureComponent {
               textLength={charWidth(mismatch.name.length)}
               id={id}
             >
-              {zoomed ? `${mismatch.name}` : ""}
+              {zoomed ? `${mismatch.name}` : ''}
             </text>
           ))}
         ,{primerPath}
@@ -639,7 +580,7 @@ export default class PrimerRows extends React.PureComponent {
       fullSeq,
       charWidth,
       zoomed,
-      fontSize
+      fontSize,
     } = this.props;
     let { elementHeight } = this.props;
     elementHeight *= 3;

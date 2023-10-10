@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 /**
  * on hover, an enzyme recognition site should have an opacity of 0.5. 0 otherwise
@@ -23,7 +23,7 @@ const hoverCutSite = (className, on = false) => {
  * a component shown above the sequence viewer that shows the name of the
  * enzyme that has a cut-site within the sequence and a line for the resulting cutsite
  */
-const CutSites = props => {
+const CutSites = (props) => {
   const {
     zoom: { linear: zoom },
     cutSiteRows,
@@ -33,40 +33,32 @@ const CutSites = props => {
     firstBase,
     lastBase,
     inputRef,
-    yDiff
+    yDiff,
   } = props;
 
   if (enzymes.length < 1) return null;
 
   const recogContiguous = (start, end, first, last) => {
-    if ((start < first && end < first) || (start > last && end > last))
-      return true;
+    if ((start < first && end < first) || (start > last && end > last)) return true;
     if (end >= start) {
       return end < last && start > first;
     }
     return start < last && end > first;
   };
 
-  const sitesWithX = cutSiteRows.map(c => {
+  const sitesWithX = cutSiteRows.map((c) => {
     const { x: cutX } = findXAndWidth(c.fcut, c.fcut);
     const { x: hangX } = findXAndWidth(c.rcut, c.rcut);
-    let { x: highlightX, width: highlightWidth } = findXAndWidth(
-      c.recogStart,
-      c.recogEnd
-    );
+    let { x: highlightX, width: highlightWidth } = findXAndWidth(c.recogStart, c.recogEnd);
     if (recogContiguous(c.recogStart, c.recogEnd, firstBase, lastBase)) {
       if (c.recogStart > c.recogEnd) {
         ({ x: highlightX, width: highlightWidth } = findXAndWidth(
           c.recogEnd < firstBase ? lastBase : Math.min(lastBase, c.recogEnd),
-          c.recogStart > lastBase
-            ? firstBase
-            : Math.max(firstBase, c.recogStart)
+          c.recogStart > lastBase ? firstBase : Math.max(firstBase, c.recogStart)
         ));
       } else if (c.recogEnd > c.recogStart) {
         ({ x: highlightX, width: highlightWidth } = findXAndWidth(
-          c.recogStart < firstBase
-            ? lastBase
-            : Math.min(lastBase, c.recogStart),
+          c.recogStart < firstBase ? lastBase : Math.min(lastBase, c.recogStart),
           c.recogEnd > lastBase ? firstBase : Math.max(firstBase, c.recogEnd)
         ));
       }
@@ -76,23 +68,23 @@ const CutSites = props => {
       cutX,
       hangX,
       highlightX,
-      highlightWidth
+      highlightWidth,
     };
   });
 
   if (!sitesWithX.length) return null;
 
   const textProps = {
-    dominantBaseline: "inherit",
-    textAnchor: "start",
-    y: yDiff
+    dominantBaseline: 'inherit',
+    textAnchor: 'start',
+    y: yDiff,
   };
 
   const getConnectorXAndWidth = (c, sequenceCutSite, complementCutSite) => {
     if (sequenceCutSite && complementCutSite) {
       return {
         x: Math.min(c.cutX, c.hangX),
-        width: Math.abs(c.hangX - c.cutX)
+        width: Math.abs(c.hangX - c.cutX),
       };
     }
     if (sequenceCutSite) {
@@ -114,7 +106,7 @@ const CutSites = props => {
 
   return (
     <g className="la-vz-cut-sites">
-      {sitesWithX.map(c => {
+      {sitesWithX.map((c) => {
         // prevent double rendering, by placing the indeces only in the seqBlock
         // that they need to be shown. Important for the zero-index edge case
         const sequenceCutSite = c.fcut >= firstBase && c.fcut < lastBase;
@@ -136,9 +128,9 @@ const CutSites = props => {
                 className={`la-vz-cut-site-text ${c.id}-name`}
                 x={c.cutX}
                 style={{
-                  cursor: "pointer",
-                  fill: "rgb(51, 51, 51)",
-                  fillOpacity: 0.8
+                  cursor: 'pointer',
+                  fill: 'rgb(51, 51, 51)',
+                  fillOpacity: 0.8,
                 }}
                 onMouseOver={() => hoverCutSite(c.id, true)}
                 onMouseOut={() => hoverCutSite(c.id, false)}
@@ -156,28 +148,23 @@ const CutSites = props => {
                 y={yDiff + 6}
                 strokeDasharray="4,5"
                 style={{
-                  stroke: "rgb(150,150,150)",
+                  stroke: 'rgb(150,150,150)',
                   strokeWidth: 1,
-                  fill: "rgb(255, 165, 0, 0.3)",
-                  fillOpacity: 0
+                  fill: 'rgb(255, 165, 0, 0.3)',
+                  fillOpacity: 0,
                 }}
                 className={c.id}
                 ref={inputRef(c.id, {
                   id: c.id,
                   start: c.start,
                   end: c.end,
-                  type: "ENZYME",
-                  element: null
+                  type: 'ENZYME',
+                  element: null,
                 })}
               />
             )}
             {sequenceCutSite ? (
-              <rect
-                width="1px"
-                height={lineHeight}
-                x={c.cutX - 0.5}
-                y={lineHeight / 4 + yDiff}
-              />
+              <rect width="1px" height={lineHeight} x={c.cutX - 0.5} y={lineHeight / 4 + yDiff} />
             ) : null}
             {showIndex && zoom > 10 ? (
               <rect
