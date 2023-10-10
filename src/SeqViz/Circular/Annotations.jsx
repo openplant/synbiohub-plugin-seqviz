@@ -55,7 +55,7 @@ export default class Annotations extends React.PureComponent {
         <div style="width: 180px; background-color: white; border: solid 2px ${text.color}; border-radius: 2px;">
           <div class="font-name" style="background-color: ${text.color}; padding:6px 5px">${name}</div>
           <div style="background-color: ${text.color}26; padding: 10px 5px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
               <div style="color: black;">${role}</div>
               <div>${symbolSVGString}</div>
             </div>
@@ -68,7 +68,11 @@ export default class Annotations extends React.PureComponent {
             <div style="color: black; margin-bottom: 4px;">${orientation}</div>
 
             <div style="color: #a3a3a3">Segment</div>
-            <div style="margin-bottom: 4px;">${range[0]}___________${range[1]}</div>
+            <div style="margin-bottom: 4px; display: flex; justify-content: space-between; align-items: end;">
+              <div>${range[0]}</div>
+              <div style="height: 1px; background-color: black; width:100%;"></div>
+              <div>${range[1]}</div>
+            </div>
           </div>
         </div>
       `;

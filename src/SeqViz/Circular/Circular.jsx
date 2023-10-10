@@ -306,7 +306,7 @@ class Circular extends React.Component {
         ref={inputRef(plasmidId, { type: 'SEQ' })}
         {...size}
       >
-        <g className="la-vz-circular-root" transform={`translate(0, ${yDiff})`}>
+        <g className="la-vz-circular-root" transform={`translate(0, ${yDiff - radius / 2})`}>
           <Selection {...general} onUnmount={onUnmount} totalRows={totalRows} seq={seq} />
           <Annotations
             {...general}
