@@ -21,7 +21,7 @@ export default class CircularSelection extends React.PureComponent {
       fill: 'transparent',
       shapeRendering: 'auto',
     };
-    return this.context.map((selection) => {
+    return this.context.map((selection, i) => {
       const { ref, start, end, clockwise } = selection;
 
       // calculate the length of the current selection region
@@ -97,7 +97,7 @@ export default class CircularSelection extends React.PureComponent {
       };
 
       return (
-        <g className="la-vz-circular-selection">
+        <g key={i} className="la-vz-circular-selection">
           {selLength && (
             <>
               <path d={selectPath} transform={getRotation(start)} {...selectStyle} />

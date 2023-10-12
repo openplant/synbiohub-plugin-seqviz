@@ -17,7 +17,7 @@ export class Edges extends React.PureComponent {
   render() {
     const { findXAndWidth, selectEdgeHeight, firstBase, lastBase, fullSeq } = this.props;
 
-    return this.context.map((selection) => {
+    return this.context.map((selection, i) => {
       const { ref, start, end, clockwise } = selection;
 
       let startEdge = null;
@@ -83,7 +83,7 @@ export class Edges extends React.PureComponent {
 
       return (
         start !== end && (
-          <g className="la-vz-linear-sel-edges">
+          <g key={i} className="la-vz-linear-sel-edges">
             {startEdge !== null && <rect {...rect} x={x - edgeWidth / 2} height={edgeHeight} />}
             {lastEdge !== null && <rect {...rect} x={x - edgeWidth / 2} height={edgeHeight} />}
           </g>
