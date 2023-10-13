@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
-tag="synbiohub/plugin-visual-seqviz:local"
+VERSION=`git describe --abbrev=0 --tags`
 
-docker build . --no-cache --tag $tag
+tag="synbiohub/plugin-visual-seqviz-sbol"
+
+docker build . \
+  --no-cache \
+  --tag "${tag}:${VERSION}" \
+  --tag "${tag}:latest"
