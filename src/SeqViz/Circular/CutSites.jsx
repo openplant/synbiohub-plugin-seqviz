@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 export default class CutSites extends React.PureComponent {
   calculateLinePath = (index, startRadius, endRadius) => {
@@ -10,15 +10,8 @@ export default class CutSites extends React.PureComponent {
     return linePath;
   };
 
-  displayCutSite = cutSite => {
-    const {
-      radius,
-      lineHeight,
-      seqLength,
-      getRotation,
-      inputRef,
-      generateArc
-    } = this.props;
+  displayCutSite = (cutSite) => {
+    const { radius, lineHeight, seqLength, getRotation, inputRef, generateArc } = this.props;
     const { id, start } = cutSite;
     let { fcut, rcut, end } = cutSite;
 
@@ -44,7 +37,7 @@ export default class CutSites extends React.PureComponent {
       outerRadius: topR,
       length: cutSiteLength,
       largeArc: cutSiteLength > seqLength / 2,
-      sweepFWD: true
+      sweepFWD: true,
     });
 
     // find start and stop coordinates to cut site line
@@ -61,7 +54,7 @@ export default class CutSites extends React.PureComponent {
       length: Math.abs(fcut - rcut),
       largeArc: Math.abs(fcut - rcut) > seqLength / 2,
       sweepFWD: true,
-      offset: Math.min(fcut, rcut) - start
+      offset: Math.min(fcut, rcut) - start,
     });
 
     // find start and stop coordinates to hang site line
@@ -71,30 +64,26 @@ export default class CutSites extends React.PureComponent {
       radius + lineHeight / 1.2
     );
 
-    const fill = "rgba(255, 165, 0, 0.2)";
+    const fill = 'rgba(255, 165, 0, 0.2)';
 
     const cutSiteStyle = {
-      stroke: "black",
+      stroke: 'black',
       strokeWidth: 1,
       fill: fill,
-      shapeRendering: "auto",
-      cursor: "pointer",
-      fillOpacity: 0
+      shapeRendering: 'auto',
+      cursor: 'pointer',
+      fillOpacity: 0,
     };
 
     const lineStyle = {
-      fill: "transparent",
-      stroke: "black",
+      fill: 'transparent',
+      stroke: 'black',
       strokeWidth: 1,
-      shapeRendering: "auto"
+      shapeRendering: 'auto',
     };
 
     return (
-      <g
-        id={`la-vz-circular-cutsite-${id}`}
-        key={id}
-        transform={getRotation(start)}
-      >
+      <g id={`la-vz-circular-cutsite-${id}`} key={id} transform={getRotation(start)}>
         {<path d={cutLinePath} {...lineStyle} />}
         {<path d={connectorLinePath} {...lineStyle} />}
         {<path d={hangLinePath} {...lineStyle} />}
@@ -106,7 +95,7 @@ export default class CutSites extends React.PureComponent {
             ref: id,
             start: start,
             end: end,
-            type: "ENZYME"
+            type: 'ENZYME',
           })}
         />
       </g>
@@ -120,10 +109,6 @@ export default class CutSites extends React.PureComponent {
       return null;
     }
 
-    return (
-      <g className="la-vz-circular-cutsites">
-        {cutSites.map(this.displayCutSite)}
-      </g>
-    );
+    return <g className="la-vz-circular-cutsites">{cutSites.map(this.displayCutSite)}</g>;
   }
 }

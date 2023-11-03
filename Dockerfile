@@ -1,16 +1,13 @@
 FROM node:16.20
 
 # Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
+COPY package.json yarn.lock ./
 
-# RUN npm ci --only=production
-RUN npm ci
+RUN yarn install --frozen-lockfile
 
 # Bundle app source
 COPY . .
 
-EXPOSE 5000
+EXPOSE 5011
 
-CMD [ "npm", "run", "start-prod-server" ]
+CMD [ "yarn", "start-prod-server" ]

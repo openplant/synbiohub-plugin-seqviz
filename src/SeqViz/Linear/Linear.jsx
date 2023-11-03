@@ -1,16 +1,12 @@
-import * as React from "react";
+import * as React from 'react';
 
-import bindingSites from "../../utils/bindingSites";
-import isEqual from "../../utils/isEqual";
-import { createLinearTranslations } from "../../utils/sequence";
-import {
-  createMultiRows,
-  createSingleRows,
-  stackElements
-} from "../elementsToRows";
-import withViewerHOCs from "../handlers";
-import InfiniteScroll from "./InfiniteScroll.jsx";
-import SeqBlock from "./SeqBlock/SeqBlock.jsx";
+import bindingSites from '../../utils/bindingSites';
+import isEqual from '../../utils/isEqual';
+import { createLinearTranslations } from '../../utils/sequence';
+import { createMultiRows, createSingleRows, stackElements } from '../elementsToRows';
+import withViewerHOCs from '../handlers';
+import InfiniteScroll from './InfiniteScroll.jsx';
+import SeqBlock from './SeqBlock/SeqBlock.jsx';
 
 /**
  * A linear sequence viewer.
@@ -39,7 +35,7 @@ class Linear extends React.Component {
   /**
    * Deep equality comparison
    */
-  shouldComponentUpdate = nextProps => !isEqual(nextProps, this.props);
+  shouldComponentUpdate = (nextProps) => !isEqual(nextProps, this.props);
 
   /**
    * given all the information needed to render all the seqblocks (ie, sequence, compSeq
@@ -69,15 +65,15 @@ class Linear extends React.Component {
       size,
       onUnmount,
 
-      search
+      search,
     } = this.props;
 
     let { primers } = this.props;
 
     primers = bindingSites(primers, seq);
 
-    const forwardPrimers = primers.filter(primer => primer.direction === 1);
-    const reversePrimers = primers.filter(primer => primer.direction === -1);
+    const forwardPrimers = primers.filter((primer) => primer.direction === 1);
+    const reversePrimers = primers.filter((primer) => primer.direction === -1);
 
     // un-official definition for being zoomed in. Being over 10 seems like a decent cut-off
     const zoomed = zoom.linear > 10;
@@ -102,8 +98,8 @@ class Linear extends React.Component {
      * @param {*} annotations
      * @return annotations
      */
-    const vetAnnotations = annotations => {
-      annotations.forEach(ann => {
+    const vetAnnotations = (annotations) => {
+      annotations.forEach((ann) => {
         if (ann.end === 0 && ann.start > ann.end) ann.end = seqLength;
         if (ann.start === seqLength && ann.end < ann.start) ann.start = 0;
       });
@@ -117,19 +113,11 @@ class Linear extends React.Component {
     );
 
     const forwardPrimerRows = showPrimers // primers...
-      ? createMultiRows(
-        stackElements(forwardPrimers, seq.length),
-        bpsPerBlock,
-        arrSize
-      )
+      ? createMultiRows(stackElements(forwardPrimers, seq.length), bpsPerBlock, arrSize)
       : new Array(arrSize).fill([]);
 
     const reversePrimerRows = showPrimers // primers...
-      ? createMultiRows(
-        stackElements(reversePrimers, seq.length),
-        bpsPerBlock,
-        arrSize
-      )
+      ? createMultiRows(stackElements(reversePrimers, seq.length), bpsPerBlock, arrSize)
       : new Array(arrSize).fill([]);
 
     const searchRows =
@@ -138,11 +126,7 @@ class Linear extends React.Component {
         : new Array(arrSize).fill([]);
 
     const translationRows = translations.length
-      ? createSingleRows(
-        createLinearTranslations(translations, seq),
-        bpsPerBlock,
-        arrSize
-      )
+      ? createSingleRows(createLinearTranslations(translations, seq), bpsPerBlock, arrSize)
       : new Array(arrSize).fill([]);
 
     for (let i = 0; i < arrSize; i += 1) {
@@ -179,8 +163,7 @@ class Linear extends React.Component {
         blockHeight += elementHeight * 3 * reversePrimerRows[i].length;
       }
       if (translationRows[i].length) {
-        blockHeight +=
-          translationRows[i].length * elementHeight + spacingHeight;
+        blockHeight += translationRows[i].length * elementHeight + spacingHeight;
       }
       blockHeights[i] = blockHeight;
     }

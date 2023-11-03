@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 /**
  * Used to build up all the path elements. Does not include a display
@@ -23,14 +23,7 @@ export default class Primers extends React.PureComponent {
   };
 
   render() {
-    const {
-      radius,
-      rowsToSkip,
-      Zoom,
-      lineHeight,
-      primers,
-      showPrimers
-    } = this.props;
+    const { radius, rowsToSkip, Zoom, lineHeight, primers, showPrimers } = this.props;
 
     const rowShiftHeight = lineHeight * rowsToSkip;
     const radiusAdjust = lineHeight * 3;
@@ -51,7 +44,7 @@ export default class Primers extends React.PureComponent {
             currTRadius -= lineHeight + 3;
           } // increment the primerRow radii if on every loop after first
           return acc.concat(
-            primerRows.map(primer => (
+            primerRows.map((primer) => (
               <SinglePrimer
                 {...this.props}
                 key={`${primer.id}-${primer.start}`}
@@ -75,7 +68,7 @@ export default class Primers extends React.PureComponent {
  *
  * @param {PrimerProps} props for a single Primer
  */
-const SinglePrimer = props => {
+const SinglePrimer = (props) => {
   const {
     primer,
     seqLength,
@@ -85,18 +78,18 @@ const SinglePrimer = props => {
     currTRadius,
     inputRef,
     hoverPrimer,
-    Zoom
+    Zoom,
   } = props;
 
   // shared style object for inlining
   const primerStyle = {
     strokeWidth: Zoom > 30 ? 1 : 0.5,
-    shapeRendering: "geometricPrecision",
-    cursor: "pointer",
+    shapeRendering: 'geometricPrecision',
+    cursor: 'pointer',
     fillOpacity: 0.2,
-    strokeLinejoin: "round",
-    fill: "#1b1d21",
-    stroke: "#1b1d21"
+    strokeLinejoin: 'round',
+    fill: '#1b1d21',
+    stroke: '#1b1d21',
   };
 
   // do not try to render primers without binding site information
@@ -106,9 +99,7 @@ const SinglePrimer = props => {
 
   // if it crosses the zero index, correct for actual length
   let primerLength =
-    primer.end >= primer.start
-      ? primer.end - primer.start
-      : seqLength - primer.start + primer.end;
+    primer.end >= primer.start ? primer.end - primer.start : seqLength - primer.start + primer.end;
 
   // can't make an arc from a full circle
   primerLength = primerLength === 0 ? seqLength - 0.1 : primerLength;
@@ -128,7 +119,7 @@ const SinglePrimer = props => {
     sweepFWD: true,
     arrowFWD: primer.direction === 1,
     arrowREV: primer.direction === -1,
-    isInsert: primer.type === "insert"
+    isInsert: primer.type === 'insert',
   });
 
   return (
@@ -141,8 +132,8 @@ const SinglePrimer = props => {
           ref: primer.id,
           start: primer.start,
           end: primer.end,
-          type: "PRIMER",
-          element: null
+          type: 'PRIMER',
+          element: null,
         })}
         onMouseOver={() => hoverPrimer(primer.id, 0.3)}
         onMouseOut={() => hoverPrimer(primer.id, 0.2)}

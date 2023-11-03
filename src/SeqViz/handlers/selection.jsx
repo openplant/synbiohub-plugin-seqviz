@@ -1,25 +1,25 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { calcGC, calcTm } from "../../utils/sequence";
+import { calcGC, calcTm } from '../../utils/sequence';
 
 /** Initial/default selection */
 export const defaultSelection = {
   ref: null,
   annref: null,
-  name: "",
-  seq: "",
+  name: '',
+  seq: '',
   gc: 0,
   tm: 0,
-  type: "",
+  type: '',
   start: 0,
   end: 0,
   length: 0,
-  clockwise: true
+  clockwise: true,
 };
 
 /** Default context object */
 export const SelectionContext = React.createContext(defaultSelection);
-SelectionContext.displayName = "SelectionContext";
+SelectionContext.displayName = 'SelectionContext';
 
 /**
  * an HOC dedicated to handling range selection for the viewer
@@ -29,7 +29,7 @@ SelectionContext.displayName = "SelectionContext";
  *
  * @param  {React.Component} WrappedComp
  */
-const withSelectionHandler = WrappedComp =>
+const withSelectionHandler = (WrappedComp) =>
   class extends React.Component {
     static displayName = `SelectionHandler`;
 
@@ -55,11 +55,11 @@ const withSelectionHandler = WrappedComp =>
     idToRange = new Map();
 
     componentDidMount = () => {
-      document.addEventListener("mouseup", this.stopDrag);
+      document.addEventListener('mouseup', this.stopDrag);
     };
 
     componentWillUnmount = () => {
-      document.removeEventListener("mouseup", this.stopDrag);
+      document.removeEventListener('mouseup', this.stopDrag);
     };
 
     /** Stop the current drag event from happening */
@@ -70,7 +70,7 @@ const withSelectionHandler = WrappedComp =>
     /**
      * Called at start of drag to make sure checkers are reset to default state
      */
-    resetCircleDragVars = start => {
+    resetCircleDragVars = (start) => {
       this.previousBase = start;
       this.forward = null;
       this.fullSelectionLength = 0;
@@ -91,7 +91,7 @@ const withSelectionHandler = WrappedComp =>
      * remove the id of the passed element from the list of tracked refs
      * @param  {string} ref  if of the element to drop from list
      */
-    removeMountedBlock = ref => {
+    removeMountedBlock = (ref) => {
       this.idToRange.delete(ref);
     };
 
@@ -108,7 +108,7 @@ const withSelectionHandler = WrappedComp =>
       const { Circular, Linear, Visbol } = this.props;
 
       // should not be updating selection since it's not a drag event time
-      if ((e.type === "mousemove" || e.type === "mouseup") && !this.dragEvent) {
+      if ((e.type === 'mousemove' || e.type === 'mouseup') && !this.dragEvent) {
         return;
       }
 
@@ -119,24 +119,27 @@ const withSelectionHandler = WrappedComp =>
         knownRange = this.dragEvent
           ? this.idToRange.get(e.currentTarget.id) // only look for SeqBlocks
           : this.idToRange.get(e.target.id) || // elements and SeqBlocks
-          this.idToRange.get(e.currentTarget.id);
+            this.idToRange.get(e.currentTarget.id);
       }
       if (!knownRange) {
         return; // there isn't a known range with the id of the element
       }
 
       switch (knownRange.type) {
-        case "ANNOTATION":
-        case "PRIMER":
-        case "FIND":
-        case "TRANSLATION":
-        case "ENZYME": {
+        case 'ANNOTATION':
+        case 'PRIMER':
+        case 'FIND':
+        case 'TRANSLATION':
+        case 'ENZYME': {
           if (Visbol) {
             let { ranges, ref, annref, type } = knownRange;
-            let start = Math.min.apply(null, ranges.reduce(function (p, c) {
-              return p.concat(c);
-            }));
-            this.props.setCentralIndex("linear", start);
+            let start = Math.min.apply(
+              null,
+              ranges.reduce(function (p, c) {
+                return p.concat(c);
+              })
+            );
+            this.props.setCentralIndex('linear', start);
             let selections = ranges.map((range) => {
               return {
                 start: range[0] - 1,
@@ -144,9 +147,9 @@ const withSelectionHandler = WrappedComp =>
                 ref: ref,
                 annref: annref,
                 type: type,
-                clockwise: true
-              }
-            })
+                clockwise: true,
+              };
+            });
             this.setSelection(selections);
             this.dragEvent = false;
           } else {
@@ -154,7 +157,7 @@ const withSelectionHandler = WrappedComp =>
             if (!Linear) {
               // if an element was clicked on the circular viewer, scroll the linear
               // viewer so the element starts on the first SeqBlock
-              this.props.setCentralIndex("linear", start);
+              this.props.setCentralIndex('linear', start);
             }
 
             // Annotation or find selection range
@@ -162,19 +165,21 @@ const withSelectionHandler = WrappedComp =>
             const selectionStart = clockwise ? start : end;
             const selectionEnd = clockwise ? end : start;
 
-            this.setSelection([{
-              ...element,
-              ...knownRange,
-              start: selectionStart,
-              end: selectionEnd,
-              clockwise: clockwise
-            }]);
+            this.setSelection([
+              {
+                ...element,
+                ...knownRange,
+                start: selectionStart,
+                end: selectionEnd,
+                clockwise: clockwise,
+              },
+            ]);
 
             this.dragEvent = false;
           }
           break;
         }
-        case "SEQ": {
+        case 'SEQ': {
           if (Linear) {
             this.linearSeqEvent(e, knownRange);
           } else if (Circular) {
@@ -194,44 +199,47 @@ const withSelectionHandler = WrappedComp =>
       selection = selection[0];
 
       const currBase = this.calculateBaseLinear(e, knownRange);
-      const clockwiseDrag =
-        selection.start !== null && currBase >= selection.start;
+      const clockwiseDrag = selection.start !== null && currBase >= selection.start;
 
-      if (e.type === "mousedown" && currBase !== null) {
+      if (e.type === 'mousedown' && currBase !== null) {
         // this is the start of a drag event
-        this.setSelection([{
-          ...defaultSelection, // clears other meta
-          start: e.shiftKey ? selection.start : currBase,
-          end: currBase,
-          clockwise: clockwiseDrag
-        }]);
+        this.setSelection([
+          {
+            ...defaultSelection, // clears other meta
+            start: e.shiftKey ? selection.start : currBase,
+            end: currBase,
+            clockwise: clockwiseDrag,
+          },
+        ]);
         this.dragEvent = true;
       } else if (this.dragEvent && currBase !== null) {
         // continue a drag event that's currently happening
-        this.setSelection([{
-          ...defaultSelection, // clears other meta
-          start: selection.start,
-          end: currBase,
-          clockwise: clockwiseDrag
-        }]);
+        this.setSelection([
+          {
+            ...defaultSelection, // clears other meta
+            start: selection.start,
+            end: currBase,
+            clockwise: clockwiseDrag,
+          },
+        ]);
       }
     };
 
     /**
      * Handle a sequence selection event on the circular viewer
      */
-    circularSeqEvent = e => {
+    circularSeqEvent = (e) => {
       let { seq, selection } = this.props;
       let { start, end, clockwise, currRef, annref } = selection[0];
 
-      // make selected selection shown on sequence view 
-      this.props.setCentralIndex("linear", start);
+      // make selected selection shown on sequence view
+      this.props.setCentralIndex('linear', start);
 
       let currBase = this.calculateBaseCircular(e);
       let ref = currRef;
       const seqLength = seq.length;
 
-      if (e.type === "mousedown") {
+      if (e.type === 'mousedown') {
         const selStart = e.shiftKey ? start : currBase;
         const lookahead = e.shiftKey
           ? this.calcSelectionLength(selStart, currBase, false)
@@ -239,15 +247,17 @@ const withSelectionHandler = WrappedComp =>
         this.selectionStarted = lookahead > 0; // update check for whether there is a prior selection
         this.resetCircleDragVars(selStart); // begin drag event
 
-        this.setSelection([{
-          ...defaultSelection,
-          start: selStart,
-          end: currBase,
-          ref: "",
-          clockwise: clockwise
-        }]);
+        this.setSelection([
+          {
+            ...defaultSelection,
+            start: selStart,
+            end: currBase,
+            ref: '',
+            clockwise: clockwise,
+          },
+        ]);
       } else if (
-        e.type === "mousemove" &&
+        e.type === 'mousemove' &&
         this.dragEvent &&
         currBase &&
         currBase !== this.previousBase
@@ -269,10 +279,7 @@ const withSelectionHandler = WrappedComp =>
         }
 
         this.previousBase = currBase; // done comparing with previous base, update previous base
-        if (
-          this.fullSelectionLength < seqLength * 0.01 &&
-          !this.shiftSelection
-        ) {
+        if (this.fullSelectionLength < seqLength * 0.01 && !this.shiftSelection) {
           clockwise = this.forward; // near selection start so selection direction is up for grabs
           const check = this.calcSelectionLength(
             this.props.selection.start,
@@ -286,7 +293,7 @@ const withSelectionHandler = WrappedComp =>
             clockwise = !this.forward; // the actual selection length being greater than additive selection length means we have come back to start and want to go in opposite direction
           }
           end = currBase;
-          ref = "";
+          ref = '';
         }
         sameDirectionMove = this.forward === this.props.selection.clockwise; // recalculate this in case we've switched selection directionality
 
@@ -296,26 +303,20 @@ const withSelectionHandler = WrappedComp =>
           this.props.selection.clockwise
         ); // check the selection length, this is agnostic to the ALL reference and will always calculate from where you cursor is to the start of selection
 
-        if (
-          this.selectionStarted &&
-          this.shiftSelection &&
-          check > this.fullSelectionLength
-        ) {
+        if (this.selectionStarted && this.shiftSelection && check > this.fullSelectionLength) {
           this.fullSelectionLength = check; // shift select catch up
         }
 
         const sameDirectionDrag = this.dragEvent && sameDirectionMove; // there is an ongoing drag in the same direction as the direction the selection started in
-        const fullSelection = currRef === "ALL"; // selection is full sequence
-        const hitFullSelection =
-          !fullSelection && this.fullSelectionLength >= seqLength; // selection became full sequence
+        const fullSelection = currRef === 'ALL'; // selection is full sequence
+        const hitFullSelection = !fullSelection && this.fullSelectionLength >= seqLength; // selection became full sequence
         if (sameDirectionDrag && hitFullSelection) {
-          ref = "ALL"; // intial set of ALL selection on selection full sequence
+          ref = 'ALL'; // intial set of ALL selection on selection full sequence
           end = start;
         } else if (fullSelection) {
           // this ensures that backtracking doesn't require making up to your overshoot forward circles
-          this.fullSelectionLength =
-            seqLength + (this.fullSelectionLength % seqLength);
-          ref = "ALL";
+          this.fullSelectionLength = seqLength + (this.fullSelectionLength % seqLength);
+          ref = 'ALL';
 
           if (
             !sameDirectionDrag && // changed direction
@@ -323,23 +324,25 @@ const withSelectionHandler = WrappedComp =>
             check > seqLength * 0.9 // passed selection start
           ) {
             end = currBase; // start decreasing selection size due to backtracking
-            ref = "";
+            ref = '';
             this.fullSelectionLength = this.fullSelectionLength - seqLength; // reset calculated additive selection length to normal now that we are not at ALL length
           }
         } else {
           end = currBase; // nothing special just update the selection
-          ref = "";
+          ref = '';
         }
         this.shiftSelection = false;
 
-        this.setSelection([{
-          ...defaultSelection,
-          start: start,
-          end: end,
-          ref: ref,
-          annref: annref,
-          clockwise: clockwise
-        }]);
+        this.setSelection([
+          {
+            ...defaultSelection,
+            start: start,
+            end: end,
+            ref: ref,
+            annref: annref,
+            clockwise: clockwise,
+          },
+        ]);
       }
     };
 
@@ -377,7 +380,7 @@ const withSelectionHandler = WrappedComp =>
      * @param {SyntheticMouseEvent} e    the click of onMouseMove event
      * @return {Number}   				 the current base being clicked or hovered
      */
-    calculateBaseCircular = e => {
+    calculateBaseCircular = (e) => {
       const { center, centralIndex, seq, yDiff } = this.props;
 
       if (!center) return 0;
@@ -414,8 +417,7 @@ const withSelectionHandler = WrappedComp =>
      * Update the selection in state. Only update the specified
      * properties of the selection that should be updated.
      */
-    setSelection = newSelection => {
-
+    setSelection = (newSelection) => {
       const { setSelection } = this.props;
 
       // if (
@@ -431,7 +433,7 @@ const withSelectionHandler = WrappedComp =>
       newSelection.forEach((selection) => {
         const { clockwise, start, end, ref, type, annref, element } = {
           ...this.props.selection[0],
-          ...selection
+          ...selection,
         };
 
         const length = this.calcSelectionLength(start, end, clockwise);
@@ -450,9 +452,9 @@ const withSelectionHandler = WrappedComp =>
           end,
           length,
           clockwise,
-          element
+          element,
         });
-      })
+      });
 
       setSelection(selections);
     };
@@ -474,7 +476,7 @@ const withSelectionHandler = WrappedComp =>
       if (end < start && clock) {
         return seq.substring(start, seq.length) + seq.substring(0, end);
       }
-      return "";
+      return '';
     };
 
     /**
@@ -509,4 +511,4 @@ const withSelectionHandler = WrappedComp =>
     }
   };
 
-export default WrappedComp => withSelectionHandler(WrappedComp);
+export default (WrappedComp) => withSelectionHandler(WrappedComp);

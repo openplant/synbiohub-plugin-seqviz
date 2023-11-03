@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 export default class CircularFind extends React.PureComponent {
   /**
@@ -6,15 +6,8 @@ export default class CircularFind extends React.PureComponent {
    *
    * @param {SearchResult} result a single search result with start, end, direction
    */
-  createHighlight = result => {
-    const {
-      radius,
-      lineHeight,
-      seqLength,
-      getRotation,
-      generateArc,
-      inputRef
-    } = this.props;
+  createHighlight = (result) => {
+    const { radius, lineHeight, seqLength, getRotation, generateArc, inputRef } = this.props;
     let { start, end } = result;
     // crosses the zero index
     if (end < start) {
@@ -27,15 +20,15 @@ export default class CircularFind extends React.PureComponent {
       outerRadius: radius + lineHeight / 2,
       length: resultLength,
       largeArc: resultLength > seqLength / 2,
-      sweepFWD: true
+      sweepFWD: true,
     });
 
     const resultStyle = {
-      stroke: "rgba(0, 0, 0, 0.5)",
+      stroke: 'rgba(0, 0, 0, 0.5)',
       strokeWidth: 1,
-      fill: "rgba(255, 251, 7, 0.5)",
-      shapeRendering: "auto",
-      cursor: "pointer"
+      fill: 'rgba(255, 251, 7, 0.5)',
+      shapeRendering: 'auto',
+      cursor: 'pointer',
     };
 
     const id = `${start}${end}${result.direction}${result.start}`;
@@ -50,7 +43,7 @@ export default class CircularFind extends React.PureComponent {
           ref: id,
           start: result.start,
           end: result.end,
-          type: "FIND"
+          type: 'FIND',
         })}
         {...resultStyle}
       />
@@ -59,8 +52,7 @@ export default class CircularFind extends React.PureComponent {
 
   render() {
     const { seqLength, search } = this.props;
-    const threshold =
-      seqLength >= 200 ? search.length / seqLength <= 0.02 : true;
+    const threshold = seqLength >= 200 ? search.length / seqLength <= 0.02 : true;
 
     if (!search.length) {
       return null;
@@ -68,9 +60,7 @@ export default class CircularFind extends React.PureComponent {
 
     return (
       threshold && (
-        <g className="la-vz-circular-search-results">
-          {search.map(this.createHighlight)}
-        </g>
+        <g className="la-vz-circular-search-results">{search.map(this.createHighlight)}</g>
       )
     );
   }

@@ -1,35 +1,8 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { COLOR_BORDER_MAP, darkerColor } from "../../../utils/colors";
+import { COLOR_BORDER_MAP, darkerColor } from '../../../utils/colors';
 
 export default class AnnotationRows extends React.PureComponent {
-  hoverOtherAnnotationRows = (event, className, opacity, isTooltipShown, text) => {
-    event.stopPropagation();
-    const elements = document.getElementsByClassName(className);
-    if (isTooltipShown) {
-      let view = document.getElementsByClassName('la-vz-seqviz')[0].getBoundingClientRect();
-
-      let left = event.clientX - view.left;
-      let top = event.clientY - view.top;
-      let tooltip = document.getElementById("linear-tooltip");
-      tooltip.innerHTML = text;
-      tooltip.style.display = "block";
-      tooltip.style.left = left + 20 + 'px';
-      tooltip.style.top = top + 'px';
-      for (let i = 0; i < elements.length; i += 1) {
-        elements[i].style.fillOpacity = opacity;
-        elements[i].classList.add("hoveredannotation");
-      }
-    } else {
-      let tooltip = document.getElementById("linear-tooltip");
-      tooltip.style.display = "none";
-      for (let i = 0; i < elements.length; i += 1) {
-        elements[i].style.fillOpacity = opacity;
-        elements[i].classList.remove("hoveredannotation");
-      }
-    }
-  };
-
   render() {
     const {
       annotationRows,
@@ -86,7 +59,6 @@ class AnnotationRow extends React.PureComponent {
       annotations,
       fullSeq,
       bpsPerBlock,
-      hoverOtherAnnotationRows
     } = this.props;
 
     const { color, name, direction, start, end } = a;
@@ -101,8 +73,7 @@ class AnnotationRow extends React.PureComponent {
 
     // does the annotation overflow to the left or the right of this seqBlock?
     let overflowLeft = start < firstBase;
-    let overflowRight =
-      end > lastBase || (start === end && fullSeq.length > bpsPerBlock); // start === end means covers whole plasmid
+    let overflowRight = end > lastBase || (start === end && fullSeq.length > bpsPerBlock); // start === end means covers whole plasmid
 
     // if the annotation starts and ends in a SeqBlock, by circling all the way around,
     // it will be rendered twice (once from the firstBase to start and another from
@@ -117,7 +88,7 @@ class AnnotationRow extends React.PureComponent {
       }, 0) > 1; // is this annotation in two pieces?
 
     if (splitAnnotation) {
-      if (annotations.findIndex(ann => ann.id === a.id) === index) {
+      if (annotations.findIndex((ann) => ann.id === a.id) === index) {
         // we're in the first half of the split annotation
         ({ x: origX, width } = findXAndWidth(firstBase, end));
         overflowLeft = true;
@@ -157,20 +128,20 @@ class AnnotationRow extends React.PureComponent {
     const height = this.props.height * 0.8;
 
     const rectProps = {
-      shapeRendering: "geometricPrecision"
+      shapeRendering: 'geometricPrecision',
     };
 
     const textProps = {
-      dominantBaseline: "middle",
-      cursor: "pointer",
-      textAnchor: "middle",
-      textRendering: "optimizeLegibility",
+      dominantBaseline: 'middle',
+      cursor: 'pointer',
+      textAnchor: 'middle',
+      textRendering: 'optimizeLegibility',
       x: width / 2,
       y: height / 2 + 1.4,
       style: {
-        color: "black",
-        fontWeight: 400
-      }
+        color: 'black',
+        fontWeight: 400,
+      },
     };
 
     const cW = 4; // jagged cutoff width
@@ -180,11 +151,11 @@ class AnnotationRow extends React.PureComponent {
     // create the SVG path, starting at the topLeft and working clockwise
     // there is additional logic here for if the annotation overflows
     // to the left or right of this seqBlock, where a "jagged edge" is created
-    const topLeft = endREV ? `M ${2 * cW} 0` : "M 0 0";
+    const topLeft = endREV ? `M ${2 * cW} 0` : 'M 0 0';
     const topRight = endFWD ? `L ${width - 2 * cW} 0` : `L ${width} 0`;
 
     let linePath;
-    if (a.type === "insert") {
+    if (a.type === 'insert') {
       linePath = `${topLeft} ${topRight}`;
     } else {
       let bottomRight = `L ${width} ${height}`; // flat right edge
@@ -241,7 +212,7 @@ class AnnotationRow extends React.PureComponent {
     }
 
     let strokeColor;
-    if (a.type === "insert") {
+    if (a.type === 'insert') {
       strokeColor = color;
     } else {
       strokeColor = COLOR_BORDER_MAP[color] || darkerColor(color);
@@ -255,22 +226,18 @@ class AnnotationRow extends React.PureComponent {
           annref: a.annId,
           start: start,
           end: end,
-          type: "ANNOTATION",
-          element: seqBlockRef
+          type: 'ANNOTATION',
+          element: seqBlockRef,
         })}
         uri={a.uri}
         className={a.annId}
         style={{
           fillOpacity: 0.7,
-          cursor: "pointer",
+          cursor: 'pointer',
           fill: color,
-          stroke: strokeColor,
-          strokeWidth: a.type === "insert" ? 2.4 : 0.5
         }}
         {...rectProps}
         d={linePath}
-        onMouseEnter={(event) => hoverOtherAnnotationRows(event, a.annId, 1.0, true, a.tooltip)}
-        onMouseLeave={(event) => hoverOtherAnnotationRows(event, a.annId, 0.7, false, '')}
         onFocus={() => 0}
         onBlur={() => 0}
       />
@@ -281,26 +248,8 @@ class AnnotationRow extends React.PureComponent {
     const nameFits = nameLength < width - 15;
 
     return (
-      <g
-        key={`${a.id}-${firstBase}`}
-        id={a.id}
-        transform={`translate(${x}, 0)`}
-      >
+      <g key={`${a.id}-${firstBase}`} id={a.id} transform={`translate(${x}, 0)`}>
         {annotationPath},
-        {nameFits ? (
-          <text
-            fontSize={11}
-            {...textProps}
-            id={a.id}
-            uri={a.uri}
-            onMouseEnter={(event) => hoverOtherAnnotationRows(event, a.annId, 1.0, true, a.tooltip)}
-            onMouseLeave={(event) => hoverOtherAnnotationRows(event, a.annId, 0.7, false, '')}
-            onFocus={() => { }}
-            onBlur={() => { }}
-          >
-            {name}
-          </text>
-        ) : null}
       </g>
     );
   };
@@ -313,11 +262,7 @@ class AnnotationRow extends React.PureComponent {
     const gTranslate = `translate(0, ${y - 5})`;
 
     return (
-      <g
-        {...size}
-        transform={gTranslate}
-        className="la-vz-linear-annotation-row"
-      >
+      <g {...size} transform={gTranslate} className="la-vz-linear-annotation-row">
         {annotations.map(this.renderAnnotation)}
       </g>
     );

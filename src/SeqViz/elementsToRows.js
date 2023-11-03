@@ -1,6 +1,6 @@
 // utility funcs for stackElements
-const last = arr => arr[arr.length - 1];
-const first = arr => arr[0];
+const last = (arr) => arr[arr.length - 1];
+const first = (arr) => arr[0];
 
 /**
  * stackElements
@@ -26,17 +26,17 @@ export const stackElements = (elements, seqL) => {
   sortedElements.sort((a, b) => {
     // prioritize insert annotations for tiebreakers so that the insert annotation appears
     // above the annotations spanning the whole insert
-    if (a.type === "insert" && a.start === b.start) {
+    if (a.type === 'insert' && a.start === b.start) {
       return -1;
     }
-    if (b.type === "insert" && a.start === b.start) {
+    if (b.type === 'insert' && a.start === b.start) {
       return 1;
     }
     return a.start - b.start;
   });
 
   return sortedElements.reduce((acc, a) => {
-    const insertIndex = acc.findIndex(elems => {
+    const insertIndex = acc.findIndex((elems) => {
       if (a.end === a.start) {
         // the element has the same start and end index and therefore the whole
         // plasmid (so it shouldn't fit into any existing row)
@@ -150,7 +150,7 @@ export const createMultiRows = (elements, rowLength, rowCount) => {
 
   // filter out the empty rows in each block
   for (let i = 0; i < rowCount; i += 1) {
-    newArr[i] = newArr[i].filter(a => a[0]);
+    newArr[i] = newArr[i].filter((a) => a[0]);
   }
 
   return newArr;
@@ -164,12 +164,7 @@ export const createMultiRows = (elements, rowLength, rowCount) => {
  * @param {CreateRowInfo}
  * @return {[[Object]]}       an array of an array of the values that were stored on creation
  */
-export const createSingleRows = (
-  elements,
-  rowLength,
-  rowCount,
-  duplicateIdsAllowed = true
-) => {
+export const createSingleRows = (elements, rowLength, rowCount, duplicateIdsAllowed = true) => {
   const newArr = new Array(rowCount);
 
   // initialize the nested rows in each block
@@ -211,10 +206,7 @@ export const createSingleRows = (
         // only add to the array if the user is okay with having duplicates by id.
         // for example, this shouldn't be allowed if multiple translation rows have
         // the same ID
-        if (
-          duplicateIdsAllowed ||
-          newArr[s].every(el => el.id !== elements[i].id)
-        ) {
+        if (duplicateIdsAllowed || newArr[s].every((el) => el.id !== elements[i].id)) {
           newArr[s].push(elements[i]);
         }
         s += 1;

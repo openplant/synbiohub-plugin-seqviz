@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { SelectionContext } from "../handlers/selection.jsx";
+import { SelectionContext } from '../handlers/selection.jsx';
 
 /**
  * renders the selection range of the plasmid viewer
@@ -14,40 +14,28 @@ export default class CircularSelection extends React.PureComponent {
   static contextType = SelectionContext;
 
   render() {
-    const {
-      seq,
-      radius,
-      lineHeight,
-      seqLength,
-      getRotation,
-      findCoor,
-      generateArc,
-      totalRows
-    } = this.props;
+    const { seq, radius, lineHeight, seqLength, getRotation, findCoor, generateArc, totalRows } =
+      this.props;
     const selectStyle = {
-      stroke: "none",
-      fill: "#DEF6FF",
-      shapeRendering: "auto"
+      stroke: '#676767',
+      fill: 'transparent',
+      shapeRendering: 'auto',
     };
-    return this.context.map((selection) => {
+    return this.context.map((selection, i) => {
       const { ref, start, end, clockwise } = selection;
 
       // calculate the length of the current selection region
       let selLength = 0;
       // start and end is the same, and something has been selected
 
-      if (start === end && ref === "ALL") {
+      if (start === end && ref === 'ALL') {
         selLength = seqLength;
       } else if (start > end) {
         selLength =
-          clockwise !== false
-            ? Math.abs(end - start + seqLength)
-            : -Math.abs(start - end);
+          clockwise !== false ? Math.abs(end - start + seqLength) : -Math.abs(start - end);
       } else if (start < end) {
         selLength =
-          clockwise !== false
-            ? Math.abs(end - start)
-            : -Math.abs(start - end + seqLength);
+          clockwise !== false ? Math.abs(end - start) : -Math.abs(start - end + seqLength);
       }
 
       // for all cases when the entire circle is selected
@@ -56,12 +44,12 @@ export default class CircularSelection extends React.PureComponent {
         selLength += adjust; // can't make an arc from a full circle
       }
 
+      const bAdjust = lineHeight * totalRows; // adjust bottom radius
       // const calc the size of the selection radii
-      let topR = radius + lineHeight; // outer radius
+      let topR = radius - bAdjust / 2 + 10; // outer radius
       if (seq.length < 200) {
         topR += 2 * lineHeight;
       }
-      const bAdjust = lineHeight * totalRows; // adjust bottom radius
       let bottomR = radius - bAdjust; // inner radius
 
       if (bottomR < 0 || topR < 0) {
@@ -72,11 +60,13 @@ export default class CircularSelection extends React.PureComponent {
       // find start and stop coordinates to created edges
       const lineTop = findCoor(0, topR);
       const lineBottom = findCoor(0, bottomR);
-      const edgePath = `M ${lineBottom.x} ${lineBottom.y}
-        L ${lineTop.x} ${lineTop.y}`;
+
+      const edgeHandleOffset = (lineBottom.y - lineTop.y) / 3;
+      const edgePath = `M ${lineBottom.x} ${lineBottom.y - edgeHandleOffset}
+        L ${lineTop.x} ${lineTop.y + edgeHandleOffset}`;
 
       // !== false is needed because it can be undefined
-      const sFlagF = clockwise !== false || ref === "ALL" ? 1 : 0; // sweep flag of first arc
+      const sFlagF = clockwise !== false || ref === 'ALL' ? 1 : 0; // sweep flag of first arc
 
       let lArc = false;
       if (clockwise !== false && selLength > seqLength / 2) {
@@ -90,36 +80,33 @@ export default class CircularSelection extends React.PureComponent {
         outerRadius: topR,
         length: selLength,
         largeArc: lArc,
-        sweepFWD: sFlagF
+        sweepFWD: sFlagF,
       });
 
       // this should be very thin when the selection range starts and ends at same point
-      let edgeStrokeWidth = 2;
+      let edgeStrokeWidth = 4;
       if (start === end) {
         edgeStrokeWidth = 1;
       }
       const edgeStyle = {
-        fill: "transparent",
-        stroke: "black",
+        fill: 'transparent',
+        stroke: '#676767',
         strokeWidth: edgeStrokeWidth,
-        shapeRendering: "auto"
+        strokeLinecap: 'round',
+        shapeRendering: 'auto',
       };
 
       return (
-        <g className="la-vz-circular-selection">
+        <g key={i} className="la-vz-circular-selection">
           {selLength && (
-            <path
-              d={selectPath}
-              transform={getRotation(start)}
-              {...selectStyle}
-            />
-          )}
-          <path d={edgePath} transform={getRotation(start)} {...edgeStyle} />
-          {selLength && (
-            <path d={edgePath} transform={getRotation(end)} {...edgeStyle} />
+            <>
+              <path d={selectPath} transform={getRotation(start)} {...selectStyle} />
+              <path d={edgePath} transform={getRotation(start)} {...edgeStyle} />
+              <path d={edgePath} transform={getRotation(end)} {...edgeStyle} />
+            </>
           )}
         </g>
       );
-    })
+    });
   }
 }

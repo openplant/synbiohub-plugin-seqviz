@@ -1,10 +1,10 @@
-import * as React from "react";
-import { shallow } from "enzyme";
+import * as React from 'react';
+import { shallow } from 'enzyme';
 
-import SeqBlock from "./SeqBlock";
+import SeqBlock from './SeqBlock';
 
 const defaultProps = {
-  name: "",
+  name: '',
   bpsPerBlock: 100,
   lineHeight: 14,
   elementHeight: 16,
@@ -13,7 +13,7 @@ const defaultProps = {
   zoom: { linear: 50 },
   translations: [],
   primers: [],
-  id: "",
+  id: '',
   y: 0,
   blockHeight: 40,
   searchRows: [],
@@ -26,7 +26,7 @@ const defaultProps = {
   zoomed: false,
   size: { height: 600, width: 1200 },
   inputRef: () => {},
-  mouseEvent: () => {}
+  mouseEvent: () => {},
 };
 
 /**
@@ -36,10 +36,9 @@ const defaultProps = {
  * at the time of writing this test, the annotation and index are
  * longer than the sequence (whose width is determined by charWidth)
  */
-describe("SeqBlock", () => {
-  it("renders with a single block", () => {
-    const seq =
-      "gcgaaaaatcaataaggaggcaacaagatgtgcgaaaaacatcttaatcatgcggtggagggtttctaatg";
+describe('SeqBlock', () => {
+  it('renders with a single block', () => {
+    const seq = 'gcgaaaaatcaataaggaggcaacaagatgtgcgaaaaacatcttaatcatgcggtggagggtttctaatg';
     const wrapper = shallow(
       <SeqBlock
         {...defaultProps}
@@ -52,10 +51,10 @@ describe("SeqBlock", () => {
             start: 0,
             end: 71,
             direction: 1,
-            name: "RBS",
-            type: "RBS",
-            color: "#80D849"
-          }
+            name: 'RBS',
+            type: 'RBS',
+            color: '#80D849',
+          },
         ]}
       />
     );

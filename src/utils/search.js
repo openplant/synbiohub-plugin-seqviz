@@ -1,10 +1,5 @@
-import { dnaComplement } from "./parser";
-import {
-  nucleotides,
-  nucleotideWildCards,
-  reverse,
-  translateWildNucleotides
-} from "./sequence";
+import { dnaComplement } from './parser';
+import { nucleotides, nucleotideWildCards, reverse, translateWildNucleotides } from './sequence';
 
 /**
  * @typedef {Object} SearchResult
@@ -30,7 +25,7 @@ export default (query, mismatch, seq) => {
 
   // Only start searching after query is at least 3 letters, lowest meaningful length
   if (query.length - mismatch < 3) {
-    console.error("search too broad, please narrow parameters.");
+    console.error('search too broad, please narrow parameters.');
     return [];
   }
 
@@ -42,15 +37,12 @@ export default (query, mismatch, seq) => {
   if (indices.length > 4000 || compIndices.length > 4000) {
     // failing out here because rendering will be too expensive
     console.error(
-      `Search too broad, ${indices.length +
-        compIndices.length} matches. Please narrow parameters.`
+      `Search too broad, ${indices.length + compIndices.length} matches. Please narrow parameters.`
     );
     return [];
   }
 
-  const searchResults = indices
-    .concat(compIndices)
-    .sort((a, b) => a.start - b.start);
+  const searchResults = indices.concat(compIndices).sort((a, b) => a.start - b.start);
 
   return searchResults;
 };
@@ -74,7 +66,7 @@ const search = (query, subject, mismatch, fwd) => {
 
   const seqLength = subject.length;
   const translatedQuery = translateWildNucleotides(query).trim();
-  const regex = new RegExp(translatedQuery, "gi");
+  const regex = new RegExp(translatedQuery, 'gi');
   let result = regex.exec(subject);
   const results = [];
   while (result) {
@@ -83,7 +75,7 @@ const search = (query, subject, mismatch, fwd) => {
     results.push({
       start: start,
       end: end,
-      direction: fwd ? 1 : -1
+      direction: fwd ? 1 : -1,
     });
     result = regex.exec(subject);
   }
@@ -127,7 +119,7 @@ const searchWithMismatch = (query, subject, mismatch, fwd) => {
       results.push({
         start: i,
         end: end,
-        direction: fwd ? 1 : -1
+        direction: fwd ? 1 : -1,
       });
     }
   }

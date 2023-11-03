@@ -1,12 +1,12 @@
-import * as React from "react";
+import * as React from 'react';
 
-import Annotations from "./Annotations.jsx";
-import CutSiteRow from "./CutSites.jsx";
-import IndexRow from "./Index.jsx";
-import Find from "./Find.jsx";
-import Primers from "./Primers.jsx";
-import Selection from "./Selection.jsx";
-import TranslationRows from "./Translations.jsx";
+import Annotations from './Annotations.jsx';
+import CutSiteRow from './CutSites.jsx';
+import IndexRow from './Index.jsx';
+import Find from './Find.jsx';
+import Primers from './Primers.jsx';
+import Selection from './Selection.jsx';
+import TranslationRows from './Translations.jsx';
 
 /**
  * SeqBlock
@@ -51,7 +51,7 @@ export default class SeqBlock extends React.PureComponent {
       fullSeq: { length: seqLength },
       firstBase,
       size,
-      bpsPerBlock
+      bpsPerBlock,
     } = this.props;
 
     const lastBase = Math.min(firstBase + bpsPerBlock, seqLength);
@@ -115,14 +115,10 @@ export default class SeqBlock extends React.PureComponent {
    * Lookup a bp in the bpColors prop and return the color
    * associated with the character, if one exists. Store the results
    */
-  bpColorLookup = bp => {
+  bpColorLookup = (bp) => {
     const { bpColors } = this.props;
 
-    const color =
-      bpColors[bp] ||
-      bpColors[bp.toUpperCase()] ||
-      bpColors[bp.toLowerCase()] ||
-      null;
+    const color = bpColors[bp] || bpColors[bp.toUpperCase()] || bpColors[bp.toLowerCase()] || null;
 
     return color;
   };
@@ -157,23 +153,23 @@ export default class SeqBlock extends React.PureComponent {
       onUnmount,
 
       charWidth,
-      zoomed
+      zoomed,
     } = this.props;
 
     if (!size.width || !size.height) return null;
 
     const svgProps = {
-      display: "block",
+      display: 'block',
       height: blockHeight,
-      width: size.width
+      width: size.width,
     };
     const textProps = {
-      dominantBaseline: "middle",
+      dominantBaseline: 'middle',
       fontSize: seqFontSize,
-      lengthAdjust: "spacing",
-      textAnchor: "start",
+      lengthAdjust: 'spacing',
+      textAnchor: 'start',
       textLength: size.width,
-      textRendering: "optimizeLegibility"
+      textRendering: 'optimizeLegibility',
     };
 
     const lastBase = firstBase + seq.length;
@@ -181,22 +177,18 @@ export default class SeqBlock extends React.PureComponent {
       ref: id,
       start: firstBase,
       end: lastBase,
-      type: "SEQ",
-      element: this
+      type: 'SEQ',
+      element: this,
     };
 
     // height and yDiff of forward primers (above sequence)
     const forwardPrimerYDiff = 0;
     const forwardPrimerHeight =
-      showPrimers && forwardPrimerRows.length
-        ? elementHeight * 3 * forwardPrimerRows.length
-        : 0;
+      showPrimers && forwardPrimerRows.length ? elementHeight * 3 * forwardPrimerRows.length : 0;
 
     // height and yDiff of cut sites
     const cutSiteYDiff =
-      zoomed && cutSiteRows.length
-        ? elementHeight / 2 + forwardPrimerHeight
-        : forwardPrimerHeight; // spacing for cutSite names
+      zoomed && cutSiteRows.length ? elementHeight / 2 + forwardPrimerHeight : forwardPrimerHeight; // spacing for cutSite names
     const cutSiteHeight = zoomed && cutSiteRows.length ? elementHeight : 0;
 
     // height and yDiff of the sequence strand
@@ -210,9 +202,7 @@ export default class SeqBlock extends React.PureComponent {
     // height and yDiff of reverse primers (below sequence)
     const reversePrimerYDiff = compYDiff + compHeight;
     const reversePrimerHeight =
-      showPrimers && reversePrimerRows.length
-        ? elementHeight * 3 * reversePrimerRows.length
-        : 0;
+      showPrimers && reversePrimerRows.length ? elementHeight * 3 * reversePrimerRows.length : 0;
 
     // height and yDiff of translations
     let translationYDiff = reversePrimerYDiff + reversePrimerHeight;
@@ -259,7 +249,7 @@ export default class SeqBlock extends React.PureComponent {
 
     const filteredSearchRows = showComplement
       ? searchRows
-      : searchRows.filter(r => r.direction === 1);
+      : searchRows.filter((r) => r.direction === 1);
 
     return (
       <svg
@@ -273,26 +263,6 @@ export default class SeqBlock extends React.PureComponent {
         cursor="text"
       >
         <g transform="translate(0, 10)">
-          <Selection.Block
-            selection={selection}
-            selectHeight={selectHeight}
-            findXAndWidth={this.findXAndWidth}
-            inputRef={inputRef}
-            onUnmount={onUnmount}
-            firstBase={firstBase}
-            lastBase={lastBase}
-            fullSeq={fullSeq}
-          />
-          <Selection.Edges
-            lastBase={lastBase}
-            findXAndWidth={this.findXAndWidth}
-            firstBase={firstBase}
-            fullSeq={fullSeq}
-            inputRef={inputRef}
-            onUnmount={onUnmount}
-            selection={selection}
-            selectEdgeHeight={selectEdgeHeight}
-          />
           <Find
             {...this.props}
             filteredRows={filteredSearchRows}
@@ -359,12 +329,12 @@ export default class SeqBlock extends React.PureComponent {
           ) : null}
           {zoomed ? (
             <text {...textProps} y={indexYDiff} id={id}>
-              {seq.split("").map((bp, i) => this.seqTextSpan(bp, i))}
+              {seq.split('').map((bp, i) => this.seqTextSpan(bp, i))}
             </text>
           ) : null}
           {compSeq && zoomed && showComplement ? (
             <text {...textProps} y={compYDiff} id={id}>
-              {compSeq.split("").map((bp, i) => this.seqTextSpan(bp, i))}
+              {compSeq.split('').map((bp, i) => this.seqTextSpan(bp, i))}
             </text>
           ) : null}
           <TranslationRows
@@ -384,6 +354,26 @@ export default class SeqBlock extends React.PureComponent {
             seqBlockRef={this}
             lastBase={lastBase}
             listenerOnly
+          />
+          <Selection.Block
+            selection={selection}
+            selectHeight={selectHeight}
+            findXAndWidth={this.findXAndWidth}
+            inputRef={inputRef}
+            onUnmount={onUnmount}
+            firstBase={firstBase}
+            lastBase={lastBase}
+            fullSeq={fullSeq}
+          />
+          <Selection.Edges
+            lastBase={lastBase}
+            findXAndWidth={this.findXAndWidth}
+            firstBase={firstBase}
+            fullSeq={fullSeq}
+            inputRef={inputRef}
+            onUnmount={onUnmount}
+            selection={selection}
+            selectEdgeHeight={selectEdgeHeight}
           />
         </g>
       </svg>

@@ -7,8 +7,8 @@ const serialize = require('serialize-javascript');
 import filesToParts from './io/filesToParts';
 
 const app = express();
-const port = 5000;
-const addr = 'localhost';
+const port = 5011;
+const addr = '0.0.0.0';
 
 app.use(express.json());
 //app.use(express.static("public"));

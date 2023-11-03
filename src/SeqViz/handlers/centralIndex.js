@@ -1,13 +1,13 @@
-import * as React from "react";
+import * as React from 'react';
 
 const defaultCentralIndex = {
   linear: 0,
   circular: 0,
-  setCentralIndex: () => {}
+  setCentralIndex: () => {},
 };
 
 /** Default central index context object */
 const CentralIndexContext = React.createContext(defaultCentralIndex);
-CentralIndexContext.displayName = "CentralIndexContext";
+CentralIndexContext.displayName = 'CentralIndexContext';
 
 export default CentralIndexContext;

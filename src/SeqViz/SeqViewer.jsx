@@ -1,10 +1,10 @@
-import * as React from "react";
-import sizeMe from "react-sizeme";
+import * as React from 'react';
+import sizeMe from 'react-sizeme';
 
-import isEqual from "../utils/isEqual";
-import CircularViewer from "./Circular/Circular.jsx";
-import LinearViewer from "./Linear/Linear.jsx";
-import CentralIndexContext from "./handlers/centralIndex";
+import isEqual from '../utils/isEqual';
+import CircularViewer from './Circular/Circular.jsx';
+import LinearViewer from './Linear/Linear.jsx';
+import CentralIndexContext from './handlers/centralIndex';
 
 /**
  * a parent sequence viewer component that holds whatever is common between
@@ -15,7 +15,7 @@ class SeqViewer extends React.Component {
     super(props);
     const { size } = props;
 
-    if ((!size.height || !size.width) && process.env.NODE_ENV !== "test") {
+    if ((!size.height || !size.width) && process.env.NODE_ENV !== 'test') {
       console.error(`SeqViz viewer rendered in an element without a height or width.
 Generally, SeqViz expands to fill the height/width of its parent element.
 
@@ -75,7 +75,7 @@ See: https://github.com/Lattice-Automation/seqviz#optionsstyle-`);
       charWidth,
       size,
       zoom: { linear: zoom },
-      Linear: true
+      Linear: true,
     };
   };
 
@@ -91,7 +91,7 @@ See: https://github.com/Lattice-Automation/seqviz#optionsstyle-`);
   circularProps = () => {
     const {
       size,
-      seq: { length: seqLength }
+      seq: { length: seqLength },
     } = this.props;
 
     let zoom = this.props.zoom.circular || 0;
@@ -100,7 +100,7 @@ See: https://github.com/Lattice-Automation/seqviz#optionsstyle-`);
 
     const center = {
       x: size.width / 2,
-      y: size.height / 2
+      y: size.height / 2,
     };
 
     const limitingDim = Math.min(size.height, size.width);
@@ -125,7 +125,7 @@ See: https://github.com/Lattice-Automation/seqviz#optionsstyle-`);
       size,
       zoom: { circular: zoom },
       bpsOnArc,
-      center
+      center,
     };
   };
 
@@ -148,15 +148,15 @@ See: https://github.com/Lattice-Automation/seqviz#optionsstyle-`);
             )}
           </CentralIndexContext.Consumer>
         ) : (
-            <LinearViewer
-              {...this.props}
-              {...this.state}
-              {...this.linearProps()}
-              copyEvent={event => event.key === "c" && (event.metaKey || event.ctrlKey)}
-              seqLength={seq.length}
-              cutSites={cutSites}
-            />
-          )}
+          <LinearViewer
+            {...this.props}
+            {...this.state}
+            {...this.linearProps()}
+            copyEvent={(event) => event.key === 'c' && (event.metaKey || event.ctrlKey)}
+            seqLength={seq.length}
+            cutSites={cutSites}
+          />
+        )}
       </div>
     );
   }
