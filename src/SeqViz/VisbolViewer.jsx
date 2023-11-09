@@ -1,6 +1,5 @@
 import React from 'react';
 import { prepareDisplay } from 'visbol';
-import Rendering from 'visbol-react';
 import { VisbolRenderer } from './VisbolRenderer.jsx';
 
 import withSelectionHandler from './handlers/selection.jsx';
@@ -70,7 +69,7 @@ class VisbolViewer extends React.Component {
         //   size={1.75}
         //   customTooltip={true}
         // />
-        <VisbolRenderer visbolSequence={vs}/>
+        <VisbolRenderer visbolSequence={vs} />
       );
     } else {
       return <div></div>;
