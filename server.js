@@ -46,6 +46,13 @@ app.post('/Run', async (req, res) => {
       topLevel: top_level,
     });
 
+    // Remove color, to clear out that we're setting it on the frontend
+    parts.forEach((part) =>
+      part.annotations.forEach((annot) => {
+        delete annot.color;
+      })
+    );
+
     const propdata = {
       style: {
         height: 600,

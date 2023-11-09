@@ -1,25 +1,28 @@
+import * as d3 from 'd3';
+
 /**
- * @typedef {COLORS}
- * @type {Array<String>}
- *
- * a color pallete of colors (for LinearSeq right now)\
- * generated using:
- * https://material.io/color/#!/?view.left=0&view.right=0&primary.color=FFCC80
+ * New color scale by Accurat.
  */
-export const COLORS = [
-  '#9DEAED', // cyan
-  '#8FDE8C', // green
-  '#CFF283', // light green
-  '#8CDEBD', // teal
-  '#F0A3CE', // pink
-  '#F7C672', // orange
-  '#F07F7F', // red
-  '#FAA887', // red-orange
-  '#F099F7', // magenta
-  '#C59CFF', // purple
-  '#6B81FF', // blue
-  '#85A6FF', // light blue
+const COLORS = [
+  '#E8AEB7',
+  '#90C1E4',
+  '#85E4DC',
+  '#B8E986',
+  '#82E298',
+  '#82ABA1',
+  '#057162',
+  '#E1DAC0',
+  '#FFCC66',
+  '#EE9F3A',
+  '#FF9966',
+  '#E9CA5B',
+  '#BAB2FF',
+  '#FDBBF9',
+  '#A368A8',
+  '#4F6382',
 ];
+
+export const colorScale = d3.scaleOrdinal(COLORS);
 
 export const COLOR_BORDER_MAP = {
   '#9DEAED': '#5EB5B8', // cyan

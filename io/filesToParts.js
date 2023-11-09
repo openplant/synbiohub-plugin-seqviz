@@ -1,6 +1,3 @@
-import path from 'path';
-
-import { COLORS } from './utils/colors';
 import parseSBOL from './parsers/sbol';
 
 /**
@@ -12,7 +9,7 @@ export default async (
   options = {
     fileName: '',
     topLevel: '',
-    colors: COLORS,
+    colors: [],
     backbone: '',
   }
 ) => {

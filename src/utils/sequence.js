@@ -1,4 +1,3 @@
-import { colorByIndex, chooseRandomColor } from './colors';
 import { dnaComplement } from './parser';
 import randomid from './randomid';
 
@@ -227,14 +226,8 @@ export const reverse = (sequence) => sequence.split('').reverse().join('');
  * an annotation generator
  */
 export const annotationFactory = (annName, i = -1) => {
-  let color = chooseRandomColor();
-  if (i > -1) {
-    color = colorByIndex(i);
-  }
-
   return {
     id: randomid(),
-    color: color,
     name: annName || 'Untitled',
     type: '',
     start: 0,

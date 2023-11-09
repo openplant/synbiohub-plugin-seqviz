@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { renderToString } from 'react-dom/server';
-
 import CentralIndexContext from '../handlers/centralIndex';
-import { COLOR_BORDER_MAP, darkerColor } from '../../utils/colors';
+import { colorScale } from '../../utils/colors';
 import { sbolTooltipStringToObject, tooltipForInnerHTML } from '../../utils/parser';
-
 import SymbolSVG from '../SymbolSVG.jsx';
 
 /**
@@ -19,23 +17,7 @@ import SymbolSVG from '../SymbolSVG.jsx';
  * @type {Function}
  */
 export default class Annotations extends React.PureComponent {
-  /** during an annotation hover event, darken all other pieces of the same annotation */
-  hoverAnnotation = (className, opacity, ishovered) => {
-    const elements = document.getElementsByClassName(className);
-    if (ishovered) {
-      for (let i = 0; i < elements.length; i += 1) {
-        elements[i].style.fillOpacity = opacity;
-        elements[i].classList.add('hoveredannotation');
-      }
-    } else {
-      for (let i = 0; i < elements.length; i += 1) {
-        elements[i].style.fillOpacity = opacity;
-        elements[i].classList.remove('hoveredannotation');
-      }
-    }
-  };
-
-  hoverOtherAnnotationRows = (event, className, opacity, isTooltipShown, text) => {
+  hoverOtherAnnotationRows = (event, className, opacity, isTooltipShown, annotation) => {
     event.stopPropagation();
     const elements = document.getElementsByClassName(className);
     if (isTooltipShown) {
@@ -45,15 +27,18 @@ export default class Annotations extends React.PureComponent {
       let top = event.clientY - view.top;
       let tooltip = document.getElementById('linear-tooltip');
 
-      let tooltipObject = sbolTooltipStringToObject(text.tooltip);
+      let tooltipObject = sbolTooltipStringToObject(annotation.tooltip);
       let { identifier, name, role, orientation, range } = tooltipForInnerHTML(tooltipObject);
 
       let symbolSVGString = renderToString(<SymbolSVG role={role} orientation={orientation} />);
 
+      const color = colorScale(annotation.name);
+      const lighterColor = `${color}26`;
+
       tooltip.innerHTML = `
-        <div style="width: 180px; background-color: white; border: solid 2px ${text.color}; border-radius: 2px;">
-          <div class="font-name" style="background-color: ${text.color}; padding:6px 5px">${name}</div>
-          <div style="background-color: ${text.color}26; padding: 10px 5px;">
+        <div style="width: 180px; background-color: white; border: solid 2px ${color}; border-radius: 2px;">
+          <div class="font-name" style="background-color: ${color}; padding:6px 5px">${name}</div>
+          <div style="background-color: ${lighterColor}; padding: 10px 5px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
               <div style="color: black;">${role}</div>
               <div>${symbolSVGString}</div>
@@ -141,11 +126,8 @@ export default class Annotations extends React.PureComponent {
                     currBRadius={currBRadius}
                     currTRadius={currTRadius}
                     transparentPath={transparentPath}
-                    labelStyle={labelStyle}
                     annStyle={annStyle}
-                    hoverAnnotation={this.hoverAnnotation}
                     hoverOtherAnnotationRows={this.hoverOtherAnnotationRows}
-                    calcBorderColor={darkerColor}
                     centralIndex={circular}
                   />
                 ))
@@ -172,15 +154,10 @@ const SingleAnnotation = (props) => {
     currBRadius,
     currTRadius,
     centralIndex,
-    lineHeight,
     transparentPath,
     inputRef,
-    calcBorderColor,
-    hoverAnnotation,
     annStyle,
-    inlinedAnnotations,
     hoverOtherAnnotationRows,
-    labelStyle,
   } = props;
 
   // if it crosses the zero index, correct for actual length
@@ -241,7 +218,7 @@ const SingleAnnotation = (props) => {
           type: 'ANNOTATION',
           direction: a.direction,
         })}
-        fill={a.color}
+        fill={colorScale(a.name)}
         onMouseEnter={(event) => hoverOtherAnnotationRows(event, a.annId, 1.0, true, a)}
         onMouseLeave={(event) => hoverOtherAnnotationRows(event, a.annId, 0.7, false, '')}
         onFocus={() => {}}
