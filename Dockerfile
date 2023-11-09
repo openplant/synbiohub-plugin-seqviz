@@ -8,6 +8,8 @@ RUN yarn install --frozen-lockfile
 # Bundle app source
 COPY . .
 
+RUN yarn build
+
 EXPOSE 5011
 
 CMD [ "yarn", "start-prod-server" ]
