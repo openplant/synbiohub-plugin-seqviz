@@ -76,6 +76,5 @@ class VisbolViewer extends React.Component {
     }
   }
 }
-('<b style="text-align:center;display:block">Feature</b><b>Identifier:</b> annotation10<br/><b>Name:</b> pstS<br/><b>Role:</b> CDS<br/><b>Range:</b> 3254..3501<br/>Orientation: inline 3254..3501<br/>');
 
 export default withSelectionHandler(VisbolViewer);
