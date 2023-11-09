@@ -1,7 +1,6 @@
 import React from 'react';
 import { prepareDisplay } from 'visbol';
 import { VisbolRenderer } from './VisbolRenderer.jsx';
-
 import withSelectionHandler from './handlers/selection.jsx';
 import { sbolTooltipStringToObject, tooltipForInnerHTML } from '../utils/parser.js';
 
@@ -60,17 +59,7 @@ class VisbolViewer extends React.Component {
     if (this.props.selection && this.props.selection[0]) id = this.props.selection[0].annref;
     if (display && this.props.Visbol) {
       const vs = this.visbolSequence(display);
-      return (
-        // <Rendering
-        //   display={display}
-        //   selection={this.props.selection ? this.props.selection[0].annref : undefined}
-        //   mouseEvent={this.props.mouseEvent}
-        //   hideNavigation={true}
-        //   size={1.75}
-        //   customTooltip={true}
-        // />
-        <VisbolRenderer visbolSequence={vs} />
-      );
+      return <VisbolRenderer visbolSequence={vs} />;
     } else {
       return <div></div>;
     }

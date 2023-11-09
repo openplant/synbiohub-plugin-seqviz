@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-import { COLOR_BORDER_MAP, darkerColor } from '../../../utils/colors';
+import { colorScale } from '../../../utils/colors';
 
 export default class AnnotationRows extends React.PureComponent {
   render() {
@@ -61,7 +60,8 @@ class AnnotationRow extends React.PureComponent {
       bpsPerBlock,
     } = this.props;
 
-    const { color, name, direction, start, end } = a;
+    const { name, direction, start, end } = a;
+    const color = colorScale(name);
     const forward = direction === 1;
     const reverse = direction === -1;
     let { x: origX, width } = findXAndWidth(start, end);
@@ -215,7 +215,7 @@ class AnnotationRow extends React.PureComponent {
     if (a.type === 'insert') {
       strokeColor = color;
     } else {
-      strokeColor = COLOR_BORDER_MAP[color] || darkerColor(color);
+      strokeColor = 'black';
     }
 
     const annotationPath = (
