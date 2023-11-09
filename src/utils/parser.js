@@ -164,7 +164,13 @@ export const sbolTooltipStringToObject = (tooltip) => {
   return Object.fromEntries(strBrSplitted);
 };
 
-export const tooltipForInnerHTML = ({ Identifier, Name, Orientation, Range, Role }) => {
+export const tooltipForInnerHTML = ({
+  Identifier = '',
+  Name = '',
+  Orientation = '',
+  Range = '',
+  Role = '',
+}) => {
   const orientation = Orientation.includes('inline') ? 'inline' : 'reverseComplement';
   const range = Range.split('..');
 
