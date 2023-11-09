@@ -70,8 +70,8 @@ export default function SymbolSVG({ role, orientation }) {
   let Icon = ICON_MAPPING[`${role}-${orientation}`];
   if (!Icon) {
     console.warn(`Missing icon for role = "${role}"!`);
-    Icon = () => <div style={{ outline: 'red 2px solid', height: '100%' }} />;
-    // Icon = UnspecifiedInline
+    // Icon = () => <div style={{ outline: 'red 2px solid', height: '100%' }} />;
+    Icon = UnspecifiedInline;
   }
   return <Icon />;
 }
