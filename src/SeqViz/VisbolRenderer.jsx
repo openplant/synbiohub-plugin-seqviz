@@ -16,9 +16,12 @@ function computeTextColor(bgColor) {
 }
 
 export const VisbolRenderer = ({ visbolSequence }) => {
+  // We're not sure why it's reversed... Fixing it here (sorry)
+  const sequence = [...visbolSequence].reverse();
+
   return (
-    <div style={{ display: 'flex' }}>
-      {visbolSequence.map((vs, i) => {
+    <div style={{ display: 'flex', width: 500, justifyContent: 'center' }}>
+      {sequence.map((vs, i) => {
         const [isTooltip, setIsTooltip] = React.useState(false);
         return (
           <div
