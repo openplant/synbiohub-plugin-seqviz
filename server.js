@@ -70,11 +70,11 @@ app.post('/Run', async (req, res) => {
                     <html>
                       <head><title>sequence view</title></head>
                       <body>
-                        <div id="reactele"></div>
-                        <script type="text/javascript">window.__INITIAL_DATA__ = ${serialize(
+                        <div id="root--accurat-seqviz"></div>
+                        <script type="text/javascript">window.__DATA_ACCURAT_SEQVIZ__ = ${serialize(
                           propdata
                         )}</script>
-                        <script type="text/javascript" src="http://${hostAddr}/seqviz.js" charset="utf-8"></script>
+                        <script type="text/javascript" src="//${hostAddr}/seqviz.js" charset="utf-8"></script>
                       </body>
                     </html>`;
     res.send(theHtml);
@@ -83,8 +83,8 @@ app.post('/Run', async (req, res) => {
                     <html>
                       <head><title>sequence view</title></head>
                       <body>
-                        <div id="reactele">
-                        Error when parsing this file to get sequence data!
+                        <div>
+                          Error when parsing this file to get sequence data!
                         </div>
                       </body>
                     </html>`;

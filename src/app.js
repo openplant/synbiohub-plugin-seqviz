@@ -10,8 +10,8 @@ function* iterate_object(o) {
   }
 }
 var data = {};
-for (var [key, val] of iterate_object(window.__INITIAL_DATA__)) {
+for (var [key, val] of iterate_object(window.__DATA_ACCURAT_SEQVIZ__)) {
   data[key] = val;
 }
 
-hydrate(<SeqViz {...data} />, document.getElementById('reactele'));
+hydrate(<SeqViz {...data} />, document.getElementById('root--accurat-seqviz'));
