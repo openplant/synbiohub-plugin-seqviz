@@ -200,7 +200,7 @@ export default class Index extends React.PureComponent {
         </text>
 
         {/* If less than 200bp long, render the bp of the plasmid */}
-        {seq.length < 200 ? <g className="la-vz-circular-bps">{this.renderBasepairs()}</g> : null}
+        {/* {seq.length < 200 ? <g className="la-vz-circular-bps">{this.renderBasepairs()}</g> : null} */}
 
         {/* The ticks and their index labels */}
         {ticks.map((t) => (
