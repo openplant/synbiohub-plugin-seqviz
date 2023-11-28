@@ -1,10 +1,9 @@
-const express = require('express');
-
-const path = require('path');
-const request = require('request');
-const serialize = require('serialize-javascript');
-
+import express from 'express';
+import path from 'path';
+import request from 'request';
 import filesToParts from './io/filesToParts';
+
+const serialize = require('serialize-javascript');
 
 const app = express();
 const port = 5011;

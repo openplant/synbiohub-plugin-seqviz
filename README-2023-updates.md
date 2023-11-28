@@ -19,7 +19,7 @@ la build del codice del frontend ogni volta che qualcosa all'interno di esso cam
 
 6. Nel `Dockerfile` (usato per la build dell'immagine del plugin) è stata aggiornata la versione di node (`16.20` al posto di `14`) perché non era più in grado di installare correttamente le dipendenze
 
-7. Sempre nel `Dockerfile` è stata tolta l'opzione `--only=production` perchè ci serve installare (temporaneamente) `babel-node`, il quale viene utilizzato dal comando `npm run start-prod-server`
+7. Sempre nel `Dockerfile` è stata tolta l'opzione `--only=production` perchè ci serve installare (temporaneamente) `babel-node`, il quale viene utilizzato dal comando `npm run start-server`
 
 8. È stato quindi aggiunto il comando `build-local-docker-image` legato a uno script bash con lo stesso nome (fa la build della image usando come tag `local`)
 
