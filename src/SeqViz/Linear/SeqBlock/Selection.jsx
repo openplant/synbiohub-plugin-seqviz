@@ -136,7 +136,7 @@ export class Block extends React.PureComponent {
                 y={-10}
                 height={selectHeight + 5}
                 width={secBlockWidth}
-                className="la-vz-linear-sel-block"
+                className="acc-la-vz-linear-sel-block"
               />
             );
             ({ x, width } = findXAndWidth(firstBase, end));
@@ -166,7 +166,7 @@ export class Block extends React.PureComponent {
                 y={-10}
                 height={selectHeight + 5}
                 width={secBlockWidth}
-                className="la-vz-linear-sel-block"
+                className="acc-la-vz-linear-sel-block"
                 shapeRendering="auto"
               />
             );
@@ -194,7 +194,7 @@ export class Block extends React.PureComponent {
       return (
         <React.Fragment>
           <rect
-            className="la-vz-linear-sel-block"
+            className="acc-la-vz-linear-sel-block"
             x={x}
             y={-10}
             height={selectHeight + 5}
