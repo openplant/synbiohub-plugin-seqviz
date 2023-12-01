@@ -8,8 +8,8 @@
     "build": "webpack --config ./config/webpack.build.js",
     "build-verbose": "webpack --config ./config/webpack.build.js --display-error-details --verbose",
     "build-dev": "webpack --config ./config/webpack.build.js --mode development --watch",
-    "start-prod-server": "node start.js",
-    "start-local-server": "nodemon --exec node localserver.js",
+    "start-server": "node start.js",
+    "start-local-server": "nodemon --exec yarn start-server",
     "local": "concurrently \"yarn build-dev\" \"yarn start-local-server\"",
     "build-local-docker-image": "./scripts/build-local-docker-image.sh",
     "prettier": "prettier --write '**/*.js'"

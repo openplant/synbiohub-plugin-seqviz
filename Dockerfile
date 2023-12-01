@@ -12,4 +12,4 @@ RUN yarn build
 
 EXPOSE 5011
 
-CMD [ "yarn", "start-prod-server" ]
+CMD [ "yarn", "start-server" ]

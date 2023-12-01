@@ -1,10 +1,9 @@
-const express = require('express');
-
-const path = require('path');
-const request = require('request');
-const serialize = require('serialize-javascript');
-
+import express from 'express';
+import path from 'path';
+import request from 'request';
 import filesToParts from './io/filesToParts';
+
+const serialize = require('serialize-javascript');
 
 const app = express();
 const port = 5011;
@@ -33,9 +32,12 @@ app.post('/Evaluate', function (req, res) {
   }
 });
 
-app.post('/Run', async (req, res) => {
-  let url = req.body.complete_sbol.toString();
-  let top_level = req.body.top_level.toString();
+app.all('/Run', async (req, res) => {
+  let url =
+    req.body.complete_sbol?.toString() ?? 'https://synbiohub.org/public/igem/BBa_B0012/1/sbol';
+  let top_level =
+    req.body?.top_level?.toString() ?? 'https://synbiohub.org/public/igem/BBa_B0012/1';
+
   let hostAddr = req.get('host');
   console.log('run url=' + url + ' top=' + top_level + ' hostAddr=' + hostAddr);
   try {

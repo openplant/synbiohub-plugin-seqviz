@@ -50,45 +50,6 @@ export default class Index extends React.PureComponent {
     indexInc: 10,
   };
 
-  /**
-   * return a react element for the basepairs along the surface of the plasmid viewer
-   */
-  renderBasepairs = () => {
-    const { seq, compSeq, seqLength, lineHeight, radius, findCoor, getRotation } = this.props;
-    const { indexInc } = this.state;
-    const centralIndex = this.context.circular;
-
-    // we should show all basepairs, with only 4 ticks
-    const seqForCircular = seq + seq;
-    const compSeqForCircular = compSeq + compSeq;
-    let firstBase = centralIndex - indexInc * 5;
-    let lastBase = centralIndex + indexInc * 5;
-    if (centralIndex < seqLength / 2) {
-      firstBase += seqLength;
-      lastBase += seqLength;
-    }
-    const basepairsToRender = [];
-    for (let i = firstBase; i <= lastBase; i += 1) {
-      basepairsToRender.push(
-        <text
-          key={`la-vz-base_${i}`}
-          {...findCoor(0, radius + 2 * lineHeight)}
-          transform={getRotation(i + 0.25)}
-        >
-          {seqForCircular.charAt(i)}
-        </text>,
-        <text
-          key={`la-vz-base_comp_${i}`}
-          {...findCoor(0, radius + lineHeight)}
-          transform={getRotation(i + 0.25)}
-        >
-          {compSeqForCircular.charAt(i)}
-        </text>
-      );
-    }
-    return basepairsToRender;
-  };
-
   render() {
     const {
       seq,
@@ -198,9 +159,6 @@ export default class Index extends React.PureComponent {
         <text x={nameCoor.x} y={nameCoor.y + 14 + 25 * (nameSpans.length - 1)} {...subtitleStyle}>
           {`${seqLength} bp`}
         </text>
-
-        {/* If less than 200bp long, render the bp of the plasmid */}
-        {seq.length < 200 ? <g className="la-vz-circular-bps">{this.renderBasepairs()}</g> : null}
 
         {/* The ticks and their index labels */}
         {ticks.map((t) => (
