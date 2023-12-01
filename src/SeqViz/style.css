@@ -112,7 +112,7 @@
   font-size: 14px;
 }
 
-#root--accurat-seqviz .la-vz-linear-sel-block {
+#root--accurat-seqviz .acc-la-vz-linear-sel-block {
   fill: transparent;
   outline: solid #676767 1px;
 }
