@@ -1,0 +1,46 @@
+name: Deploy on Staging server
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Deploy on Staging server
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout source code
+      # - name: Rsync code to Staging server
+      #   uses: easingthemes/ssh-deploy@v5.1.0
+      #   with:
+      #     SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     REMOTE_HOST: ${{ secrets.SSH_HOST }}
+      #     REMOTE_USER: ${{ secrets.SSH_USER }}
+      #     SOURCE: "./"
+      #     TARGET: "/root/obl-synbiohub-seqviz/"
+      #     EXCLUDE: ""
+      #     SCRIPT_AFTER: |
+      #       ls -al
+      #       echo $RSYNC_STDOUT
+      #       docker compose up --build plugin-seqviz -d
+      #       docker compose logs plugin-seqviz -f
+      - name: 'SSH: Git Pull'
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ vars.SSH_HOST }}
+          username: ${{ vars.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd obl-synbiohub-seqviz/
+            git pull
+            ls -al
+      - name: 'SSH: Docker Compose Up'
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ vars.SSH_HOST }}
+          username: ${{ vars.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker compose up --build plugin-seqviz -d
