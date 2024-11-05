@@ -101,7 +101,7 @@ export class Block extends React.PureComponent {
 
   render() {
     const { findXAndWidth, selectHeight, firstBase, lastBase, fullSeq } = this.props;
-    return this.context.map((selection) => {
+    return this.context.map((selection, i) => {
       let { start, end, clockwise, ref } = selection;
 
       // there's no need to render a selection block (rect) if just one point
@@ -192,7 +192,7 @@ export class Block extends React.PureComponent {
       if (!x && !width) return null;
 
       return (
-        <React.Fragment>
+        <React.Fragment key={i}>
           <rect
             className="acc-la-vz-linear-sel-block"
             x={x}
