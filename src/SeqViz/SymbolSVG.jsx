@@ -1,10 +1,9 @@
 import React from 'react';
-import CDSInline from '../../images/small-icons/CDS-inline.svg';
-import CDSReverseComplement from '../../images/small-icons/CDS-reverseComplement.svg';
 import AptamerInline from '../../images/small-icons/aptamer-inline.svg';
 import AssemblyScarInline from '../../images/small-icons/assembly-scar-inline.svg';
 import BiopolymerBaseInline from '../../images/small-icons/biopolymer-base-inline.svg';
 import BluntRestrictionSiteInline from '../../images/small-icons/blunt-restriction-site-inline.svg';
+import CDSInline from '../../images/small-icons/CDS-inline.svg';
 import DnaStabilityInline from '../../images/small-icons/dna-stability-inline.svg';
 import EngineeredRegionInline from '../../images/small-icons/engineered-region-inline.svg';
 import Insulator from '../../images/small-icons/insulator.svg';
@@ -17,9 +16,7 @@ import OverhangSite5Inline from '../../images/small-icons/overhang-site-5-inline
 import OverhangSite5ReverseComplement from '../../images/small-icons/overhang-site-5-reverseComplement.svg';
 import PolyAInline from '../../images/small-icons/poly-a-inline.svg';
 import PrimerBindingSiteInline from '../../images/small-icons/primer-binding-site-inline.svg';
-import PrimerBindingSiteReverseComplement from '../../images/small-icons/primer-binding-site-reverseComplement.svg';
 import PromoterInline from '../../images/small-icons/promoter-inline.svg';
-import PromoterReverseComplement from '../../images/small-icons/promoter-reverseComplement.svg';
 import ProteinInline from '../../images/small-icons/protein-inline.svg';
 import RecombinationSiteInline from '../../images/small-icons/recombination-site-inline.svg';
 import ResInline from '../../images/small-icons/res-inline.svg';
@@ -32,46 +29,55 @@ import TerminatorInline from '../../images/small-icons/terminator-inline.svg';
 import UnspecifiedInline from '../../images/small-icons/unspecified-inline.svg';
 
 const ICON_MAPPING = {
-  'CDS-inline': CDSInline,
-  'CDS-reverseComplement': CDSReverseComplement,
-  'aptamer-inline': AptamerInline,
-  'assembly-scar-inline': AssemblyScarInline,
-  'biopolymer-base-inline': BiopolymerBaseInline,
-  'blunt-restriction-site-inline': BluntRestrictionSiteInline,
-  'dna-stability-inline': DnaStabilityInline,
-  'engineered-region-inline': EngineeredRegionInline,
+  cds: CDSInline,
+  aptamer: AptamerInline,
+  'assembly-scar': AssemblyScarInline,
+  'biopolymer-base': BiopolymerBaseInline,
+  'blunt-restriction-site': BluntRestrictionSiteInline,
+  'dna-stability': DnaStabilityInline,
+  'engineered-region': EngineeredRegionInline,
   insulator: Insulator,
-  'no-glyph-assigned-inline': NoGlyphAssignedInline,
-  'non-coding-rna-gene-inline': NonCodingRnaGeneInline,
-  'operator-inline': OperatorInline,
-  'origin-of-replication-inline': OriginOfReplicationInline,
-  'origin-of-transfer-inline': OriginOfTransferInline,
-  'overhang-site-5-inline': OverhangSite5Inline,
+  'no-glyph-assigned': NoGlyphAssignedInline,
+  'non-coding-rna-gene': NonCodingRnaGeneInline,
+  operator: OperatorInline,
+  'origin-of-replication': OriginOfReplicationInline,
+  'origin-of-transfer': OriginOfTransferInline,
+  'overhang-site-5': OverhangSite5Inline,
+  'poly-a': PolyAInline,
+  'primer-binding-site': PrimerBindingSiteInline,
+  promoter: PromoterInline,
+  protein: ProteinInline,
+  'recombination-site': RecombinationSiteInline,
+  res: ResInline,
+  'ribosome-entry-site': ResInline, // EXCEPTION
+  'restriction-site': RestrictionSiteInline,
+  rna: RnaInline,
+  signature: SignatureInline,
+  'sticky-restriction-site-3': StickyRestrictionSite3Inline,
+  'sticky-restriction-site-5': StickyRestrictionSite5Inline,
+  terminator: TerminatorInline,
+  unspecified: UnspecifiedInline,
+  // Only exception of not rotated
   'overhang-site-5-reverseComplement': OverhangSite5ReverseComplement,
-  'poly-a-inline': PolyAInline,
-  'primer-binding-site-inline': PrimerBindingSiteInline,
-  'primer-binding-site-reverseComplement': PrimerBindingSiteReverseComplement,
-  'promoter-inline': PromoterInline,
-  'promoter-reverseComplement': PromoterReverseComplement,
-  'protein-inline': ProteinInline,
-  'recombination-site-inline': RecombinationSiteInline,
-  'res-inline': ResInline,
-  'ribosome_entry_site-inline': ResInline,
-  'restriction-site-inline': RestrictionSiteInline,
-  'rna-inline': RnaInline,
-  'signature-inline': SignatureInline,
-  'sticky-restriction-site-3-inline': StickyRestrictionSite3Inline,
-  'sticky-restriction-site-5-inline': StickyRestrictionSite5Inline,
-  'terminator-inline': TerminatorInline,
-  'unspecified-inline': UnspecifiedInline,
 };
 
 export default function SymbolSVG({ role, orientation }) {
-  let Icon = ICON_MAPPING[`${role}-${orientation}`];
+  const cleanedRole = role.replaceAll('_', '-').toLowerCase();
+  const isReverse = orientation === 'reverseComplement';
+  const InlineIcon = ICON_MAPPING[cleanedRole];
+  const ReverseIconIfExists = ICON_MAPPING[cleanedRole + '-reverseComplement'];
+
+  let Icon = (isReverse && ReverseIconIfExists) || InlineIcon;
+  let toRotate = isReverse && !ReverseIconIfExists;
+
   if (!Icon) {
-    console.warn(`Missing icon for role = "${role}"!`);
-    // Icon = () => <div style={{ outline: 'red 2px solid', height: '100%' }} />;
+    console.log(`Missing icon for role = "${role}"! Using the UnspecifiedInline icon...`);
     Icon = UnspecifiedInline;
+    toRotate = false;
   }
-  return <Icon />;
+  return (
+    <svg width="32px" height="32px" style={{ transform: toRotate ? 'rotate(180deg)' : '' }}>
+      <Icon />
+    </svg>
+  );
 }
