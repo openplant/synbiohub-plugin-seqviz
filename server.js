@@ -46,6 +46,23 @@ app.post('/Evaluate', function (req, res) {
 });
 
 app.all('/Run', async (req, res) => {
+  /**
+  Receives parameters:
+    complete_sbol: The single-use URL for the complete object to operate on
+    shallow_sbol: The single-use URL for a summarized or truncated view of the object
+    genbank: The single-use URL for the Genbank of the object (Note: This will be a blank website for all types other than Component)
+    top_level: The top-level URL of the SBOL object
+    instanceUrl: The top-level URL of the synbiohub instance
+    size: A number representing an estimate of the size of the object, probably triple count
+    type: The RDF type of the top-level object: [
+        'Activity', 'Agent', 'Association', 'Attachment', 'Collection',
+        'CombinatorialDerivation', 'Component', 'ComponentDefinition', 'Cut',
+        'Experiment', 'ExperimentalData', 'FunctionalComponent', 'GenericLocation',
+        'Implementation', 'Interaction', 'Location', 'MapsTo', 'Measure',
+        'Model', 'Module', 'ModuleDefinition', 'Participation', 'Plan', 'Range',
+        'Sequence', 'SequenceAnnotation', 'SequenceConstraint', 'Usage', 'VariableComponent',
+      ]
+  */
   let url =
     req.body.complete_sbol?.toString() ?? 'https://synbiohub.org/public/igem/BBa_B0012/1/sbol';
   let top_level =

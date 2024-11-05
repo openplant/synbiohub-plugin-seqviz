@@ -20,7 +20,14 @@ export const VisbolRenderer = ({ visbolSequence }) => {
   const sequence = [...visbolSequence].reverse();
 
   return (
-    <div style={{ display: 'flex', width: 500, justifyContent: 'center' }}>
+    <div
+      style={{
+        display: 'flex',
+        width: 550,
+        justifyContent: sequence.length > 17 ? '' : 'center',
+        flexWrap: 'wrap',
+      }}
+    >
       {sequence.map((vs, i) => {
         const [isTooltip, setIsTooltip] = React.useState(false);
         return (
