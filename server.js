@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import request from 'request';
 import filesToParts from './io/filesToParts';
+import { readFile } from 'fs/promises';
 
 const serialize = require('serialize-javascript');
 
@@ -20,6 +21,18 @@ app.get('/seqviz.js', function (req, res) {
 app.get('/Status', function (req, res) {
   console.log('Status');
   res.status(200).send('The plugin is up and running');
+});
+
+// Endpoint used to test the /Run POST endpoint with several inputs.
+app.get('/test', (req, res) => {
+  readFile('./templates/test.html', 'utf-8').then((html) => {
+    res.status(200).send(html);
+  });
+});
+
+// Endpoint used to get sample datasets for the /Test page.
+app.get('/test/sample-data/:file', (req, res) => {
+  res.sendFile(path.join(path.resolve(), 'sample-data', req.params.file + '.xml'));
 });
 
 app.post('/Evaluate', function (req, res) {
@@ -41,9 +54,10 @@ app.all('/Run', async (req, res) => {
   let hostAddr = req.get('host');
   console.log('run url=' + url + ' top=' + top_level + ' hostAddr=' + hostAddr);
   try {
-    // Get SBOL file content string
+    console.log(`Get SBOL file content string...`);
     const csv = await getFileData(url);
-    // parse SBOL file to get data for sequence view rendering
+    console.log(`SBOL file content string:\n${csv}`);
+    console.log(`Parse SBOL file to get data for sequence view rendering`);
     const { displayList, parts } = await filesToParts(csv, {
       topLevel: top_level,
     });

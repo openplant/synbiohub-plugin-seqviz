@@ -1,0 +1,75 @@
+<html>
+  <form id="accurat-seqviz-form">
+    <select name="complete_sbol">
+      <option>http://localhost:5012/test/sample-data/SEGA003</option>
+      <option>https://synbiohub.org/public/SEGA/SEGA003/1</option>
+      <option>http://localhost:5012/test/sample-data/BBF10K_003498_backbone</option>
+      <option>
+        https://synbiohub.org/public/free_genes_feature_libraries/BBF10K_003498_backbone/1
+      </option>
+      <option>http://localhost:5012/test/sample-data/SEGA030</option>
+      <option>https://synbiohub.org/public/SEGA/SEGA030/1</option>
+      <option>http://localhost:5012/test/sample-data/marchantia_openplant_toolkit-SBOL</option>
+    </select>
+    <select name="type">
+      <option>Component</option>
+      <option>ComponentDefinition</option>
+      <option>Layout</option>
+    </select>
+    <input type="submit" />
+  </form>
+
+  <style>
+    #accurat-seqviz-content {
+      padding: 15px;
+      overflow: scroll;
+      outline: solid 2px grey;
+    }
+  </style>
+
+  <div id="accurat-seqviz-content"></div>
+
+  <script>
+    const form = document.querySelector('#accurat-seqviz-form');
+    const content = document.querySelector('#accurat-seqviz-content');
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const data = JSON.stringify({
+        ...Object.fromEntries(formData),
+        complete_sbol: formData.get('complete_sbol') + '/sbol',
+        top_level: formData.get('complete_sbol'),
+      });
+      fetch('/run', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: data,
+      })
+        .then((r) => r.text())
+        .then((html) => {
+          setInnerHTML(content, html);
+        });
+    });
+
+    function setInnerHTML(elm, html) {
+      elm.innerHTML = html;
+
+      Array.from(elm.querySelectorAll('script')).forEach((oldScriptEl) => {
+        const newScriptEl = document.createElement('script');
+
+        Array.from(oldScriptEl.attributes).forEach((attr) => {
+          newScriptEl.setAttribute(attr.name, attr.value);
+        });
+
+        const scriptText = document.createTextNode(oldScriptEl.innerHTML);
+        newScriptEl.appendChild(scriptText);
+
+        oldScriptEl.parentNode.replaceChild(newScriptEl, oldScriptEl);
+      });
+    }
+  </script>
+</html>
