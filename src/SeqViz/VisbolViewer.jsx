@@ -57,11 +57,12 @@ class VisbolViewer extends React.Component {
   }
 
   render() {
+    const { selection } = this.props;
     const { display } = this.state;
     this.updateReferences(display, this.props.inputRef);
     if (display && this.props.Visbol) {
       const vs = this.visbolSequence(display);
-      return <VisbolRenderer visbolSequence={vs} />;
+      return <VisbolRenderer visbolSequence={vs} selection={selection} />;
     } else {
       return null;
     }
