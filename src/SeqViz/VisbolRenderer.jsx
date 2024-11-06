@@ -43,7 +43,7 @@ export const VisbolRenderer = ({ visbolSequence }) => {
       style={{
         display: 'flex',
         gap: 1,
-        width: 550,
+        width: 520,
         justifyContent: sequence.length > 17 ? '' : 'center',
         flexWrap: 'wrap',
       }}

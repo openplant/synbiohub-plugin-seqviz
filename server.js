@@ -92,7 +92,7 @@ app.all('/Run', async (req, res) => {
         width: 1100,
       },
       size: {
-        width: 500,
+        width: 520,
         height: 600,
       },
       displayList: displayList,
