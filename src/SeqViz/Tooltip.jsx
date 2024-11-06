@@ -43,6 +43,7 @@ export function Tooltip({ info, colorScale }) {
           minWidth: 180,
           overflow: 'hidden',
           padding: '8px 6px',
+          fontWeight: 500,
           fontSize: 16,
         }}
       >
