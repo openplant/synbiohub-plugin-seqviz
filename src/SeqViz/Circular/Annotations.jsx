@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import CentralIndexContext from '../handlers/centralIndex';
 import { colorScale } from '../../utils/colors';
 import { sbolTooltipStringToObject, tooltipForInnerHTML } from '../../utils/parser';
-import SymbolSVG from '../SymbolSVG.jsx';
+import { Tooltip } from '../Tooltip.jsx';
 
 /**
  * Used to build up all the path elements. Does not include a display
@@ -34,35 +34,12 @@ export default class Annotations extends React.PureComponent {
       const top = event.clientY;
       const tooltip = document.getElementById('linear-tooltip');
       const tooltipObject = sbolTooltipStringToObject(annotation.tooltip);
-      const { identifier, name, role, orientation, range } = tooltipForInnerHTML(tooltipObject);
-      const symbolSVGString = renderToString(<SymbolSVG role={role} orientation={orientation} />);
-      const color = colorScale(annotation.name);
-      const lighterColor = `${color}26`;
+      const tooltipInfo = tooltipForInnerHTML(tooltipObject);
 
       tooltip.style.display = 'block';
       tooltip.style.left = `${left}px`;
       tooltip.style.top = `${top}px`;
-      tooltip.innerHTML = `
-        <div style="width: 180px; background-color: white; border: solid 2px ${color}; border-radius: 2px;">
-          <div class="font-name" style="background-color: ${color}; padding:6px 5px">${name}</div>
-          <div style="background-color: ${lighterColor}; padding: 10px 5px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-              <div style="color: black;">${role}</div>
-              <div>${symbolSVGString}</div>
-            </div>
-            <div style="color: #a3a3a3">Feature Identifier</div>
-            <div style="color: black; margin-bottom: 4px;">${identifier}</div>
-            <div style="color: #a3a3a3">Orientation</div>
-            <div style="color: black; margin-bottom: 4px;">${orientation}</div>
-            <div style="color: #a3a3a3">Segment</div>
-            <div style="margin-bottom: 4px; display: flex; justify-content: space-between; align-items: end;">
-              <div>${range[0]}</div>
-              <div style="height: 1px; background-color: black; width:100%;"></div>
-              <div>${range[1]}</div>
-            </div>
-          </div>
-        </div>
-      `;
+      tooltip.innerHTML = renderToString(<Tooltip info={tooltipInfo} colorScale={colorScale} />);
 
       // FIXME: It almost never works because of lazy rendering in scroller element...
       // if (linearAnnotations[0]) {

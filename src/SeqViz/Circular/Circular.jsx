@@ -256,7 +256,6 @@ class Circular extends React.Component {
       radius,
       yDiff,
       size,
-
       seq,
       compSeq,
       cutSites,
