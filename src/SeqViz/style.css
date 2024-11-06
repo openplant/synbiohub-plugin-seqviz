@@ -16,8 +16,8 @@
 
 #root--accurat-seqviz .hoveredannotation {
   stroke: black !important;
-  stroke-width: 2px !important;
-  paint-order: stroke;
+  stroke-width: 1px !important;
+  paint-order: fill;
 }
 
 #root--accurat-seqviz .la-vz-seqviz svg text {
@@ -86,7 +86,7 @@
 
 /* linear viewer */
 #root--accurat-seqviz .la-vz-linear-scroller {
-  height: 100%;
+  height: calc(100% - 20px);
 
   outline: none !important;
   position: relative;

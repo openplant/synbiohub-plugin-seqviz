@@ -47,21 +47,23 @@ class VisbolViewer extends React.Component {
 
   visbolSequence(display) {
     return display.toPlace.map((glyph) => {
-      let tooltipObject = sbolTooltipStringToObject(glyph.tooltip);
-      return tooltipForInnerHTML(tooltipObject);
+      const { tooltip, ...rest } = glyph;
+      let tooltipObject = sbolTooltipStringToObject(tooltip);
+      return {
+        ...rest,
+        ...tooltipForInnerHTML(tooltipObject),
+      };
     });
   }
 
   render() {
     const { display } = this.state;
     this.updateReferences(display, this.props.inputRef);
-    var id = undefined;
-    if (this.props.selection && this.props.selection[0]) id = this.props.selection[0].annref;
     if (display && this.props.Visbol) {
       const vs = this.visbolSequence(display);
       return <VisbolRenderer visbolSequence={vs} />;
     } else {
-      return <div></div>;
+      return null;
     }
   }
 }

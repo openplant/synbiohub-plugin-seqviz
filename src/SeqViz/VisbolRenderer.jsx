@@ -21,8 +21,10 @@ export const VisbolRenderer = ({ visbolSequence }) => {
 
   return (
     <div
+      className="mini-visbol"
       style={{
         display: 'flex',
+        gap: 1,
         width: 550,
         justifyContent: sequence.length > 17 ? '' : 'center',
         flexWrap: 'wrap',
@@ -35,9 +37,9 @@ export const VisbolRenderer = ({ visbolSequence }) => {
             key={i}
             onMouseEnter={() => setIsTooltip(true)}
             onMouseLeave={() => setIsTooltip(false)}
-            style={{ position: 'relative' }}
+            style={{ position: 'relative', paddingTop: 1 }}
           >
-            <VisbolCard info={vs} colorScale={colorScale} />
+            <VisbolCard info={vs} colorScale={colorScale} isHovered={isTooltip} />
             {isTooltip && (
               <div style={{ position: 'absolute', top: 40, zIndex: 10 }}>
                 <Tooltip info={vs} colorScale={colorScale} />
@@ -50,12 +52,20 @@ export const VisbolRenderer = ({ visbolSequence }) => {
   );
 };
 
-const VisbolCard = ({ info, colorScale }) => {
+const VisbolCard = ({ info, colorScale, isHovered }) => {
   const { name, orientation, role } = info;
-  const backgroundColor = colorScale(name);
-
   return (
-    <div style={{ width: 32, height: 32, backgroundColor, borderRadius: 2, cursor: 'pointer' }}>
+    <div
+      className={`mini-visbol-card ${info.id}`}
+      style={{
+        width: 32,
+        height: 32,
+        backgroundColor: colorScale(name),
+        borderRadius: 2,
+        cursor: 'pointer',
+        border: isHovered ? '1px solid black' : '1px solid transparent',
+      }}
+    >
       <SymbolSVG role={role} orientation={orientation} />
     </div>
   );

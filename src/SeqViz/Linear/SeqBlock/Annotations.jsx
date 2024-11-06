@@ -210,6 +210,7 @@ class AnnotationRow extends React.PureComponent {
       L ${4 * cW} ${cH}`; // add double forward reverse
       }
     }
+    linePath += 'z';
 
     let strokeColor;
     if (a.type === 'insert') {
@@ -232,7 +233,6 @@ class AnnotationRow extends React.PureComponent {
         uri={a.uri}
         className={a.annId}
         style={{
-          fillOpacity: 0.7,
           cursor: 'pointer',
           fill: color,
         }}

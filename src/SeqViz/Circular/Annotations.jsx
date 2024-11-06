@@ -17,24 +17,31 @@ import SymbolSVG from '../SymbolSVG.jsx';
  * @type {Function}
  */
 export default class Annotations extends React.PureComponent {
-  hoverOtherAnnotationRows = (event, className, opacity, isTooltipShown, annotation) => {
+  hoverOtherAnnotationRows = (event, annotation) => {
     event.stopPropagation();
-    const elements = document.getElementsByClassName(className);
-    if (isTooltipShown) {
-      let view = document.getElementsByClassName('la-vz-seqviz')[0].getBoundingClientRect();
+    if (annotation) {
+      const linearAnnotations = Array.from(
+        document.querySelectorAll(`.la-vz-linear-scroller .${annotation.annId}`)
+      );
+      const circularAnnotations = Array.from(
+        document.querySelectorAll(`.la-vz-circular-root .${annotation.annId}`)
+      );
+      const miniVisbolCards = Array.from(
+        document.querySelectorAll(`.mini-visbol .${annotation.annId}`)
+      );
 
-      let left = event.clientX - view.left;
-      let top = event.clientY - view.top;
-      let tooltip = document.getElementById('linear-tooltip');
-
-      let tooltipObject = sbolTooltipStringToObject(annotation.tooltip);
-      let { identifier, name, role, orientation, range } = tooltipForInnerHTML(tooltipObject);
-
-      let symbolSVGString = renderToString(<SymbolSVG role={role} orientation={orientation} />);
-
+      const left = event.clientX;
+      const top = event.clientY;
+      const tooltip = document.getElementById('linear-tooltip');
+      const tooltipObject = sbolTooltipStringToObject(annotation.tooltip);
+      const { identifier, name, role, orientation, range } = tooltipForInnerHTML(tooltipObject);
+      const symbolSVGString = renderToString(<SymbolSVG role={role} orientation={orientation} />);
       const color = colorScale(annotation.name);
       const lighterColor = `${color}26`;
 
+      tooltip.style.display = 'block';
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
       tooltip.innerHTML = `
         <div style="width: 180px; background-color: white; border: solid 2px ${color}; border-radius: 2px;">
           <div class="font-name" style="background-color: ${color}; padding:6px 5px">${name}</div>
@@ -43,14 +50,10 @@ export default class Annotations extends React.PureComponent {
               <div style="color: black;">${role}</div>
               <div>${symbolSVGString}</div>
             </div>
-
             <div style="color: #a3a3a3">Feature Identifier</div>
             <div style="color: black; margin-bottom: 4px;">${identifier}</div>
-
-
             <div style="color: #a3a3a3">Orientation</div>
             <div style="color: black; margin-bottom: 4px;">${orientation}</div>
-
             <div style="color: #a3a3a3">Segment</div>
             <div style="margin-bottom: 4px; display: flex; justify-content: space-between; align-items: end;">
               <div>${range[0]}</div>
@@ -61,20 +64,36 @@ export default class Annotations extends React.PureComponent {
         </div>
       `;
 
-      tooltip.style.display = 'block';
-      tooltip.style.left = left + 20 + 'px';
-      tooltip.style.top = top + 'px';
-      for (let i = 0; i < elements.length; i += 1) {
-        elements[i].style.fillOpacity = opacity;
-        elements[i].classList.add('hoveredannotation');
-      }
+      // FIXME: It almost never works because of lazy rendering in scroller element...
+      // if (linearAnnotations[0]) {
+      //   const scroller = document.querySelector('.la-vz-linear-scroller');
+      //   linearAnnotations[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // }
+      [...linearAnnotations, ...circularAnnotations].forEach((la) => {
+        la.classList.add('hoveredannotation');
+      });
+      miniVisbolCards.forEach((c) => {
+        c.style.border = '1px solid black';
+      });
     } else {
+      const linearAnnotations = Array.from(
+        document.querySelectorAll('.la-vz-linear-scroller .hoveredannotation')
+      );
+      const circularAnnotations = Array.from(
+        document.querySelectorAll(`.la-vz-circular-root .hoveredannotation`)
+      );
+      const miniVisbolCards = Array.from(
+        document.querySelectorAll(`.mini-visbol .mini-visbol-card`)
+      );
+
       let tooltip = document.getElementById('linear-tooltip');
       tooltip.style.display = 'none';
-      for (let i = 0; i < elements.length; i += 1) {
-        elements[i].style.fillOpacity = opacity;
-        elements[i].classList.remove('hoveredannotation');
-      }
+      [...linearAnnotations, ...circularAnnotations].forEach((la) => {
+        la.classList.remove('hoveredannotation');
+      });
+      miniVisbolCards.forEach((c) => {
+        c.style.border = '1px solid transparent';
+      });
     }
   };
 
@@ -90,10 +109,9 @@ export default class Annotations extends React.PureComponent {
 
     // shared style object for inlining
     const annStyle = {
-      strokeWidth: 0.5,
+      strokeWidth: 1,
       shapeRendering: 'geometricPrecision',
       cursor: 'pointer',
-      fillOpacity: 0.7,
       strokeLinejoin: 'round',
     };
     // this is strictly here to create an invisible path that the
@@ -219,8 +237,8 @@ const SingleAnnotation = (props) => {
           direction: a.direction,
         })}
         fill={colorScale(a.name)}
-        onMouseEnter={(event) => hoverOtherAnnotationRows(event, a.annId, 1.0, true, a)}
-        onMouseLeave={(event) => hoverOtherAnnotationRows(event, a.annId, 0.7, false, '')}
+        onMouseEnter={(event) => hoverOtherAnnotationRows(event, a)}
+        onMouseLeave={(event) => hoverOtherAnnotationRows(event, null)}
         onFocus={() => {}}
         onBlur={() => {}}
         {...annStyle}

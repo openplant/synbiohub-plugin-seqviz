@@ -335,7 +335,7 @@ function getDisplayListSegment(componentDefinition, config, share, i) {
   } else {
     sortedSequenceAnnotations(componentDefinition).forEach((sequenceAnnotation) => {
       var annName = sequenceAnnotation.name || sequenceAnnotation.displayId;
-      var annId = randomid();
+      var annId = 'annot-' + randomid();
       var color = chooseRandomColor();
       var glyph = 'unspecified';
       var roles = sequenceAnnotation.roles;
