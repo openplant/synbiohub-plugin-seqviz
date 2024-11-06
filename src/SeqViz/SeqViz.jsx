@@ -275,15 +275,24 @@ export default class SeqViz extends React.Component {
 
     return (
       <div className="la-vz-seqviz" style={style}>
-        <SelectionContext.Provider value={selection}>
-          <VisbolViewer
-            displayList={displayList}
-            selection={selection}
-            setSelection={this.setSelection}
-            Visbol={true}
-          />
-          <div className="seq-viewer">{viewers.filter((v) => v).map((v) => v)}</div>
-        </SelectionContext.Provider>
+        <CentralIndexContext.Provider value={centralIndex}>
+          <SelectionContext.Provider value={selection}>
+            <CentralIndexContext.Consumer>
+              {({ setCentralIndex }) => (
+                <VisbolViewer
+                  setCentralIndex={setCentralIndex}
+                  displayList={displayList}
+                  selection={selection}
+                  setSelection={this.setSelection}
+                  Visbol={true}
+                  name={name}
+                  seq={seq}
+                />
+              )}
+            </CentralIndexContext.Consumer>
+            <div className="seq-viewer">{viewers.filter((v) => v).map((v) => v)}</div>
+          </SelectionContext.Provider>
+        </CentralIndexContext.Provider>
         <div id="linear-tooltip"></div>
       </div>
     );

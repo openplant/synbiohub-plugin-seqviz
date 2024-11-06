@@ -3,7 +3,7 @@ import SymbolSVG from './SymbolSVG.jsx';
 import { Tooltip } from './Tooltip.jsx';
 import { colorScale } from '../utils/colors.js';
 
-export const VisbolRenderer = ({ visbolSequence, selection }) => {
+export const VisbolRenderer = ({ visbolSequence, selection, onClick }) => {
   const [hovered, setHovered] = useState(null);
 
   // We're not sure why it's reversed... Fixing it here (sorry)
@@ -62,6 +62,7 @@ export const VisbolRenderer = ({ visbolSequence, selection }) => {
               colorScale={colorScale}
               isHovered={hovered === vs}
               isSelected={selectedId === vs.id}
+              onClick={onClick}
             />
 
             {hovered === vs && (
@@ -76,7 +77,7 @@ export const VisbolRenderer = ({ visbolSequence, selection }) => {
   );
 };
 
-const VisbolCard = ({ info, colorScale, isHovered, isSelected }) => {
+const VisbolCard = ({ info, colorScale, isHovered, isSelected, onClick }) => {
   const { name, orientation, role } = info;
   return (
     <div
@@ -90,6 +91,7 @@ const VisbolCard = ({ info, colorScale, isHovered, isSelected }) => {
         border: isHovered ? '1px solid black' : '1px solid transparent',
         outline: isSelected ? '1px solid black' : '',
       }}
+      onClick={(e) => onClick(e, info.id)}
     >
       <SymbolSVG role={role} orientation={orientation} />
     </div>
