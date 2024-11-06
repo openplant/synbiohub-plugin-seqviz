@@ -1,7 +1,90 @@
 import * as React from 'react';
 import { colorScale } from '../../../utils/colors';
+import { renderToString } from 'react-dom/server';
+import { sbolTooltipStringToObject, tooltipForInnerHTML } from '../../../utils/parser';
+import SymbolSVG from '../../SymbolSVG.jsx';
 
 export default class AnnotationRows extends React.PureComponent {
+  hoverOtherAnnotationRows = (event, annotation) => {
+    event.stopPropagation();
+    if (annotation) {
+      const linearAnnotations = Array.from(
+        document.querySelectorAll(`.la-vz-linear-scroller .${annotation.annId}`)
+      );
+      const circularAnnotations = Array.from(
+        document.querySelectorAll(`.la-vz-circular-root .${annotation.annId}`)
+      );
+      const miniVisbolCards = Array.from(
+        document.querySelectorAll(`.mini-visbol .${annotation.annId}`)
+      );
+
+      const left = event.clientX;
+      const top = event.clientY;
+      const tooltip = document.getElementById('linear-tooltip');
+      const tooltipObject = sbolTooltipStringToObject(annotation.tooltip);
+      const { identifier, name, role, orientation, range } = tooltipForInnerHTML(tooltipObject);
+      const symbolSVGString = renderToString(<SymbolSVG role={role} orientation={orientation} />);
+      const color = colorScale(annotation.name);
+      const lighterColor = `${color}26`;
+
+      tooltip.style.display = 'block';
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
+      tooltip.innerHTML = `
+        <div style="width: 180px; background-color: white; border: solid 2px ${color}; border-radius: 2px;">
+          <div class="font-name" style="background-color: ${color}; padding:6px 5px">${name}</div>
+          <div style="background-color: ${lighterColor}; padding: 10px 5px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <div style="color: black;">${role}</div>
+              <div>${symbolSVGString}</div>
+            </div>
+            <div style="color: #a3a3a3">Feature Identifier</div>
+            <div style="color: black; margin-bottom: 4px;">${identifier}</div>
+            <div style="color: #a3a3a3">Orientation</div>
+            <div style="color: black; margin-bottom: 4px;">${orientation}</div>
+            <div style="color: #a3a3a3">Segment</div>
+            <div style="margin-bottom: 4px; display: flex; justify-content: space-between; align-items: end;">
+              <div>${range[0]}</div>
+              <div style="height: 1px; background-color: black; width:100%;"></div>
+              <div>${range[1]}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // FIXME: It almost never works because of lazy rendering in scroller element...
+      // if (linearAnnotations[0]) {
+      //   const scroller = document.querySelector('.la-vz-linear-scroller');
+      //   linearAnnotations[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // }
+      [...linearAnnotations, ...circularAnnotations].forEach((la) => {
+        la.classList.add('hoveredannotation');
+      });
+      miniVisbolCards.forEach((c) => {
+        c.style.border = '1px solid black';
+      });
+    } else {
+      const linearAnnotations = Array.from(
+        document.querySelectorAll('.la-vz-linear-scroller .hoveredannotation')
+      );
+      const circularAnnotations = Array.from(
+        document.querySelectorAll(`.la-vz-circular-root .hoveredannotation`)
+      );
+      const miniVisbolCards = Array.from(
+        document.querySelectorAll(`.mini-visbol .mini-visbol-card`)
+      );
+
+      let tooltip = document.getElementById('linear-tooltip');
+      tooltip.style.display = 'none';
+      [...linearAnnotations, ...circularAnnotations].forEach((la) => {
+        la.classList.remove('hoveredannotation');
+      });
+      miniVisbolCards.forEach((c) => {
+        c.style.border = '1px solid transparent';
+      });
+    }
+  };
+
   render() {
     const {
       annotationRows,
@@ -58,6 +141,7 @@ class AnnotationRow extends React.PureComponent {
       annotations,
       fullSeq,
       bpsPerBlock,
+      hoverOtherAnnotationRows,
     } = this.props;
 
     const { name, direction, start, end } = a;
@@ -240,6 +324,8 @@ class AnnotationRow extends React.PureComponent {
         d={linePath}
         onFocus={() => 0}
         onBlur={() => 0}
+        onMouseEnter={(event) => hoverOtherAnnotationRows(event, a)}
+        onMouseLeave={(event) => hoverOtherAnnotationRows(event, null)}
       />
     );
 
