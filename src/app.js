@@ -2,16 +2,9 @@ import React from 'react';
 import { hydrate } from 'react-dom';
 import SeqViz from './SeqViz/SeqViz.jsx';
 
-// change non iterable obejct to iterable object, then can use spread operator
-function* iterate_object(o) {
-  var keys = Object.keys(o);
-  for (var i = 0; i < keys.length; i++) {
-    yield [keys[i], o[keys[i]]];
-  }
-}
-var data = {};
-for (var [key, val] of iterate_object(window.__DATA_ACCURAT_SEQVIZ__)) {
-  data[key] = val;
-}
+const data = window.__DATA_ACCURAT_SEQVIZ__;
 
-hydrate(<SeqViz {...data} />, document.getElementById('root--accurat-seqviz'));
+hydrate(
+  <SeqViz style={data.style} size={data.size} displayList={data.displayList} parts={data.parts} />,
+  document.getElementById('root--accurat-seqviz')
+);
