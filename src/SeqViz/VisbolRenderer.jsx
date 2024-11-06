@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 import SymbolSVG from './SymbolSVG.jsx';
 import { colorScale } from '../utils/colors.js';
@@ -16,8 +16,38 @@ function computeTextColor(bgColor) {
 }
 
 export const VisbolRenderer = ({ visbolSequence }) => {
+  const [hovered, setHovered] = useState(null);
+
   // We're not sure why it's reversed... Fixing it here (sorry)
   const sequence = [...visbolSequence].reverse();
+
+  useEffect(() => {
+    if (hovered) {
+      const linearAnnotations = Array.from(
+        document.querySelectorAll(`.la-vz-linear-scroller .${hovered.id}`)
+      );
+      const circularAnnotations = Array.from(
+        document.querySelectorAll(`.la-vz-circular-root .${hovered.id}`)
+      );
+
+      [...linearAnnotations, ...circularAnnotations].forEach((la) => {
+        la.classList.add('hoveredannotation');
+      });
+    }
+
+    return () => {
+      const linearAnnotations = Array.from(
+        document.querySelectorAll('.la-vz-linear-scroller .hoveredannotation')
+      );
+      const circularAnnotations = Array.from(
+        document.querySelectorAll(`.la-vz-circular-root .hoveredannotation`)
+      );
+
+      [...linearAnnotations, ...circularAnnotations].forEach((la) => {
+        la.classList.remove('hoveredannotation');
+      });
+    };
+  }, [hovered]);
 
   return (
     <div
@@ -31,16 +61,16 @@ export const VisbolRenderer = ({ visbolSequence }) => {
       }}
     >
       {sequence.map((vs, i) => {
-        const [isTooltip, setIsTooltip] = React.useState(false);
         return (
           <div
             key={i}
-            onMouseEnter={() => setIsTooltip(true)}
-            onMouseLeave={() => setIsTooltip(false)}
+            onMouseEnter={() => setHovered(vs)}
+            onMouseLeave={() => setHovered(null)}
             style={{ position: 'relative', paddingTop: 1 }}
           >
-            <VisbolCard info={vs} colorScale={colorScale} isHovered={isTooltip} />
-            {isTooltip && (
+            <VisbolCard info={vs} colorScale={colorScale} isHovered={hovered === vs} />
+
+            {hovered === vs && (
               <div style={{ position: 'absolute', top: 40, zIndex: 10 }}>
                 <Tooltip info={vs} colorScale={colorScale} />
               </div>
