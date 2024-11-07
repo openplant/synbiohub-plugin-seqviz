@@ -314,7 +314,11 @@ function SequenceCopierButtons({ selection }) {
 
   const copyAndDisplay = (text) => {
     setDisplayedSequence(text);
-    navigator.clipboard.writeText(text);
+    if (navigator.clipboarda) {
+      navigator.clipboard.writeText(text);
+    } else {
+      legacyUnsecuredCopyToClipboard(text);
+    }
 
     setTimeout(() => {
       setDisplayedSequence('');
@@ -391,4 +395,19 @@ function SequenceCopierButtons({ selection }) {
       </div>
     </div>
   );
+}
+
+function legacyUnsecuredCopyToClipboard(text) {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+  } catch (err) {
+    alert(`Unable to copy to clipboard: ${text}`);
+    console.error('Unable to copy to clipboard', err);
+  }
+  document.body.removeChild(textArea);
 }
