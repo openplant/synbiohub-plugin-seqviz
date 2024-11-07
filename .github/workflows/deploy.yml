@@ -45,3 +45,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker compose up --build plugin-seqviz -d
+            sleep 5
+            docker compose logs plugin-seqviz
