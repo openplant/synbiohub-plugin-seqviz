@@ -5,8 +5,24 @@ import { sbolTooltipStringToObject, tooltipForInnerHTML } from '../../../utils/p
 import { Tooltip } from '../../Tooltip.jsx';
 
 export default class AnnotationRows extends React.PureComponent {
+  _oldHoveredAnnotation = null;
+
   hoverOtherAnnotationRows = (event, annotation) => {
     event.stopPropagation();
+
+    if (annotation === this._oldHoveredAnnotation) {
+      const view = document.querySelector('.la-vz-seqviz').getBoundingClientRect();
+      const left = event.clientX - view.left + 10;
+      const top = event.clientY - view.top + 10;
+      const tooltip = document.querySelector('#linear-tooltip');
+      tooltip.style.display = 'block';
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
+      return;
+    } else {
+      this._oldHoveredAnnotation = annotation;
+    }
+
     if (annotation) {
       const linearAnnotations = Array.from(
         document.querySelectorAll(`.la-vz-linear-scroller .${annotation.annId}`)
@@ -18,9 +34,11 @@ export default class AnnotationRows extends React.PureComponent {
         document.querySelectorAll(`.mini-visbol .${annotation.annId}`)
       );
 
-      const left = event.clientX;
-      const top = event.clientY;
-      const tooltip = document.getElementById('linear-tooltip');
+      const view = document.querySelector('.la-vz-seqviz').getBoundingClientRect();
+      const left = event.clientX - view.left + 10;
+      const top = event.clientY - view.top + 10;
+
+      const tooltip = document.querySelector('#linear-tooltip');
       const tooltipObject = sbolTooltipStringToObject(annotation.tooltip);
       const tooltipInfo = tooltipForInnerHTML(tooltipObject);
 
@@ -302,6 +320,7 @@ class AnnotationRow extends React.PureComponent {
         onFocus={() => 0}
         onBlur={() => 0}
         onMouseEnter={(event) => hoverOtherAnnotationRows(event, a)}
+        onMouseMove={(event) => hoverOtherAnnotationRows(event, a)}
         onMouseLeave={(event) => hoverOtherAnnotationRows(event, null)}
       />
     );

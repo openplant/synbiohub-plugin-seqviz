@@ -64,7 +64,7 @@ export function Tooltip({ info, colorScale }) {
           }}
         >
           <div style={{ fontSize: 16, color: '#a3a3a3' }}>{role}</div>
-
+          <div style={{ width: 15 }} />
           <SymbolSVG role={role} orientation={orientation} />
         </div>
 

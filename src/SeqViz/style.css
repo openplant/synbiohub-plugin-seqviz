@@ -139,14 +139,11 @@
 }
 
 #root--accurat-seqviz #linear-tooltip {
-  padding: 5px;
   position: absolute;
   display: none;
   font-size: 14px;
   font-weight: 500;
-  width: fit-content;
   font-family: Arial, Helvetica, sans-serif;
-  max-width: 200px;
 }
 
 #root--accurat-seqviz #linear-tooltip .font-name {

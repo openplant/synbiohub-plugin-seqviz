@@ -279,26 +279,28 @@ export default class SeqViz extends React.Component {
     const viewers = bothFlipped ? [linear, circular] : [circular, linear];
 
     return (
-      <div className="la-vz-seqviz" style={{ ...style, position: 'relative' }}>
-        <CentralIndexContext.Provider value={centralIndex}>
-          <SelectionContext.Provider value={selection}>
-            <CentralIndexContext.Consumer>
-              {({ setCentralIndex }) => (
-                <VisbolViewer
-                  setCentralIndex={setCentralIndex}
-                  displayList={displayList}
-                  selection={selection}
-                  setSelection={this.setSelection}
-                  Visbol={true}
-                  name={name}
-                  seq={seq}
-                />
-              )}
-            </CentralIndexContext.Consumer>
-            <div className="seq-viewer">{viewers.filter((v) => v).map((v) => v)}</div>
-            <SequenceCopierButtons selection={selection} />
-          </SelectionContext.Provider>
-        </CentralIndexContext.Provider>
+      <div style={{ position: 'relative' }}>
+        <div className="la-vz-seqviz" style={{ ...style }}>
+          <CentralIndexContext.Provider value={centralIndex}>
+            <SelectionContext.Provider value={selection}>
+              <CentralIndexContext.Consumer>
+                {({ setCentralIndex }) => (
+                  <VisbolViewer
+                    setCentralIndex={setCentralIndex}
+                    displayList={displayList}
+                    selection={selection}
+                    setSelection={this.setSelection}
+                    Visbol={true}
+                    name={name}
+                    seq={seq}
+                  />
+                )}
+              </CentralIndexContext.Consumer>
+              <div className="seq-viewer">{viewers.filter((v) => v).map((v) => v)}</div>
+              <SequenceCopierButtons selection={selection} />
+            </SelectionContext.Provider>
+          </CentralIndexContext.Provider>
+        </div>
         <div id="linear-tooltip"></div>
       </div>
     );
@@ -334,7 +336,7 @@ function SequenceCopierButtons({ selection }) {
         style={{
           fontFamily: '"Roboto Mono", "monospace"',
           fontSize: 12,
-          marginBottom: 20,
+          marginBottom: 5,
           height: 40,
           overflow: 'hidden',
           textOverflow: 'ellipsis',
