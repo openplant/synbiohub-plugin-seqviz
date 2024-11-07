@@ -44,7 +44,7 @@ export const VisbolRenderer = ({ visbolSequence, selection, onClick }) => {
         display: 'flex',
         gap: 1,
         width: 520,
-        justifyContent: sequence.length > 17 ? '' : 'center',
+        justifyContent: sequence.length > 14 ? 'start' : 'center',
         flexWrap: 'wrap',
       }}
     >
