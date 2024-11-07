@@ -29,7 +29,7 @@ app.get('/test', (req, res) => {
 });
 
 // Endpoint used to get sample datasets for the /Test page.
-app.get('/test/sample-data/:file', (req, res) => {
+app.get('/test/sample-data/:file/:anything', (req, res) => {
   res.sendFile(path.join(path.resolve(), 'sample-data', req.params.file + '.xml'));
 });
 
