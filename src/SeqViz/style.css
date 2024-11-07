@@ -115,6 +115,7 @@
 #root--accurat-seqviz .acc-la-vz-linear-sel-block {
   fill: transparent;
   outline: solid #676767 1px;
+  pointer-events: none;
 }
 
 #root--accurat-seqviz .la-vz-scroll::-webkit-scrollbar {

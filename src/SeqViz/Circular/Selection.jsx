@@ -20,6 +20,7 @@ export default class CircularSelection extends React.PureComponent {
       stroke: '#676767',
       fill: 'transparent',
       shapeRendering: 'auto',
+      pointerEvents: 'none',
     };
     return this.context.map((selection, i) => {
       const { ref, start, end, clockwise } = selection;
@@ -94,15 +95,16 @@ export default class CircularSelection extends React.PureComponent {
         strokeWidth: edgeStrokeWidth,
         strokeLinecap: 'round',
         shapeRendering: 'auto',
+        cursor: 'grab',
       };
 
       return (
         <g key={i} className="la-vz-circular-selection">
-          {selLength && (
+          {selLength > 0 && (
             <>
-              <path d={selectPath} transform={getRotation(start)} {...selectStyle} />
-              <path d={edgePath} transform={getRotation(start)} {...edgeStyle} />
-              <path d={edgePath} transform={getRotation(end)} {...edgeStyle} />
+              <path d={selectPath} transform={getRotation(start)} style={selectStyle} />
+              <path d={edgePath} transform={getRotation(start)} style={edgeStyle} />
+              <path d={edgePath} transform={getRotation(end)} style={edgeStyle} />
             </>
           )}
         </g>
