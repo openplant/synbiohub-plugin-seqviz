@@ -1,4 +1,8 @@
 <html>
+  <head>
+    <title>SeqViz Testing</title>
+  </head>
+
   <form id="accurat-seqviz-form">
     <select name="complete_sbol">
       <option>https://synbiohub.org/public/SEGA/SEGA003/1</option>
@@ -24,6 +28,7 @@
     #accurat-seqviz-content {
       padding: 15px;
       outline: solid 2px grey;
+      width: 1138px;
     }
   </style>
 
@@ -33,13 +38,24 @@
     const form = document.querySelector('#accurat-seqviz-form');
     const content = document.querySelector('#accurat-seqviz-content');
 
+    function addHostToURL(url) {
+      if (url.startsWith('/')) {
+        return `${document.location.origin}${url}`;
+      } else {
+        return url;
+      }
+    }
+
     form.addEventListener('submit', function (event) {
       event.preventDefault();
-      const formData = new FormData(form);
+
+      setInnerHTML(content, 'LOADING...');
+
+      const formData = Object.fromEntries(new FormData(form));
       const data = JSON.stringify({
-        ...Object.fromEntries(formData),
-        complete_sbol: formData.get('complete_sbol') + '/sbol',
-        top_level: formData.get('complete_sbol'),
+        ...formData,
+        complete_sbol: addHostToURL(formData.complete_sbol) + '/sbol',
+        top_level: addHostToURL(formData.complete_sbol),
       });
       fetch('/run', {
         method: 'POST',
