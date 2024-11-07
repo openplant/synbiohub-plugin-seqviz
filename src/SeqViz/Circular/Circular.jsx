@@ -301,7 +301,8 @@ class Circular extends React.Component {
         onMouseUp={mouseEvent}
         onMouseMove={mouseEvent}
         ref={inputRef(plasmidId, { type: 'SEQ' })}
-        {...size}
+        width={size.width}
+        height={size.width}
       >
         <g className="la-vz-circular-root" transform={`translate(0, ${yDiff - radius / 2})`}>
           <Annotations

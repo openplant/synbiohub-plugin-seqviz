@@ -1,6 +1,5 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-
 import { cutSitesInRows } from '../utils/digest';
 import isEqual from '../utils/isEqual';
 import { directionality, dnaComplement } from '../utils/parser';
@@ -10,7 +9,13 @@ import CentralIndexContext from './handlers/centralIndex';
 import { SelectionContext, defaultSelection } from './handlers/selection.jsx';
 import SeqViewer from './SeqViewer.jsx';
 import VisbolViewer from './VisbolViewer.jsx';
-
+import {
+  computeTopStrandBases,
+  computeBottomStrandBases53,
+  computeBottomStrandBases35,
+  computeAminoAcids1Letter,
+  computeAminoAcids3Letter,
+} from '../utils/transformSequences.js';
 import './style.css';
 
 /**
@@ -274,7 +279,7 @@ export default class SeqViz extends React.Component {
     const viewers = bothFlipped ? [linear, circular] : [circular, linear];
 
     return (
-      <div className="la-vz-seqviz" style={style}>
+      <div className="la-vz-seqviz" style={{ ...style, position: 'relative' }}>
         <CentralIndexContext.Provider value={centralIndex}>
           <SelectionContext.Provider value={selection}>
             <CentralIndexContext.Consumer>
@@ -291,10 +296,97 @@ export default class SeqViz extends React.Component {
               )}
             </CentralIndexContext.Consumer>
             <div className="seq-viewer">{viewers.filter((v) => v).map((v) => v)}</div>
+            <SequenceCopierButtons selection={selection} />
           </SelectionContext.Provider>
         </CentralIndexContext.Provider>
         <div id="linear-tooltip"></div>
       </div>
     );
   }
+}
+
+function SequenceCopierButtons({ selection }) {
+  const [displayedSequence, setDisplayedSequence] = useState('');
+
+  const seq = selection[0] ? selection[0].seq : '';
+
+  const copyAndDisplay = (text) => {
+    setDisplayedSequence(text);
+    navigator.clipboard.writeText(text);
+
+    setTimeout(() => {
+      setDisplayedSequence('');
+    }, 2000);
+  };
+
+  if (!selection || !selection[0] || !selection[0].seq) return null;
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: '50%',
+      }}
+    >
+      <div
+        style={{
+          fontFamily: '"Roboto Mono", "monospace"',
+          fontSize: 12,
+          marginBottom: 20,
+          height: 40,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          color: 'gray',
+        }}
+      >
+        {displayedSequence && 'Copied:'}
+        <br />
+        {displayedSequence}
+      </div>
+      <div>
+        <button
+          onClick={() => {
+            copyAndDisplay(computeTopStrandBases(seq));
+          }}
+        >
+          Copy Top Strand Bases
+        </button>
+      </div>
+      <div>
+        <button
+          onClick={() => {
+            copyAndDisplay(computeBottomStrandBases53(seq));
+          }}
+        >
+          Copy Bottom Strand Bases 5' → 3'
+        </button>
+        <button
+          onClick={() => {
+            copyAndDisplay(computeBottomStrandBases35(seq));
+          }}
+        >
+          Copy Bottom Strand Bases 3' → 5'
+        </button>
+      </div>
+      <div>
+        <button
+          onClick={() => {
+            copyAndDisplay(computeAminoAcids1Letter(seq));
+          }}
+        >
+          Copy Amino Acids 1-Letter
+        </button>
+        <button
+          onClick={() => {
+            copyAndDisplay(computeAminoAcids3Letter(seq));
+          }}
+        >
+          Copy Amino Acids 3-Letter
+        </button>
+      </div>
+    </div>
+  );
 }
