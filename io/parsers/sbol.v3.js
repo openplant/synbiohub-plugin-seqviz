@@ -274,12 +274,10 @@ function getDisplayListSegment(componentDefinition, config, share, i) {
       }
     }
 
-    var tooltip = '<b style="text-align:center;display:block">Component</b>';
-    if (componentDefinition.displayId)
-      tooltip += '<b>Identifier:</b> ' + componentDefinition.displayId + '<br/>';
-    if (componentDefinition.name) tooltip += '<b>Name:</b> ' + componentDefinition.name + '<br/>';
-    if (componentDefinition.description)
-      tooltip += '<b>Description:</b> ' + componentDefinition.description + '<br/>';
+    var tooltip = { type: 'Component' };
+    if (componentDefinition.displayId) tooltip.identifier = componentDefinition.displayId;
+    if (componentDefinition.name) tooltip.name = componentDefinition.name;
+    if (componentDefinition.description) tooltip.description = componentDefinition.description;
 
     /*
      *if glyph is nonDnA we need to set the glyph
@@ -293,18 +291,16 @@ function getDisplayListSegment(componentDefinition, config, share, i) {
       let igemFeaturePrefix = 'http://wiki.synbiohub.org/wiki/Terms/igem#feature/';
       let soPrefix = 'http://identifiers.org/so/';
       if (role.toString().indexOf(igemPartPrefix) === 0) {
-        tooltip +=
-          '<b>iGEM Part Type:</b> ' + role.toString().slice(igemPartPrefix.length) + '<br/>';
+        tooltip.igemPartType = role.toString().slice(igemPartPrefix.length);
       } else if (role.toString().indexOf(igemFeaturePrefix) === 0) {
-        tooltip +=
-          '<b>iGEM Feature Type:</b> ' + role.toString().slice(igemFeaturePrefix.length) + '<br/>';
+        tooltip.igemFeatureType = role.toString().slice(igemFeaturePrefix.length);
       } else if (role.toString().indexOf(soPrefix) === 0) {
         let soTerm = role.toString().slice(soPrefix.length).split('_').join(':');
         let rolename = soTerm;
         if (sbolmeta.sequenceOntology[soTerm]) {
           rolename = sbolmeta.sequenceOntology[soTerm].name;
         }
-        tooltip += '<b>Role:</b> ' + rolename + '<br/>';
+        tooltip.role = rolename;
       }
       let so = (role + '').match(/SO.([0-9]+)/g);
       if (!so || !so.length) {
@@ -340,11 +336,11 @@ function getDisplayListSegment(componentDefinition, config, share, i) {
       var glyph = 'unspecified';
       var roles = sequenceAnnotation.roles;
       var uri = '';
-      var tooltip = '';
-      var visboltooltip = '';
+      var tooltip = {};
+      var visboltooltip = {};
       // If the sequence annotation denotes a component
       if (sequenceAnnotation.component && sequenceAnnotation.component != '') {
-        tooltip = '<b style="text-align:center;display:block">Component</b>';
+        tooltip.type = 'Component';
         let component = sequenceAnnotation.component;
         if (
           component.definition &&
@@ -368,15 +364,9 @@ function getDisplayListSegment(componentDefinition, config, share, i) {
             }
           }
 
-          if (component.definition.displayId) {
-            tooltip += '<b>Identifier:</b> ' + component.definition.displayId + '<br/>';
-          }
-          if (component.definition.name) {
-            tooltip += '<b>Name:</b> ' + component.definition.name + '<br/>';
-          }
-          if (component.definition.description) {
-            tooltip += '<b>Description:</b> ' + component.definition.description + '<br/>';
-          }
+          tooltip.identifier = component.definition.displayId;
+          tooltip.name = component.definition.name;
+          tooltip.description = component.definition.description;
         } else {
           if (component.definition) uri = component.definition.toString();
           if (config && uri.startsWith(config.get('databasePrefix'))) {
@@ -395,12 +385,10 @@ function getDisplayListSegment(componentDefinition, config, share, i) {
       }
       // else the sequence annotation denotes a feature
       else {
-        tooltip = '<b style="text-align:center;display:block">Feature</b>';
-        if (sequenceAnnotation.displayId)
-          tooltip += '<b>Identifier:</b> ' + sequenceAnnotation.displayId + '<br/>';
-        if (sequenceAnnotation.name) tooltip += '<b>Name:</b> ' + sequenceAnnotation.name + '<br/>';
-        if (sequenceAnnotation.description)
-          tooltip += '<b>Description:</b> ' + sequenceAnnotation.description + '<br/>';
+        tooltip.type = 'Feature';
+        tooltip.identifier = sequenceAnnotation.displayId;
+        tooltip.name = sequenceAnnotation.name;
+        tooltip.description = sequenceAnnotation.description;
       }
 
       if (roles.length === 0) {
@@ -411,20 +399,16 @@ function getDisplayListSegment(componentDefinition, config, share, i) {
           let igemFeaturePrefix = 'http://wiki.synbiohub.org/wiki/Terms/igem#feature/';
           let soPrefix = 'http://identifiers.org/so/';
           if (role.toString().indexOf(igemPartPrefix) === 0) {
-            tooltip +=
-              '<b>iGEM Part Type:</b> ' + role.toString().slice(igemPartPrefix.length) + '<br/>';
+            tooltip.igemPartType = role.toString().slice(igemPartPrefix.length);
           } else if (role.toString().indexOf(igemFeaturePrefix) === 0) {
-            tooltip +=
-              '<b>iGEM Feature Type:</b> ' +
-              role.toString().slice(igemFeaturePrefix.length) +
-              '<br/>';
+            tooltip.igemFeatureType = role.toString().slice(igemFeaturePrefix.length);
           } else if (role.toString().indexOf(soPrefix) === 0) {
             let soTerm = role.toString().slice(soPrefix.length).split('_').join(':');
             let rolename = soTerm;
             if (sbolmeta.sequenceOntology[soTerm]) {
               rolename = sbolmeta.sequenceOntology[soTerm].name;
             }
-            tooltip += '<b>Role:</b> ' + rolename + '<br/>';
+            tooltip.role = rolename;
           }
 
           let so = (role + '').match(/SO.([0-9]+)/g);
@@ -457,33 +441,17 @@ function getDisplayListSegment(componentDefinition, config, share, i) {
             rangeend = range.end;
           }
         });
-        tooltip += '<b>Range:</b> ' + rangestart + '..' + rangeend + '<br/>';
+        tooltip.range = [rangestart, rangeend];
       }
 
       visboltooltip = tooltip;
       var strand = 'positive';
       annotationRanges.forEach((range, i) => {
-        let loc = '';
         annotationRanges.forEach((range, j) => {
-          if (i === j) {
-            let boldloc = '';
-            if (range.orientation) {
-              boldloc =
-                '> Orientation: ' +
-                range.orientation.toString().replace('http://sbols.org/v2#', '') +
-                ' ';
-            }
-            boldloc += range.start + '..' + range.end + '<br/>';
-            loc += boldloc.bold();
-          } else {
-            if (range.orientation) {
-              loc +=
-                'Orientation: ' +
-                range.orientation.toString().replace('http://sbols.org/v2#', '') +
-                ' ';
-            }
-            loc += range.start + '..' + range.end + '<br/>';
+          if (range.orientation) {
+            tooltip.orientation = range.orientation.toString().replace('http://sbols.org/v2#', '');
           }
+          tooltip.range = [range.start, range.end];
         });
         annotations.push({
           ...annotationFactory(annName),
@@ -492,22 +460,20 @@ function getDisplayListSegment(componentDefinition, config, share, i) {
           color: color,
           start: range.start - 1,
           end: range.end,
-          tooltip: tooltip + loc,
+          tooltip: tooltip,
           uri: uri,
         });
       });
 
       annotationRanges.forEach((range) => {
         if (range.orientation) {
-          visboltooltip +=
-            'Orientation: ' +
-            range.orientation.toString().replace('http://sbols.org/v2#', '') +
-            ' ';
+          visboltooltip.orientation;
+          range.orientation.toString().replace('http://sbols.org/v2#', '');
           if (range.orientation.toString() === 'http://sbols.org/v2#reverseComplement') {
             strand = 'negative';
           }
         }
-        visboltooltip += range.start + '..' + range.end + '<br/>';
+        visboltooltip.range = [range.start, range.end];
       });
 
       var isComposite = false;

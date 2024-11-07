@@ -4,6 +4,8 @@ import SeqViz from './SeqViz/SeqViz.jsx';
 
 const data = window.__DATA_ACCURAT_SEQVIZ__;
 
+console.log('__DATA_ACCURAT_SEQVIZ__', data);
+
 hydrate(
   <SeqViz style={data.style} size={data.size} displayList={data.displayList} parts={data.parts} />,
   document.getElementById('root--accurat-seqviz')

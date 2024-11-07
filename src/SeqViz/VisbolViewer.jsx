@@ -2,7 +2,6 @@ import React from 'react';
 import { prepareDisplay } from 'visbol';
 import { VisbolRenderer } from './VisbolRenderer.jsx';
 import withSelectionHandler from './handlers/selection.jsx';
-import { sbolTooltipStringToObject, tooltipForInnerHTML } from '../utils/parser.js';
 
 class VisbolViewer extends React.Component {
   constructor(props) {
@@ -45,24 +44,18 @@ class VisbolViewer extends React.Component {
     }
   }
 
-  visbolSequence(display) {
-    return display.toPlace.map((glyph) => {
-      const { tooltip, ...rest } = glyph;
-      let tooltipObject = sbolTooltipStringToObject(tooltip);
-      return {
-        ...rest,
-        ...tooltipForInnerHTML(tooltipObject),
-      };
-    });
-  }
-
   render() {
     const { inputRef, Visbol, selection, mouseEvent } = this.props;
     const { display } = this.state;
     this.updateReferences(display, inputRef);
     if (display && Visbol) {
-      const vs = this.visbolSequence(display);
-      return <VisbolRenderer visbolSequence={vs} selection={selection} onClick={mouseEvent} />;
+      return (
+        <VisbolRenderer
+          visbolSequence={display.toPlace}
+          selection={selection}
+          onClick={mouseEvent}
+        />
+      );
     } else {
       return null;
     }

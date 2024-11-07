@@ -147,38 +147,3 @@ export const partFactory = () => ({
   cutSites: [],
   note: '',
 });
-
-export const sbolTooltipStringToObject = (tooltip) => {
-  const strBrSplitted = tooltip
-    .split('<br/>')
-    .map((s) =>
-      s
-        .replace(/<b.*?>/g, '')
-        .split('</b>')
-        .join(' ')
-        .split(':')
-        .map((p) => p.trim().replace('> ', '').replace('Feature ', ''))
-    )
-    .filter((d) => d.length > 1);
-
-  return Object.fromEntries(strBrSplitted);
-};
-
-export const tooltipForInnerHTML = ({
-  Identifier = '',
-  Name = '',
-  Orientation = '',
-  Range = '',
-  Role = '',
-}) => {
-  const orientation = Orientation.includes('inline') ? 'inline' : 'reverseComplement';
-  const range = Range.split('..');
-
-  return {
-    identifier: Identifier,
-    name: Name,
-    role: Role,
-    orientation,
-    range,
-  };
-};

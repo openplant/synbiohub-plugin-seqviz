@@ -58,7 +58,7 @@ export const VisbolRenderer = ({ visbolSequence, selection, onClick }) => {
             style={{ position: 'relative', paddingTop: 1 }}
           >
             <VisbolCard
-              info={vs}
+              info={{ id: vs.id, ...vs.tooltip }}
               colorScale={colorScale}
               isHovered={hovered === vs}
               isSelected={selectedId === vs.id}
@@ -67,7 +67,7 @@ export const VisbolRenderer = ({ visbolSequence, selection, onClick }) => {
 
             {hovered === vs && (
               <div style={{ position: 'absolute', top: 40, zIndex: 10 }}>
-                <Tooltip info={vs} colorScale={colorScale} />
+                <Tooltip info={vs.tooltip} colorScale={colorScale} />
               </div>
             )}
           </div>
@@ -78,10 +78,10 @@ export const VisbolRenderer = ({ visbolSequence, selection, onClick }) => {
 };
 
 const VisbolCard = ({ info, colorScale, isHovered, isSelected, onClick }) => {
-  const { name, orientation, role } = info;
+  const { id, name, orientation, role } = info;
   return (
     <div
-      className={`mini-visbol-card ${info.id}`}
+      className={`mini-visbol-card ${id}`}
       style={{
         width: 32,
         height: 32,
@@ -91,7 +91,7 @@ const VisbolCard = ({ info, colorScale, isHovered, isSelected, onClick }) => {
         border: isHovered ? '1px solid black' : '1px solid transparent',
         outline: isSelected ? '1px solid black' : '',
       }}
-      onClick={(e) => onClick(e, info.id)}
+      onClick={(e) => onClick(e, id)}
     >
       <SymbolSVG role={role} orientation={orientation} />
     </div>

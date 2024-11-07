@@ -79,12 +79,12 @@ export function Tooltip({ info, colorScale }) {
         >
           <div style={{ flex: '0 0 auto' }}>
             <div style={{ color: '#a3a3a3' }}>Feature Identifier</div>
-            <div>{identifier}</div>
+            <div>{identifier || '?'}</div>
           </div>
 
           <div style={{ flex: '0 0 auto' }}>
             <div style={{ color: '#a3a3a3' }}>Orientation</div>
-            <div>{orientation}</div>
+            <div>{orientation || '?'}</div>
           </div>
 
           <div style={{ display: 'flex', flex: '1 0 auto' }} />
@@ -92,7 +92,7 @@ export function Tooltip({ info, colorScale }) {
           <div style={{ flex: '0 0 auto' }}>
             <div style={{ color: '#a3a3a3' }}>Segment</div>
             <div style={{ display: 'flex', flex: '0 0 auto' }}>
-              <div>{range[0]}</div>
+              <div>{range[0] || '?'}</div>
               <div
                 style={{
                   flex: '1 1 100%',
@@ -101,7 +101,7 @@ export function Tooltip({ info, colorScale }) {
                   margin: '0 5px',
                 }}
               />
-              <div>{range[1]}</div>
+              <div>{range[1] || '?'}</div>
             </div>
           </div>
         </div>

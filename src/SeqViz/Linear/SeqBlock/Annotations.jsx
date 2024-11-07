@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { colorScale } from '../../../utils/colors';
 import { renderToString } from 'react-dom/server';
-import { sbolTooltipStringToObject, tooltipForInnerHTML } from '../../../utils/parser';
 import { Tooltip } from '../../Tooltip.jsx';
 
 export default class AnnotationRows extends React.PureComponent {
@@ -39,8 +38,7 @@ export default class AnnotationRows extends React.PureComponent {
       const top = event.clientY - view.top + 10;
 
       const tooltip = document.querySelector('#linear-tooltip');
-      const tooltipObject = sbolTooltipStringToObject(annotation.tooltip);
-      const tooltipInfo = tooltipForInnerHTML(tooltipObject);
+      const tooltipInfo = annotation.tooltip;
 
       tooltip.style.display = 'block';
       tooltip.style.left = `${left}px`;

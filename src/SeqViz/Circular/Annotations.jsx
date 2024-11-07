@@ -2,7 +2,6 @@ import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 import CentralIndexContext from '../handlers/centralIndex';
 import { colorScale } from '../../utils/colors';
-import { sbolTooltipStringToObject, tooltipForInnerHTML } from '../../utils/parser';
 import { Tooltip } from '../Tooltip.jsx';
 
 /**
@@ -51,8 +50,7 @@ export default class Annotations extends React.PureComponent {
       const top = event.clientY - view.top + 10;
 
       const tooltip = document.querySelector('#linear-tooltip');
-      const tooltipObject = sbolTooltipStringToObject(annotation.tooltip);
-      const tooltipInfo = tooltipForInnerHTML(tooltipObject);
+      const tooltipInfo = annotation.tooltip;
 
       tooltip.style.display = 'block';
       tooltip.style.left = `${left}px`;
