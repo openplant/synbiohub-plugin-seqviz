@@ -35,6 +35,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd obl-synbiohub-seqviz/
+            git reset --hard HEAD
             git pull
             ls -al
       - name: 'SSH: Build'
@@ -54,5 +55,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker compose up --build plugin-seqviz -d
-            sleep 5
+            sleep 2
             docker compose logs plugin-seqviz
