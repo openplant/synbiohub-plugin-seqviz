@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon --exec babel-node server.js",
-    "build": "webpack --config ./config/webpack.build.js; ncc build server.js -o dist",
+    "build": "webpack --config ./config/webpack.build.js --mode production; ncc build server.js -o dist; mv dist/index.js dist/server.js",
     "build-dev": "webpack --config ./config/webpack.build.js --mode development --watch",
     "local": "concurrently \"yarn build-dev\" \"yarn dev\"",
     "prettier": "prettier --write '**/*.js'"

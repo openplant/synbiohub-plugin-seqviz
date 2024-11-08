@@ -4,4 +4,4 @@ COPY dist .
 
 EXPOSE 5011
 
-CMD [ "node", "server.js" ]
+CMD [ "node", "./server.js" ]
