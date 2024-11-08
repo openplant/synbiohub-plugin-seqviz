@@ -3,91 +3,113 @@
     <title>SeqViz Testing</title>
   </head>
 
-  <form id="accurat-seqviz-form">
-    <select name="complete_sbol">
-      <option>https://synbiohub.org/public/SEGA/SEGA003/1</option>
-      <option>https://synbiohub.org/public/SEGA/SEGA030/1</option>
-      <option>https://synbiohub.org/public/igem/BBa_K1780018/1</option>
-      <option>
-        https://synbiohub.org/public/free_genes_feature_libraries/BBF10K_003498_backbone/1
-      </option>
-      <!-- <option>http://localhost:5011/test/sample-data/SEGA003</option>
-      <option>http://localhost:5011/test/sample-data/SEGA030</option>
-      <option>http://localhost:5011/test/sample-data/BBF10K_003498_backbone</option>
-      <option>http://localhost:5011/test/sample-data/marchantia_openplant_toolkit-SBOL</option> -->
-    </select>
-    <select name="type">
-      <option>Component</option>
-      <option>ComponentDefinition</option>
-      <option>Layout</option>
-    </select>
-    <input type="submit" />
-  </form>
+  <body style="font-family: sans-serif">
+    <form id="accurat-seqviz-form">
+      <div style="display: flex; flex-direction: column">
+        <div>Prefill SBOL URL:</div>
+        <div style="display: flex; flex-direction: row">
+          <select name="prefill_complete_sbol" style="width: 600px">
+            <option>https://synbiohub.org/public/SEGA/SEGA003/1</option>
+            <option>https://synbiohub.org/public/SEGA/SEGA030/1</option>
+            <option>https://synbiohub.org/public/igem/BBa_K1780018/1</option>
+            <option>
+              https://synbiohub.org/public/free_genes_feature_libraries/BBF10K_003498_backbone/1
+            </option>
+            <!--
+            <option>/test/sample-data/SEGA003</option>
+            <option>/test/sample-data/SEGA030</option>
+            <option>/test/sample-data/BBF10K_003498_backbone</option>
+            <option>/test/sample-data/marchantia_openplant_toolkit-SBOL</option>
+            -->
+          </select>
+        </div>
+        <div style="height: 10px"></div>
+        <div>Custom SBOL URL:</div>
+        <div style="display: flex; flex-direction: row">
+          <input name="complete_sbol" value="" style="width: 600px" />
+          <select name="type">
+            <option>Component</option>
+            <option>ComponentDefinition</option>
+            <option>Layout</option>
+          </select>
+          <input type="submit" value="SUBMIT" />
+        </div>
+      </div>
+    </form>
 
-  <style>
-    #accurat-seqviz-content {
-      padding: 15px;
-      outline: solid 2px grey;
-      width: 1138px;
-    }
-  </style>
-
-  <div id="accurat-seqviz-content"></div>
-
-  <script>
-    const form = document.querySelector('#accurat-seqviz-form');
-    const content = document.querySelector('#accurat-seqviz-content');
-
-    function addHostToURL(url) {
-      if (url.startsWith('/')) {
-        return `${document.location.origin}${url}`;
-      } else {
-        return url;
+    <style>
+      #accurat-seqviz-content {
+        padding: 15px;
+        outline: solid 2px grey;
+        width: 1138px;
       }
-    }
+    </style>
 
-    form.addEventListener('submit', function (event) {
-      event.preventDefault();
+    <div id="accurat-seqviz-content"></div>
 
-      setInnerHTML(content, 'LOADING...');
+    <script>
+      const form = document.querySelector('#accurat-seqviz-form');
+      const content = document.querySelector('#accurat-seqviz-content');
+      const selectSbol = document.querySelector('select[name=prefill_complete_sbol]');
+      const inputSbol = document.querySelector('input[name=complete_sbol]');
 
-      const formData = Object.fromEntries(new FormData(form));
-      const data = JSON.stringify({
-        ...formData,
-        complete_sbol: addHostToURL(formData.complete_sbol) + '/sbol',
-        top_level: addHostToURL(formData.complete_sbol),
+      inputSbol.value = selectSbol.value;
+
+      selectSbol.addEventListener('change', (event) => {
+        inputSbol.value = selectSbol.value;
       });
-      fetch('/run', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: data,
-      })
-        .then((r) => r.text())
-        .then((html) => {
-          setInnerHTML(content, html);
+
+      function addHostToURL(url) {
+        if (url.startsWith('/')) {
+          return `${document.location.origin}${url}`;
+        } else {
+          return url;
+        }
+      }
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        setInnerHTML(content, 'LOADING...');
+
+        const formData = Object.fromEntries(new FormData(form));
+        const data = JSON.stringify({
+          ...formData,
+          complete_sbol: addHostToURL(formData.complete_sbol) + '/sbol',
+          top_level: addHostToURL(formData.complete_sbol),
         });
-    });
-
-    function setInnerHTML(elm, html) {
-      elm.innerHTML = html;
-
-      Array.from(elm.querySelectorAll('script')).forEach((oldScriptEl) => {
-        const newScriptEl = document.createElement('script');
-
-        Array.from(oldScriptEl.attributes).forEach((attr) => {
-          newScriptEl.setAttribute(attr.name, attr.value);
-        });
-
-        const scriptText = document.createTextNode(oldScriptEl.innerHTML);
-        newScriptEl.appendChild(scriptText);
-
-        oldScriptEl.parentNode.replaceChild(newScriptEl, oldScriptEl);
+        fetch('/run', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: data,
+        })
+          .then((r) => r.text())
+          .then((html) => {
+            setInnerHTML(content, html);
+          });
       });
-    }
 
-    form.querySelector(`input[type=submit]`).click();
-  </script>
+      function setInnerHTML(elm, html) {
+        elm.innerHTML = html;
+
+        Array.from(elm.querySelectorAll('script')).forEach((oldScriptEl) => {
+          const newScriptEl = document.createElement('script');
+
+          Array.from(oldScriptEl.attributes).forEach((attr) => {
+            newScriptEl.setAttribute(attr.name, attr.value);
+          });
+
+          const scriptText = document.createTextNode(oldScriptEl.innerHTML);
+          newScriptEl.appendChild(scriptText);
+
+          oldScriptEl.parentNode.replaceChild(newScriptEl, oldScriptEl);
+        });
+      }
+
+      form.querySelector(`input[type=submit]`).click();
+    </script>
+  </body>
 </html>
