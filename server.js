@@ -23,7 +23,7 @@ app.get('/Status', function (req, res) {
 
 // Endpoint used to test the /Run POST endpoint with several inputs.
 app.get('/test', (req, res) => {
-  readFile('./templates/test.html', 'utf-8').then((html) => {
+  readFile(path.join(path.resolve(), 'templates/test.html'), 'utf-8').then((html) => {
     res.status(200).send(html);
   });
 });
