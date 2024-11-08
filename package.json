@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node server.js",
+    "start": "node dist/index.js",
     "dev": "nodemon --exec babel-node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config ./config/webpack.build.js",
+    "build": "webpack --config ./config/webpack.build.js; ncc build server.js -o dist",
     "build-dev": "webpack --config ./config/webpack.build.js --mode development --watch",
     "local": "concurrently \"yarn build-dev\" \"yarn dev\"",
     "prettier": "prettier --write '**/*.js'"
@@ -43,6 +42,7 @@
     "@babel/preset-react": "^7.10.4",
     "@babel/register": "^7.10.5",
     "@babel/runtime": "^7.10.2",
+    "@vercel/ncc": "^0.38.2",
     "babel-plugin-css-modules-transform": "^1.6.2",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-plugin-transform-imports": "^2.0.0",
