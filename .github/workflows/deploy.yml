@@ -11,8 +11,8 @@ jobs:
     name: Deploy on Staging server
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        name: Checkout source code
+      # - uses: actions/checkout@v2
+      #   name: Checkout source code
       # - name: Rsync code to Staging server
       #   uses: easingthemes/ssh-deploy@v5.1.0
       #   with:
@@ -37,6 +37,15 @@ jobs:
             cd obl-synbiohub-seqviz/
             git pull
             ls -al
+      - name: 'SSH: Build'
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ vars.SSH_HOST }}
+          username: ${{ vars.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd obl-synbiohub-seqviz/
+            yarn install --frozen-lockfile && yarn build
       - name: 'SSH: Docker Compose Up'
         uses: appleboy/ssh-action@v1.1.0
         with:
