@@ -1,18 +1,14 @@
 {
-  "name": "react-sequence",
+  "name": "synbiohub-plugin-seqviz",
   "version": "1.1.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
     "start": "node dist/server.js",
-    "dev": "nodemon --exec babel-node server.js",
+    "dev": "concurrently \"yarn build-dev\" \"yarn server-dev\"",
+    "server-dev": "nodemon --exec babel-node server.js",
     "build": "webpack --config ./config/webpack.build.js --mode production; ncc build server.js -o dist; mv dist/index.js dist/server.js",
     "build-dev": "webpack --config ./config/webpack.build.js --mode development --watch",
-    "local": "concurrently \"yarn build-dev\" \"yarn dev\"",
     "prettier": "prettier --write '**/*.js'"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "devDependencies": {
     "@babel/cli": "^7.10.1",

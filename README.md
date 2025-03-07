@@ -1,22 +1,68 @@
-# Project Description
+# SynbioHub Plugin: SeqViz
 
-Sequence View Plugin is a visualization plugin engine for SynBioHub to enhance the functional annotations of DNA sequence which are coordinated with the SBOL Visual standard. 
+## Project Description
 
-# Interface
+Sequence Visualization Plugin is a visualization plugin engine for SynBioHub to enhance the functional annotations of DNA sequence which are coordinated with the SBOL Visual standard.
 
-![Sequence View Plugin](./images/interface.png)
+## Development
 
-# Installation
+To start both the frontend build and the backend server in dev mode:
 
-Follow the instructions on the [GitHub README](https://github.com/SynBioHub/synbiohub#manual-installation) to install SynBioHub locally on your system and start the SynBioHub process. In the Admin module, configure the plugin as follows:
+```bash
+yarn dev
+```
 
-![configuration](./images/configuration.png)
+## Deploy
 
-1. Clone the Sequence View Plugin repository `git clone https://github.com/alicelh/sequence-view-plugin.git`
-2. Change to the  Sequence View Plugin directory `cd sequence-view-plugin`
-3. Install all the dependencies `npm install`
-4. Start the plugin server `npm run local`
+### Configuration
 
-# Publish
+On the server:
 
-Releases are published automatically using GitHub Actions. There is an action which fires on release publication. It publishes an image to Docker Hub as synbiohub/plugin-visual-seqviz, which will be used in public SynBioHub. It should be noticed that docker use server.js to start the server. The only difference between server.js and localserver.js is on line 67 where the src uses http or https. Thus, what other code updates in localserver.js should also be reflected in server.js. 
+```bash
+nano ~/synbiohub-plugins/docker-compose.yml
+# services:
+#     # ...
+#     plugin-seqviz:
+#         build: ./seqviz/.
+#         ports:
+#             - "127.0.0.1:5011:5011"
+#         dns: 8.8.8.8
+#         restart: always
+
+nano /etc/Caddyfile
+# hub.openbioeconomy.org:6011 {
+#     reverse_proxy :5011
+# }
+```
+
+### Update
+
+The build script outputs two self-contained compiled JS files, one for the backend and one for the frontend.
+To build the frontend and backend code, run:
+
+```bash
+yarn build
+```
+
+Then deploy `dist/`, together with the `Dockerfile`:
+
+```bash
+scp Dockerfile USER@SERVER:~/synbiohub-plugins/seqviz/
+scp -r dist/ USER@SERVER:~/synbiohub-plugins/seqviz/
+```
+
+On the server, run:
+
+```bash
+cd ~/synbiohub-plugins/
+docker-compose up --build -d
+```
+
+### SynbioHub Configuration
+
+The plugin will run on port 5011 of the container, reverse-proxied on port 6011 of the server,
+so this is the configuration that will need to be added in SynbioHub > Admin > Plugins:
+
+| Name   | URL                    |
+| ------ | ---------------------- |
+| SeqViz | https://{SERVER}:6011/ |
