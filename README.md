@@ -4,6 +4,14 @@
 
 Sequence Visualization Plugin is a visualization plugin engine for SynBioHub to enhance the functional annotations of DNA sequence which are coordinated with the SBOL Visual standard.
 
+Original SeqViz plugin (from using [https://github.com/SynBioHub/Plugin-Visual-VisBOL-Js](https://github.com/SynBioHub/Plugin-Visual-Seqviz)): 
+![image](https://github.com/user-attachments/assets/d9fcba2e-ece5-4e06-bbf6-86f47d11c670)
+
+New SeqViz plugin (from this repo): 
+![image](https://github.com/user-attachments/assets/2efb356f-fa12-42d2-a6ad-6a60d9be35cd)
+
+Only the new SeqViz plugin is present on each part's page: see [example](https://hub.openbioeconomy.org/public/Marchantia_OpenPlant_Toolkit/OP_088/1).
+
 ## Development
 
 To start both the frontend build and the backend server in dev mode:
